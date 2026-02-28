@@ -49,14 +49,14 @@
     @media (max-width: 768px) { #chart { height: 130px; } }
     #chartWatermark { position: absolute; left: 0; top: 50%; transform: translateY(-50%); width: 100%; height: 65px; opacity: 0.18; pointer-events: none; z-index: 1; object-fit: contain; object-position: center; transition: opacity 0.3s; }
     @media (max-width: 768px) { #chartWatermark { height: 52px; } }
-    #xzRowWrap { width: 100%; position: relative; margin-top: 1px; }
-    #numbersTop { display: flex; flex-wrap: nowrap; justify-content: flex-end; overflow: hidden; width: 100%; position: relative; padding: 3px 0; }
-    .num-box { flex: 0 0 36px; height: 22px; display: flex; justify-content: center; align-items: center; margin: 1px; color: #fff; font-size: 12px; font-weight: bold; border-radius: 3px; }
+    #xzRowWrap { width: 100%; position: relative; margin-top: 1px; overflow: visible; }
+    #numbersTop { display: flex; flex-wrap: nowrap; justify-content: flex-end; overflow: visible; width: 100%; position: relative; padding: 3px 0; }
+    .num-box { flex: 0 0 36px; height: 22px; display: flex; justify-content: center; align-items: center; margin: 1px; color: #fff; font-size: 12px; font-weight: bold; border-radius: 3px; position: relative; overflow: visible; }
     @media (max-width: 768px) { .num-box { flex: 0 0 28px; height: 18px; font-size: 10px; margin: 0.5px; } }
     .worm-line { position: absolute; height: 1px; border-top: 2px solid; z-index: 5; }
-    #gridWrap { width: 100%; position: relative; margin-top: 2px; }
-    #gridTopRow, #gridBottomRow { display: flex; flex-wrap: nowrap; justify-content: flex-end; width: 100%; }
-    .grid-cell { flex: 0 0 36px; height: 36px; box-sizing: border-box; background: #1a1a1a; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 16px; line-height: 1; padding: 0; margin: 0; border: 2px solid #444; transition: background 0.3s, border-color 0.3s; }
+    #gridWrap { width: 100%; position: relative; margin-top: 2px; overflow: visible; }
+    #gridTopRow, #gridBottomRow { display: flex; flex-wrap: nowrap; justify-content: flex-end; width: 100%; overflow: visible; }
+    .grid-cell { flex: 0 0 44px; height: 44px; box-sizing: border-box; background: #1a1a1a; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 16px; line-height: 1; padding: 12px 0; margin: 0; border: 2px solid #444; transition: background 0.3s, border-color 0.3s; position: relative; overflow: visible; }
     body.day-mode .grid-cell { background: #fff; border-color: #000; }
     @media (max-width: 768px) { .grid-cell { flex: 0 0 28px; height: 28px; font-size: 13px; border: 1.5px solid #444; } body.day-mode .grid-cell { border: 1.5px solid #000; } }
     .grid-top { border-color: #0b57d0; }
@@ -67,11 +67,6 @@
     .start-box { position: absolute; border: 2px solid #fff; pointer-events: none; z-index: 50; box-sizing: border-box; transition: border-color 0.3s; }
     body.day-mode .start-box { border-color: #000; }
     .start-label { position: absolute; top: -10px; left: 50%; transform: translateX(-50%); background: orange; color: #000; font-size: 8px; font-weight: 900; padding: 0 3px; line-height: 10px; border-radius: 2px; white-space: nowrap; }
-    #analysisBoxes { width: 100%; margin-top: 2px; position: relative; }
-    #xyBox { position: relative; width: 100%; height: 340px; border-bottom: 2px solid #444; transition: border-color 0.3s; }
-    body.day-mode #xyBox { border-bottom-color: #000; }
-    @media (max-width: 768px) { #xyBox { height: 250px; } }
-    #xyCanvas { width: 100%; height: 100%; display: block; }
 
 ```
 /* ===== SAĞ BÖLÜM PANELLERİ ===== */
@@ -154,6 +149,29 @@ body.day-mode #tradeChart { background: #f5f5f5; border-color: #ccc; }
 @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 .performance-mode { transform: translateZ(0); backface-visibility: hidden; perspective: 1000px; }
 .hw-accelerate { transform: translate3d(0, 0, 0); }
+
+/* Sayı sütunu ok işaretleri */
+.grid-arrow {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  z-index: 5;
+}
+.grid-arrow-up {
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-bottom: 6px solid #1155ff;
+  top: 2px;
+}
+.grid-arrow-down {
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 6px solid #cc1111;
+  bottom: 2px;
+}
 ```
 
   </style>
@@ -207,14 +225,10 @@ body.day-mode #tradeChart { background: #f5f5f5; border-color: #ccc; }
         <div id="gridDivider"><div id="gridDividerLine"></div></div>
         <div id="gridBottomRow"></div>
       </div>
-      <div id="analysisBoxes">
-        <div id="xyBox">
-          <canvas id="xyCanvas"></canvas>
-        </div>
-      </div>
-    </div>
 
 ```
+</div>
+
 <div id="rightSection">
 
 
@@ -521,18 +535,17 @@ body.day-mode #tradeChart { background: #f5f5f5; border-color: #ccc; }
 
       if (!trendDrawStarted) return;
 
-      // Start'ın 2. sayısı (index: startGlobalSpan.to - 1) ve sonrası
-      // gridHistory içindeki konumunu bul
-      // from=1.sayı, from+1=2.sayı, to=3.sayı → 2. sayı = to - 1
+      // Start çerçevesinin 1. sayısından (from) itibaren 6 sayı topla
+      // İlk 3 → panel 1, sonraki 3 → panel 2
       const vis = gridHistory.length;
       const firstGlobal = xzTickCounter - vis;
-      const startToLocal = (startGlobalSpan.to - 1) - firstGlobal; // start'ın 2. sayısının local indexi
+      const startFromLocal = startGlobalSpan.from - firstGlobal; // 1. sayının local indexi
 
-      if (startToLocal < 0 || startToLocal >= vis) return;
+      if (startFromLocal < 0 || startFromLocal >= vis) return;
 
-      // startToLocal'dan itibaren max 6 sayı topla
+      // startFromLocal'dan itibaren max 6 sayı topla
       const newBuffer = [];
-      for (let i = startToLocal; i < vis && newBuffer.length < 6; i++) {
+      for (let i = startFromLocal; i < vis && newBuffer.length < 6; i++) {
         newBuffer.push({
           v: gridHistory[i].v,
           color: gridHistory[i].effColor
@@ -541,6 +554,7 @@ body.day-mode #tradeChart { background: #f5f5f5; border-color: #ccc; }
 
       trendDrawBuffer = newBuffer;
       renderDrawPanels();
+      renderTwoRowGrid();
     }
 
     function clearDrawPanels() {
@@ -879,40 +893,7 @@ body.day-mode #tradeChart { background: #f5f5f5; border-color: #ccc; }
     }
 
     // ========== XY AREA ==========
-    function renderXYArea() {
-      requestAnimationFrame(()=>{
-        const canvas=document.getElementById('xyCanvas'); if(!canvas) return;
-        const box=document.getElementById('xyBox'); const rect=box.getBoundingClientRect(); const dpr=window.devicePixelRatio||1;
-        canvas.width=rect.width*dpr; canvas.height=rect.height*dpr;
-        const ctx=canvas.getContext('2d'); ctx.setTransform(dpr,0,0,dpr,0,0); ctx.clearRect(0,0,rect.width,rect.height);
-        if(currentGraph!=='XZ') return;
-        const vis=Math.min(11,decimalDigits.length); if(vis<2) return;
-        const decSlice=decimalDigits.slice(-vis); const colorSlice=numColors.slice(-vis);
-        const isDark=!document.body.classList.contains('day-mode');
-        const values=decSlice.map(function(d){let v=parseInt((d||'0'),10);if(isNaN(v))v=0;if(v===0)v=10;return v;});
-        const width=rect.width,height=rect.height,marginX=32,marginTop=14,marginBottom=24;
-        const stepX=(width-2*marginX)/(vis-1); const xs=[]; for(let i=0;i<vis;i++) xs.push(marginX+i*stepX);
-        const baseY=height/2,maxAmp=(height/2)-marginTop-marginBottom,unitY=maxAmp/10;
-        function pointY(idx){const v=values[idx],col=colorSlice[idx];if(col==='blue')return baseY-v*unitY;if(col==='red')return baseY+v*unitY;return baseY;}
-        ctx.strokeStyle=isDark?'#fff':'#000'; ctx.lineWidth=2.0; ctx.beginPath(); ctx.moveTo(marginX-10,baseY); ctx.lineTo(width-marginX+10,baseY); ctx.stroke();
-        const splitIndex=vis-6; const splitX=xs[splitIndex]-stepX*0.15; ctx.lineWidth=2.0;
-        ctx.strokeStyle='#0b57d0'; ctx.beginPath(); ctx.moveTo(splitX,marginTop-6); ctx.lineTo(splitX,baseY); ctx.stroke();
-        ctx.strokeStyle='#d93025'; ctx.beginPath(); ctx.moveTo(splitX,baseY); ctx.lineTo(splitX,height-marginBottom+12); ctx.stroke();
-        ctx.font='10px sans-serif'; ctx.textAlign='right'; ctx.textBaseline='middle';
-        for(let v=1;v<=10;v++){const yUp=baseY-v*unitY,yDn=baseY+v*unitY;if(yUp>marginTop-4){ctx.fillStyle='#0b57d0';ctx.fillText(String(v),marginX-16,yUp);}if(yDn<height-marginBottom+6){ctx.fillStyle='#d93025';ctx.fillText(String(v),marginX-16,yDn);}}
-        ctx.strokeStyle='#777'; ctx.lineWidth=2.0; const startIdx=vis-6; ctx.beginPath();
-        for(let i=startIdx;i<vis;i++){const x=xs[i],y=pointY(i);if(i===startIdx)ctx.moveTo(x,y);else ctx.lineTo(x,y);}ctx.stroke();
-        ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.font='bold 15px sans-serif';
-        for(let i=0;i<vis;i++){const x=xs[i],y=pointY(i),col=colorSlice[i];ctx.fillStyle=(col==='blue'?'#0b57d0':(col==='red'?'#d93025':'#666'));const shown=(values[i]===10?0:values[i]);ctx.fillText(String(shown),x,y);}
-        ctx.strokeStyle=isDark?'#40E0D0':'#000'; ctx.lineWidth=2.3;
-        function drawVZ(i,j){const v1=values[i],v2=values[j],c1=colorSlice[i],c2=colorSlice[j];if(c1!==c2)return;if(c1!=='blue'&&c1!=='red')return;if(Math.abs(v1-v2)!==1)return;const x1=xs[i],x2=xs[j],y1=pointY(i),y2=pointY(j),yMid=(y1+y2)/2,extra=10;ctx.beginPath();ctx.moveTo(x1-extra,yMid);ctx.lineTo(x2+extra,yMid);ctx.stroke();}
-        for(let i=0;i<vis-1;i++) drawVZ(i,i+1);
-        const winStart=Math.max(0,vis-6); for(let i=winStart;i<vis;i++) for(let j=i+2;j<vis;j++) drawVZ(i,j);
-        const lastLocal=vis-1,lastVal=values[lastLocal],lastCol=colorSlice[lastLocal],pairs=[];
-        for(let k=1;k<=5;k++){const idx=lastLocal-k;if(idx<0)break;const prevCol=colorSlice[idx];if(Math.abs(lastVal-values[idx])===1&&lastCol!==prevCol&&lastCol!=='#666'&&prevCol!=='#666')pairs.push(idx);}
-        if(pairs.length>0){ctx.strokeStyle=isDark?'#fff':'#000';ctx.lineWidth=2;const radius=10;const xL=xs[lastLocal],yL=pointY(lastLocal);ctx.beginPath();ctx.arc(xL,yL,radius,0,Math.PI*2);ctx.stroke();pairs.forEach(function(idx){const x=xs[idx],y=pointY(idx);ctx.beginPath();ctx.arc(x,y,radius,0,Math.PI*2);ctx.stroke();});ctx.font='bold 16px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';const shownLast=(values[lastLocal]===10?0:values[lastLocal]);ctx.fillStyle=(lastCol==='blue'?'#0b57d0':(lastCol==='red'?'#d93025':'#666'));ctx.fillText(String(shownLast),xL,yL);pairs.forEach(function(idx){const x=xs[idx],y=pointY(idx),col=colorSlice[idx],shown=(values[idx]===10?0:values[idx]);ctx.fillStyle=(col==='blue'?'#0b57d0':(col==='red'?'#d93025':'#666'));ctx.fillText(String(shown),x,y);});}
-      });
-    }
+    function renderXYArea() { /* kaldırıldı */ }
 
     // ========== GRID ==========
     function isEven(n){return(n%2)===0;}
@@ -925,7 +906,7 @@ body.day-mode #tradeChart { background: #f5f5f5; border-color: #ccc; }
     }
     function updateGridFromLast11() {
       if(currentGraph!=='XZ'){gridHistory=[];startGlobalSpan=null;startCooldown=0;renderTwoRowGrid();renderStartOverlay();return;}
-      const vis=Math.min(11,decimalDigits.length);
+      const vis=Math.min(7,decimalDigits.length);
       if(vis<=0){gridHistory=[];renderTwoRowGrid();renderStartOverlay();return;}
       const decSlice=decimalDigits.slice(-vis).map(function(x){let v=parseInt((x||'0'),10);if(isNaN(v))v=0;return v;});
       const colSlice=numColors.slice(-vis); const newHist=[];
@@ -947,12 +928,13 @@ body.day-mode #tradeChart { background: #f5f5f5; border-color: #ccc; }
       setTimeout(renderStartOverlay,0);
     }
     function detectStartGlobal() {
-      if(currentGraph!=='XZ') return; if(startCooldown>0) return; if(gridHistory.length<3) return;
+      if(currentGraph!=='XZ') return; if(startCooldown>0) return; if(gridHistory.length<2) return;
       const vis=gridHistory.length,firstGlobal=xzTickCounter-vis,n=vis;
-      const a=gridHistory[n-3].v,b=gridHistory[n-2].v,c=gridHistory[n-1].v;
-      const cond1=isEven(a)&&isEven(b)&&!isEven(c); const cond2=!isEven(a)&&!isEven(b)&&isEven(c);
-      if(cond1||cond2){
-        startGlobalSpan={from:firstGlobal+(n-3),to:firstGlobal+(n-1)};
+      const a=gridHistory[n-2].v, b=gridHistory[n-1].v;
+      // Tek+çift veya çift+tek yan yana gelirse start
+      const cond = (isEven(a) && !isEven(b)) || (!isEven(a) && isEven(b));
+      if(cond){
+        startGlobalSpan={from:firstGlobal+(n-2),to:firstGlobal+(n-1)};
         startCooldown=6; trendStartGlobal=firstGlobal+(n-1);
         lastTrendSignal=null; showTrendSignal(null);
         currentTrendData={direction:null,last3:[],colors:[],arrows:[]};
@@ -969,17 +951,44 @@ body.day-mode #tradeChart { background: #f5f5f5; border-color: #ccc; }
         topRow.innerHTML=''; botRow.innerHTML=''; const vis=gridHistory.length;
         if(vis===0){dividerLine.style.width='0px';return;}
         const topFragment=document.createDocumentFragment(),botFragment=document.createDocumentFragment();
+        // Buffer bilgisini önceden hazırla: hangi global index'lere ok gidecek
+        const arrowMap = {}; // globalIndex -> 'up' | 'down'
+        if(trendDrawBuffer && trendDrawBuffer.length >= 2 && startGlobalSpan) {
+          const firstGlobalBuf = xzTickCounter - vis;
+          const bufStartIdx = startGlobalSpan.from - firstGlobalBuf;
+          [[0,1],[2,3],[4,5]].forEach(function(pair) {
+            const bi0=pair[0], bi1=pair[1];
+            if(trendDrawBuffer.length <= bi1) return;
+            const gi0=bufStartIdx+bi0, gi1=bufStartIdx+bi1;
+            if(gi0<0||gi0>=vis||gi1<0||gi1>=vis) return;
+            const it0=trendDrawBuffer[bi0], it1=trendDrawBuffer[bi1];
+            const s0=it0.color==='red'?-it0.v:it0.v;
+            const s1=it1.color==='red'?-it1.v:it1.v;
+            arrowMap[gi0] = s0>s1 ? 'up' : 'down';
+            arrowMap[gi1] = s1>s0 ? 'up' : 'down';
+          });
+        }
+
         for(let i=0;i<vis;i++){
           const item=gridHistory[i],cellTop=document.createElement('div'),cellBot=document.createElement('div');
           cellTop.className='grid-cell grid-top'; cellBot.className='grid-cell grid-bottom';
           const showColor=(item.rawColor==='blue'||item.rawColor==='red')?item.rawColor:item.effColor;
           if(item.row==='top'){cellTop.style.color=showColor;cellTop.textContent=String(item.v);cellBot.textContent='';}
           else{cellBot.style.color=showColor;cellBot.textContent=String(item.v);cellTop.textContent='';}
+          // Ok ekle
+          if(arrowMap[i]) {
+            const targetCell = item.row==='top' ? cellTop : cellBot;
+            const arrow = document.createElement('div');
+            arrow.className = 'grid-arrow grid-arrow-' + arrowMap[i];
+            targetCell.appendChild(arrow);
+          }
           topFragment.appendChild(cellTop); botFragment.appendChild(cellBot);
         }
         topRow.appendChild(topFragment); botRow.appendChild(botFragment);
         const firstCell=topRow.querySelector('.grid-cell'); const cellW=firstCell?firstCell.getBoundingClientRect().width:36;
         dividerLine.style.width=(vis*cellW)+'px';
+
+
       });
     }
     function renderStartOverlay() {
@@ -1029,15 +1038,17 @@ body.day-mode #tradeChart { background: #f5f5f5; border-color: #ccc; }
         }
         const row=document.getElementById('numbersTop'); row.innerHTML=''; numColors=[];
         const activeArr=(currentGraph==='XZ'?decimalDigits:(currentGraph==='ZZ'?digits:combinedDigits));
-        const sliceArr=activeArr.slice(-11); const fragment=document.createDocumentFragment();
+        const sliceArr=activeArr.slice(-7); const fragment=document.createDocumentFragment();
         for(let i=0;i<sliceArr.length;i++){
-          const globalIndex=activeArr.length-11+i,up=globalIndex>0&&prices[globalIndex]>prices[globalIndex-1],down=globalIndex>0&&prices[globalIndex]<prices[globalIndex-1];
+          const globalIndex=activeArr.length-7+i,up=globalIndex>0&&prices[globalIndex]>prices[globalIndex-1],down=globalIndex>0&&prices[globalIndex]<prices[globalIndex-1];
           const color=up?'blue':(down?'red':'#666'); numColors.push(color);
           const box=document.createElement('div'); box.className='num-box'; box.style.background=color;
           box.innerText=(currentGraph==='Z.Z')?(sliceArr[i]||'').replace(',','.'):(sliceArr[i]||'0'); fragment.appendChild(box);
         }
         row.appendChild(fragment);
-        const last11=prices.slice(-11);
+
+
+        const last11=prices.slice(-7);
         if(chart){
           chart.data.datasets[0].data=last11;
           chart.data.datasets[0].pointBackgroundColor=last11.map(function(p,i){if(i===0)return'gray';if(p>last11[i-1])return'blue';if(p<last11[i-1])return'red';return'gray';});
@@ -1046,7 +1057,7 @@ body.day-mode #tradeChart { background: #f5f5f5; border-color: #ccc; }
           chart.update();
         }
         updateGridFromLast11();
-        setTimeout(function(){renderWormLines('numbersTop',wormLinesTop.slice(-11));renderXYArea();renderStartOverlay();drawTrendAngle();},40);
+        setTimeout(function(){renderWormLines('numbersTop',wormLinesTop.slice(-7));renderXYArea();renderStartOverlay();drawTrendAngle();},40);
       };
     }
 
@@ -1058,11 +1069,11 @@ body.day-mode #tradeChart { background: #f5f5f5; border-color: #ccc; }
       const ctx=document.getElementById('chart').getContext('2d');
       chart=new Chart(ctx,{
         type:'line',
-        data:{labels:Array.from({length:11},function(_,i){return(i+1).toString();}),datasets:[{data:Array(11).fill(null),borderColor:'#fff',borderWidth:1.5,backgroundColor:'rgba(255,255,255,0.05)',pointBackgroundColor:Array(11).fill('#fff'),pointRadius:2,pointHoverRadius:3}]},
+        data:{labels:Array.from({length:7},function(_,i){return(i+1).toString();}),datasets:[{data:Array(7).fill(null),borderColor:'#fff',borderWidth:1.5,backgroundColor:'rgba(255,255,255,0.05)',pointBackgroundColor:Array(7).fill('#fff'),pointRadius:2,pointHoverRadius:3}]},
         options:{plugins:{legend:{display:false},tooltip:{enabled:false}},scales:{y:{beginAtZero:false,grid:{color:'rgba(255,255,255,0.1)'},ticks:{color:'#fff'}},x:{grid:{color:'rgba(255,255,255,0.1)'},ticks:{color:'#fff'}}},animation:false,maintainAspectRatio:false},
         plugins:[{afterDatasetsDraw:function(chartInstance){
           const ctx=chartInstance.ctx,meta=chartInstance.getDatasetMeta(0),isDark=!document.body.classList.contains('day-mode');
-          const decs=decimalDigits.slice(-11),colors=numColors.slice(-11);
+          const decs=decimalDigits.slice(-7),colors=numColors.slice(-7);
           const values=decs.map(function(d){let v=parseInt((d||'0'),10);if(isNaN(v))v=0;return v;});
           for(let i=0;i<values.length-1;i++){
             const v1=values[i],v2=values[i+1],c1=colors[i],c2=colors[i+1]; if(Math.abs(v1-v2)!==1) continue;
@@ -1080,7 +1091,7 @@ body.day-mode #tradeChart { background: #f5f5f5; border-color: #ccc; }
             else{ctx.beginPath();ctx.moveTo(arrowX-stemLength*0.707,midY-stemLength*0.707);ctx.lineTo(arrowX,midY);ctx.stroke();ctx.beginPath();ctx.moveTo(arrowX,midY);ctx.lineTo(arrowX-arrowSize,midY);ctx.lineTo(arrowX,midY-arrowSize);ctx.closePath();ctx.fill();}
           }
           ctx.font='900 15px sans-serif';ctx.textAlign='center';ctx.textBaseline='bottom';
-          const digs=digits.slice(-11),combs=combinedDigits.slice(-11),worms=wormLinesTop.slice(-11);
+          const digs=digits.slice(-7),combs=combinedDigits.slice(-7),worms=wormLinesTop.slice(-7);
           meta.data.forEach(function(pt,i){
             let t=''; if(currentGraph==='XZ')t=decs[i]||'';else if(currentGraph==='ZZ')t=digs[i]||'';else t=(combs[i]||'').replace(',','.');
             if(pt&&pt.x!==undefined){let fillColor=colors[i]||'#000';if(fillColor==='blue')fillColor='#6A9FFF';ctx.fillStyle=fillColor;ctx.fillText(t,pt.x,pt.y-2);const wormColor=worms[i];if(wormColor==='blue'||wormColor==='red'){ctx.strokeStyle=wormColor;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(pt.x-5,pt.y-2);ctx.lineTo(pt.x+5,pt.y-2);ctx.stroke();}}
