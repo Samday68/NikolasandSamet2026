@@ -147,9 +147,30 @@ body.day-mode .panel-input { background: #fff; color: #000; border-color: #ccc; 
 .balance-label { font-size: 8px; font-weight: bold; }
 .balance-value { color: #4CAF50; font-size: 8px; font-weight: bold; }
 @media (max-width: 768px) { .balance-row { margin-top: 1px; } .balance-label, .balance-value { font-size: 7px; } }
-#tradeChart { width: 100%; height: 85px; background: #1a1a1a; border: 2px solid #666; border-radius: 6px; margin-top: 0; display: none; flex-shrink: 0; }
-body.day-mode #tradeChart { background: #f5f5f5; border-color: #ccc; }
-@media (max-width: 768px) { #tradeChart { height: 70px; border: 1.5px solid #666; margin-top: 4px; } body.day-mode #tradeChart { border: 1.5px solid #ccc; } }
+#tradeInfoPanel { width: 100%; background: #111; border: 1px solid #4a7a4a; border-top: none; border-radius: 0 0 6px 6px; padding: 3px 2px; margin-top: 0; display: none; }
+  .tinfo-row { display: flex; justify-content: space-between; }
+  .tinfo-cell { flex: 1; text-align: center; }
+  .tinfo-label { font-size: 5px; color: #aaa; font-weight: bold; white-space: nowrap; }
+  .tinfo-val { font-size: 7px; color: #fff; font-weight: bold; margin-top: 1px; }
+  #tradeChart { width: 100%; height: 85px; background: #000000; border: 2px solid #4a7a4a; border-radius: 6px 6px 0 0; margin-top: 0; display: none; flex-shrink: 0; }
+  #tradeCanvas { width: 100%; height: 100%; background: transparent; display: block; }
+body.day-mode #tradeInfoPanel { width: 100%; background: #111; border: 1px solid #4a7a4a; border-top: none; border-radius: 0 0 6px 6px; padding: 3px 2px; margin-top: 0; display: none; }
+  .tinfo-row { display: flex; justify-content: space-between; }
+  .tinfo-cell { flex: 1; text-align: center; }
+  .tinfo-label { font-size: 5px; color: #aaa; font-weight: bold; white-space: nowrap; }
+  .tinfo-val { font-size: 7px; color: #fff; font-weight: bold; margin-top: 1px; }
+  #tradeChart { background: #f5f5f5; border-color: #ccc; }
+@media (max-width: 768px) { #tradeInfoPanel { width: 100%; background: #111; border: 1px solid #4a7a4a; border-top: none; border-radius: 0 0 6px 6px; padding: 3px 2px; margin-top: 0; display: none; }
+  .tinfo-row { display: flex; justify-content: space-between; }
+  .tinfo-cell { flex: 1; text-align: center; }
+  .tinfo-label { font-size: 5px; color: #aaa; font-weight: bold; white-space: nowrap; }
+  .tinfo-val { font-size: 7px; color: #fff; font-weight: bold; margin-top: 1px; }
+  #tradeChart { height: 70px; border: 1.5px solid #666; margin-top: 4px; } body.day-mode #tradeInfoPanel { width: 100%; background: #111; border: 1px solid #4a7a4a; border-top: none; border-radius: 0 0 6px 6px; padding: 3px 2px; margin-top: 0; display: none; }
+  .tinfo-row { display: flex; justify-content: space-between; }
+  .tinfo-cell { flex: 1; text-align: center; }
+  .tinfo-label { font-size: 5px; color: #aaa; font-weight: bold; white-space: nowrap; }
+  .tinfo-val { font-size: 7px; color: #fff; font-weight: bold; margin-top: 1px; }
+  #tradeChart { border: 1.5px solid #ccc; } }
 #tradeCanvas { width: 100%; height: 100%; display: block; }
 #loadingIndicator { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #1a1a1a; display: flex; align-items: center; justify-content: center; z-index: 1000; transition: opacity 0.3s; }
 .spinner { width: 50px; height: 50px; border: 5px solid #333; border-top: 5px solid #0b57d0; border-radius: 50%; animation: spin 1s linear infinite; }
@@ -179,9 +200,23 @@ body.day-mode #tradeChart { background: #f5f5f5; border-color: #ccc; }
   border-top: 6px solid #cc1111;
   bottom: 2px;
 }
+
+/* ===== DESKTOP FULL SCREEN ===== */
+@media (min-width: 769px) {
+  #rightSection { flex: 0 0 192px; min-width: 192px; align-items: flex-start; }
+  #trendDrawBox { display: flex !important; flex-direction: row !important; flex-wrap: nowrap !important; gap: 4px; width: 100%; }
+  .draw-panel { width: 90px !important; height: 90px !important; flex: 0 0 90px !important; min-width: 90px; max-width: 90px; }
+  #trendBellBox { width: calc(75% - 2px); align-self: flex-end; }
+  #tradingPanel { width: 100%; }
+  #tradeChart { width: 100%; }
+  #tradeInfoPanel { width: 100%; }
+  #topbar { flex-wrap: nowrap; }
+  #apiInput { max-width: 200px; }
+  #price { flex-shrink: 0; }
+}
+  </style>
 ```
 
-  </style>
 </head>
 <body>
   <div id="loadingIndicator"><div class="spinner"></div></div>
@@ -257,6 +292,13 @@ body.day-mode #tradeChart { background: #f5f5f5; border-color: #ccc; }
   <div id="tradeChart">
     <canvas id="tradeCanvas"></canvas>
   </div>
+  <div id="tradeInfoPanel">
+    <div class="tinfo-row" id="tinfoRow1">
+      <div class="tinfo-cell"><div class="tinfo-label" id="tinfoL1">-</div><div class="tinfo-val" id="tinfoV1">-</div></div>
+      <div class="tinfo-cell"><div class="tinfo-label" id="tinfoL2">-</div><div class="tinfo-val" id="tinfoV2">-</div></div>
+      <div class="tinfo-cell"><div class="tinfo-label" id="tinfoL3">-</div><div class="tinfo-val" id="tinfoV3">-</div></div>
+    </div>
+  </div>
   <div id="tradingPanel">
     <div class="panel-header-row">
       <div class="duration-container">
@@ -280,7 +322,7 @@ body.day-mode #tradeChart { background: #f5f5f5; border-color: #ccc; }
       <span class="balance-value" id="balanceValue">$ 0.00</span>
     </div>
     <div class="balance-row">
-      <span class="balance-label">Profit:</span>
+      <span class="balance-label">Total Profit:</span>
       <span class="balance-value" id="profitValue">$ 0.00</span>
     </div>
   </div>
@@ -341,6 +383,8 @@ body.day-mode #tradeChart { background: #f5f5f5; border-color: #ccc; }
     let xzTickCounter = 0;
     let startGlobalSpan = null;
     let tradeActive = false;
+    let totalProfit = 0;
+    let bellMuted = false;
     let tradeType = '';
     let entrySpot = 0;
     let exitSpot = 0;
@@ -531,8 +575,8 @@ body.day-mode #tradeChart { background: #f5f5f5; border-color: #ccc; }
       const box = document.getElementById('trendBellBox');
       const label = document.getElementById('trendLabel');
       box.classList.remove('trend-up', 'trend-down');
-      if (direction === 'UP') { box.classList.add('trend-up'); label.textContent='Trend ↑'; if(lastTrendSignal!=='UP'){playUpTrendSound();lastTrendSignal='UP';} }
-      else if (direction === 'DOWN') { box.classList.add('trend-down'); label.textContent='Trend ↓'; if(lastTrendSignal!=='DOWN'){playDownTrendSound();lastTrendSignal='DOWN';} }
+      if (direction === 'UP') { box.classList.add('trend-up'); label.textContent='Trend ↑'; if(lastTrendSignal!=='UP'){if(!bellMuted)playUpTrendSound();lastTrendSignal='UP';} }
+      else if (direction === 'DOWN') { box.classList.add('trend-down'); label.textContent='Trend ↓'; if(lastTrendSignal!=='DOWN'){if(!bellMuted)playDownTrendSound();lastTrendSignal='DOWN';} }
       else { label.textContent='Trend'; lastTrendSignal=null; }
     }
 
@@ -897,11 +941,11 @@ body.day-mode #tradeChart { background: #f5f5f5; border-color: #ccc; }
       document.getElementById('connectBtn').style.background = '#1a7a1a';
       document.getElementById('apiInput').value = '';
       document.getElementById('balanceValue').innerText = '$ 0.00';
-      document.getElementById('profitValue').innerText = '$ 0.00';
+      document.getElementById('profitValue').innerText = '$ 0.00'; totalProfit = 0;
     }
     function connectAPI() {
       apiToken=document.getElementById('apiInput').value.trim();
-      if (!apiToken) { alert('Lütfen geçerli bir API token girin!'); return; }
+      if (!apiToken) { alert('Пожалуйста, введите действительный API токен!'); return; }
       wsReconnectEnabled = true;
       _openWS();
     }
@@ -941,31 +985,75 @@ body.day-mode #tradeChart { background: #f5f5f5; border-color: #ccc; }
       derivWS.onmessage=function(msg){
         const data=JSON.parse(msg.data);
         if(data.ping || data.pong){ wsLastPong = Date.now(); return; }
-        if(data.authorize){ document.getElementById('connectBtn').textContent='Disconnect'; document.getElementById('connectBtn').style.background='#d93025'; clearTimeout(wsReconnectTimer); alert('API Bağlantısı Başarılı!');if(data.authorize.balance)document.getElementById('balanceValue').innerText='$ '+parseFloat(data.authorize.balance).toFixed(2);derivWS.send(JSON.stringify({balance:1,subscribe:1}));}
+        if(data.authorize){ document.getElementById('connectBtn').textContent='Disconnect'; document.getElementById('connectBtn').style.background='#d93025'; clearTimeout(wsReconnectTimer); alert('Соединение с API установлено успешно!');if(data.authorize.balance)document.getElementById('balanceValue').innerText='$ '+parseFloat(data.authorize.balance).toFixed(2);derivWS.send(JSON.stringify({balance:1,subscribe:1}));}
         if(data.balance)document.getElementById('balanceValue').innerText='$ '+parseFloat(data.balance.balance).toFixed(2);
         if(data.proposal_open_contract){
           const contract=data.proposal_open_contract;
           if(tradeActive&&contract.tick_stream){
             const ticks=contract.tick_stream;
-            if(tradeData.length===0&&ticks.length>0){entrySpot=parseFloat(ticks[0].tick);barrier=parseFloat(contract.barrier||entrySpot);tradeData=[entrySpot];document.getElementById('tradeChart').style.display='block';}
+            if(tradeData.length===0&&ticks.length>0){entrySpot=parseFloat(ticks[0].tick);barrier=parseFloat(contract.barrier||entrySpot);tradeData=[entrySpot];
+            var _tc=document.getElementById('tradeChart');
+            _tc.style.display='block';
+            var _cv2=document.getElementById('tradeCanvas');
+            if(_cv2){var _cx2=_cv2.getContext('2d');_cv2.width=_tc.offsetWidth||185;_cv2.height=85;_cx2.fillStyle='#000000';_cx2.fillRect(0,0,_cv2.width,_cv2.height);}}
             if(ticks.length>tradeData.length&&tradeData.length<6){for(let i=tradeData.length;i<Math.min(ticks.length,6);i++)tradeData.push(parseFloat(ticks[i].tick));drawTradeChart();}
           }
-          if(contract.status==='won'||contract.status==='lost'){if(contract.exit_tick)exitSpot=parseFloat(contract.exit_tick);const profit=parseFloat(contract.profit||0);document.getElementById('profitValue').innerText=(profit>=0?'$ +':'$ ')+profit.toFixed(2);drawTradeChart();tradeActive=false;}
+          if(contract.status==='won'||contract.status==='lost'){
+            if(contract.exit_tick)exitSpot=parseFloat(contract.exit_tick);
+            const profit=parseFloat(contract.profit||0);
+            const buyPr=parseFloat(contract.buy_price||contract.purchase||0);
+            const finalPr=parseFloat(contract.sell_price||0);
+            totalProfit += profit; document.getElementById('profitValue').innerText=(totalProfit>=0?'$ +':'$ ')+totalProfit.toFixed(2);
+            // tradeInfo panelini sonuçla güncelle
+            if(contract.status==='won'){
+              document.getElementById('tinfoL1').textContent='Buy price';
+              document.getElementById('tinfoV1').textContent=buyPr.toFixed(2)+' USD';
+              document.getElementById('tinfoL2').textContent='Final price';
+              document.getElementById('tinfoV2').textContent=finalPr.toFixed(2)+' USD';
+              document.getElementById('tinfoL3').textContent='Profit';
+              document.getElementById('tinfoV3').textContent='+'+profit.toFixed(2)+' USD';
+              document.getElementById('tinfoV3').style.color='#4caf50';
+            } else {
+              document.getElementById('tinfoL1').textContent='Buy price';
+              document.getElementById('tinfoV1').textContent=buyPr.toFixed(2)+' USD';
+              document.getElementById('tinfoL2').textContent='Final price';
+              document.getElementById('tinfoV2').textContent=finalPr.toFixed(2)+' USD';
+              document.getElementById('tinfoL3').textContent='Loss';
+              document.getElementById('tinfoV3').textContent=profit.toFixed(2)+' USD';
+              document.getElementById('tinfoV3').style.color='#f44336';
+            }
+            drawTradeChart();tradeActive=false;setTimeout(function(){document.getElementById('tradeChart').style.display='none';document.getElementById('tradeInfoPanel').style.display='none';},2000);}
         }
-        if(data.error)alert('API Hatası: '+data.error.message);
+        if(data.error)alert('Ошибка API: '+data.error.message);
       };
     }
     function placeTrade(type) {
-      if(!apiToken||!derivWS||derivWS.readyState!==WebSocket.OPEN){alert('Önce API bağlantısı yapın!');return;}
+      if(!apiToken||!derivWS||derivWS.readyState!==WebSocket.OPEN){alert('Сначала установите соединение с API!');return;}
       const stakeInput=document.getElementById('stakeInput'); let stake=parseFloat(stakeInput.value);
-      if(isNaN(stake)||stake<0.35){alert('Minimum stake 0.35 USD olmalı!');stakeInput.value='1';return;}
+      if(isNaN(stake)||stake<0.35){alert('Минимальная ставка должна быть 0.35 USD!');stakeInput.value='1';return;}
       const proposal={proposal:1,amount:stake,basis:'stake',contract_type:type,currency:'USD',duration:5,duration_unit:'t',symbol:currentPair};
       derivWS.send(JSON.stringify(proposal));
       const handleProposal=function(msg){
         const data=JSON.parse(msg.data);
         if(data.proposal){derivWS.send(JSON.stringify({buy:data.proposal.id,price:stake}));}
-        if(data.buy){contractId=data.buy.contract_id;tradeActive=true;tradeType=type;entrySpot=0;exitSpot=0;barrier=0;tradeData=[];derivWS.send(JSON.stringify({proposal_open_contract:1,contract_id:contractId,subscribe:1}));derivWS.removeEventListener('message',handleProposal);}
-        if(data.error){alert('Trade Hatası: '+data.error.message);derivWS.removeEventListener('message',handleProposal);}
+        if(data.buy){contractId=data.buy.contract_id;tradeActive=true;tradeType=type;entrySpot=0;exitSpot=0;barrier=0;tradeData=[];
+          // Canvas temizle - önceki işlem görüntüsü silinsin
+          var _cv=document.getElementById('tradeCanvas');
+          if(_cv){var _cx=_cv.getContext('2d');_cx.clearRect(0,0,_cv.width,_cv.height);}
+          // tradeInfo panelini göster - işlem açık
+          var _buyPrice = data.buy.buy_price || 0;
+          var _payout = data.buy.payout || 0;
+          var _potProfit = (_payout - _buyPrice).toFixed(2);
+          document.getElementById('tinfoL1').textContent='Potential Payout';
+          document.getElementById('tinfoV1').textContent=parseFloat(_payout).toFixed(2)+' USD';
+          document.getElementById('tinfoL2').textContent='Total Cost';
+          document.getElementById('tinfoV2').textContent=parseFloat(_buyPrice).toFixed(2)+' USD';
+          document.getElementById('tinfoL3').textContent='Potential Profit';
+          document.getElementById('tinfoV3').textContent=_potProfit+' USD';
+          document.getElementById('tinfoV3').style.color='#4caf50';
+          document.getElementById('tradeInfoPanel').style.display='block';
+          derivWS.send(JSON.stringify({proposal_open_contract:1,contract_id:contractId,subscribe:1}));derivWS.removeEventListener('message',handleProposal);}
+        if(data.error){alert('Ошибка сделки: '+data.error.message);derivWS.removeEventListener('message',handleProposal);}
       };
       derivWS.addEventListener('message',handleProposal);
     }
@@ -976,7 +1064,7 @@ body.day-mode #tradeChart { background: #f5f5f5; border-color: #ccc; }
         const canvas=document.getElementById('tradeCanvas'); if(!canvas||tradeData.length===0) return;
         const rect=canvas.getBoundingClientRect(); const dpr=window.devicePixelRatio||1;
         canvas.width=rect.width*dpr; canvas.height=rect.height*dpr;
-        const ctx=canvas.getContext('2d'); ctx.setTransform(dpr,0,0,dpr,0,0); ctx.clearRect(0,0,rect.width,rect.height);
+        const ctx=canvas.getContext('2d'); ctx.setTransform(dpr,0,0,dpr,0,0); ctx.clearRect(0,0,rect.width,rect.height); ctx.fillStyle='#000000'; ctx.fillRect(0,0,rect.width,rect.height);
         const isDark=!document.body.classList.contains('day-mode');
         const width=rect.width,height=rect.height,padding=12;
         const allValues=tradeData.concat([barrier]); const minVal=Math.min(...allValues),maxVal=Math.max(...allValues);
@@ -1242,6 +1330,10 @@ addEventListener('DOMContentLoaded', function() {
         if(wormLinesTop.length > 100) wormLinesTop.splice(0, wormLinesTop.length - 100);
       }, 300000); // 5 dakika
 
+      document.getElementById('trendBellBox').addEventListener('click', function(){
+        bellMuted = !bellMuted;
+        document.getElementById('trendBellIcon').textContent = bellMuted ? '🔕' : '🔔';
+      });
       document.getElementById('connectBtn').addEventListener('click',function(){ if(document.getElementById('connectBtn').textContent.trim()==='Disconnect'){ disconnectAPI(); } else { connectAPI(); } });
       document.getElementById('saveCheckbox').addEventListener('change',toggleSaveToken);
       document.getElementById('autoTradeBtn').addEventListener('click',toggleAutoTrade);
