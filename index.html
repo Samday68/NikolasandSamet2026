@@ -7,12 +7,12 @@
   <title>VOLATILITY ANALYZER V.2.0</title>
   <link rel="manifest" href="manifest.json">
   <style>
-    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; } html { overflow: hidden; height: 100%; }
-    body { font-family: sans-serif; background: #1a1a1a; color: #fff; margin: 0; padding: 4px 3px; transition: background-color 0.3s, color 0.3s; overflow-x: hidden; overflow-y: auto; }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; } html { overflow: auto; height: 100%; }
+    body { font-family: sans-serif; background: #1a1a1a; color: #fff; margin: 0; padding: 4px 3px; transition: background-color 0.3s, color 0.3s; overflow-x: auto; overflow-y: auto; }
     body.day-mode { background: #fff; color: #000; }
-    #mainContainer { display: flex; gap: 4px; max-width: 100%; margin: 0 auto; overflow: hidden; }
-    #leftSection { flex: 1; min-width: 0; max-width: 100%; }
-    #rightSection { flex: 0 0 85px; display: flex; flex-direction: column; gap: 6px; align-items: stretch; overflow: hidden; }
+    #mainContainer { display: flex; gap: 4px; max-width: 100%; margin: 0 auto; overflow: visible; }
+    #leftSection { flex: 1; min-width: 0; max-width: 100%;  z-index: 2; position: relative; }
+    #rightSection { flex: 0 0 185px; display: flex; flex-direction: column; gap: 6px; align-items: stretch; overflow: visible;  z-index: 1; }
     @media (max-width: 768px) { #mainContainer { gap: 3px; } #leftSection { flex: 1; min-width: 0; } #rightSection { flex: 0 0 70px; } body { padding: 3px 2px; } }
     #headerSection { text-align: center; margin: 4px 0; width: 100%; }
     #headerLogo { width: 100%; height: 65px; display: block; object-fit: contain; object-position: center; margin: 0 auto; transition: opacity 0.3s; }
@@ -28,21 +28,21 @@
     body.day-mode .pair-btn { background: #e0e0e0; color: #000; }
     .pair-btn.active { background: #000; color: #fff; }
     @media (max-width: 768px) { .pair-btn { padding: 3px 1px; font-size: 6.5px; min-width: 26px; } }
-    #startStopBtn { padding: 4px 7px; font-size: 8.5px; font-weight: 900; cursor: pointer; border: 2px solid #4CAF50; border-radius: 12px; background: #4CAF50; color: #fff; display: flex; align-items: center; justify-content: center; gap: 2px; white-space: nowrap; flex-shrink: 0; }
+    #startStopBtn { padding: 3px 5px; font-size: 7.5px; font-weight: 900; cursor: pointer; border: 2px solid #4CAF50; border-radius: 12px; background: #4CAF50; color: #fff; display: flex; align-items: center; justify-content: center; gap: 2px; white-space: nowrap; flex-shrink: 0; }
     #startStopBtn.stopped { background: #d93025; border-color: #d93025; }
     @media (max-width: 768px) { #startStopBtn { padding: 4px 8px; font-size: 9px; } }
-    #topbar { display: flex; gap: 3px; margin: 4px 0; align-items: center; flex-wrap: wrap; }
+    #topbar { display: flex; gap: 3px; margin: 4px 0; align-items: center; flex-wrap: nowrap; }
     #time { background: #000; color: #fff; padding: 3px 6px; border-radius: 3px; font-weight: bold; font-size: 9px; white-space: nowrap; height: 21px; display: flex; align-items: center; }
     body.day-mode #time { background: #333; }
-    #connectBtn { background: #d93025; color: #fff; border: none; padding: 3px 8px; border-radius: 3px; cursor: pointer; font-weight: bold; font-size: 9px; white-space: nowrap; height: 21px; display: flex; align-items: center; }
-    #apiInput { flex: 1; min-width: 80px; background: #0b57d0; color: #fff; border: none; padding: 3px 6px; border-radius: 3px; font-size: 9px; height: 21px; }
+    #connectBtn { background: #1a7a1a; color: #fff; border: none; padding: 3px 8px; border-radius: 3px; cursor: pointer; font-weight: bold; font-size: 9px; white-space: nowrap; height: 21px; display: flex; align-items: center; }
+    #apiInput { flex: 1; min-width: 60px; max-width: 120px; background: #0b57d0; color: #fff; border: none; padding: 3px 6px; border-radius: 3px; font-size: 9px; height: 21px; }
     #apiInput::placeholder { color: #cce5ff; }
     #saveGroup { display: flex; align-items: center; gap: 3px; padding: 0px 5px; border-radius: 3px; outline: 2px solid #fff; height: 21px; }
     body.day-mode #saveGroup { outline: 2px solid #000; }
     #saveCheckbox { width: 13px; height: 13px; cursor: pointer; accent-color: #0b57d0; background: #fff; border: 2px solid #fff; border-radius: 2px; padding: 2px; }
     body.day-mode #saveCheckbox { background: #fff; border: 2px solid #000; }
     #saveLabel { font-size: 8px; font-weight: bold; cursor: pointer; white-space: nowrap; user-select: none; }
-    #price { background: #0b57d0; color: #fff; padding: 3px 8px; border-radius: 3px; font-weight: bold; font-size: 10px; text-align: center; white-space: nowrap; height: 21px; display: flex; align-items: center; }
+    #price { background: #0b57d0; color: #fff; padding: 3px 8px; border-radius: 3px; font-weight: bold; font-size: 10px; text-align: center; white-space: nowrap; height: 21px; display: flex; align-items: center; flex-shrink: 0; }
     @media (max-width: 768px) { #time, #connectBtn { font-size: 8px; padding: 2px 6px; height: 19px; } #apiInput { font-size: 8px; padding: 2px 5px; min-width: 60px; height: 19px; } #saveGroup { gap: 2px; padding: 0px 4px; height: 19px; } #saveCheckbox { width: 12px; height: 12px; } #saveLabel { font-size: 7px; } #price { font-size: 9px; padding: 2px 6px; height: 19px; } }
     #chartContainer { position: relative; width: 100%; }
     #chart { width: 100%; height: 180px; position: relative; z-index: 2; }
@@ -72,12 +72,13 @@
 /* ===== SAĞ BÖLÜM PANELLERİ ===== */
 
 /* ===== YENİ TREND ÇİZİM KUTULARI ===== */
-#trendDrawBox { width: 100%; display: flex; flex-direction: column; gap: 4px; margin-top: 0; }
-@media (max-width: 768px) { #trendDrawBox { width: 100%; display: flex; flex-direction: column; gap: 4px; margin-top: 0; } }
+#trendDrawBox { width: auto; display: flex; flex-direction: row; gap: 4px; margin-top: 0; overflow: visible; }
+@media (max-width: 768px) { #trendDrawBox { width: auto; display: flex; flex-direction: row; gap: 4px; margin-top: 0; overflow: visible; } }
 
 .draw-panel {
-  width: 100%;
+  width: 90px;
   height: 90px;
+  flex: 0 0 90px;
   background: #111;
   border: 2px solid #444;
   border-radius: 6px;
@@ -85,7 +86,7 @@
   position: relative;
 }
 body.day-mode .draw-panel { background: #f0f0f0; border-color: #bbb; }
-@media (max-width: 768px) { .draw-panel { height: 75px; } }
+@media (max-width: 768px) { .draw-panel { height: 75px; width: 75px; flex: 0 0 75px; } }
 
 .draw-panel svg {
   width: 100%;
@@ -94,13 +95,13 @@ body.day-mode .draw-panel { background: #f0f0f0; border-color: #bbb; }
 }
 /* ===== YENİ TREND ÇİZİM KUTULARI SONU ===== */
 
-#trendBellBox { width: 100%; height: 45px; background: #666; border: 2px solid #444; border-radius: 6px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; transition: background 0.3s, border-color 0.3s; flex-shrink: 0; }
+#trendBellBox { width: calc(75% - 2px); height: 45px; background: #666; border: 2px solid #444; border-radius: 6px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; transition: background 0.3s, border-color 0.3s; flex-shrink: 0; align-self: flex-end; }
 #trendBellBox.trend-up { background: #0066ff; border-color: #0044cc; }
 #trendBellBox.trend-down { background: #cc0000; border-color: #990000; }
-body.day-mode #trendBellBox { width: 100%; height: 45px; background: #666; border: 2px solid #444; border-radius: 6px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; transition: background 0.3s, border-color 0.3s; flex-shrink: 0; }
+body.day-mode #trendBellBox { width: calc(75% - 2px); height: 45px; background: #666; border: 2px solid #444; border-radius: 6px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; transition: background 0.3s, border-color 0.3s; flex-shrink: 0; align-self: flex-end; }
 body.day-mode #trendBellBox.trend-up { background: #0066ff; border-color: #0044cc; }
 body.day-mode #trendBellBox.trend-down { background: #cc0000; border-color: #990000; }
-@media (max-width: 768px) { #trendBellBox { width: 100%; height: 45px; background: #666; border: 2px solid #444; border-radius: 6px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; transition: background 0.3s, border-color 0.3s; flex-shrink: 0; } }
+@media (max-width: 768px) { #trendBellBox { width: calc(75% - 2px); height: 45px; background: #666; border: 2px solid #444; border-radius: 6px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; transition: background 0.3s, border-color 0.3s; flex-shrink: 0; align-self: flex-end; } }
 #trendBellIcon { font-size: 18px; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.3)); }
 @media (max-width: 768px) { #trendBellIcon { font-size: 16px; } }
 #trendLabel { font-size: 9px; font-weight: 900; color: #fff; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); }
@@ -114,7 +115,13 @@ body.day-mode #tradingPanel { background: #f5f5f5; border-color: #ccc; }
 .panel-label { font-size: 8px; font-weight: bold; white-space: nowrap; }
 .panel-value { background: #555; color: #fff; padding: 3px 6px; border-radius: 4px; text-align: center; font-size: 10px; font-weight: bold; border: 1.5px solid #666; min-width: 30px; }
 body.day-mode .panel-value { background: #fff; color: #000; border-color: #ccc; }
-#autoTradeBtn { position: absolute; top: 0; right: 0; width: 18px; height: 9px; border-radius: 4.5px; border: 1px solid #666; background: linear-gradient(to bottom, #444, #222); color: #fff; font-size: 4px; font-weight: 900; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s; padding: 0; letter-spacing: 0.5px; box-shadow: 0 1px 2px rgba(0,0,0,0.5); z-index: 10; }
+
+#martingaleBtn { position: absolute; top: 0; right: 36px; width: 32px; height: 12px; border-radius: 6px; border: 1px solid #666; background: linear-gradient(to bottom, #444, #222); color: #fff; font-size: 5.5px; font-weight: 900; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 10; }
+#martingaleBtn.active { background: linear-gradient(to bottom, #00aa00, #006600); border-color: #004400; }
+#martingaleBtn:hover { transform: translateY(-0.5px); }
+#martingaleInput { position: absolute; top: 0; right: 72px; width: 32px; height: 12px; background: #333; color: #fff; border: 1px solid #666; border-radius: 3px; font-size: 6px; text-align: center; padding: 0 1px; }
+@media (max-width: 768px) { #martingaleBtn { width: 16px; height: 8px; font-size: 3.5px; right: 20px; } #martingaleInput { width: 26px; height: 8px; font-size: 4.5px; right: 38px; } }
+#autoTradeBtn { position: absolute; top: 0; right: 0; width: 32px; height: 12px; border-radius: 6px; border: 1px solid #666; background: linear-gradient(to bottom, #444, #222); color: #fff; font-size: 5.5px; font-weight: 900; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s; padding: 0; letter-spacing: 0.5px; box-shadow: 0 1px 2px rgba(0,0,0,0.5); z-index: 10; }
 #autoTradeBtn:hover { transform: translateY(-0.5px); box-shadow: 0 1.5px 3px rgba(0,0,0,0.6); }
 #autoTradeBtn:active { transform: translateY(0); box-shadow: 0 0.5px 1px rgba(0,0,0,0.4); }
 #autoTradeBtn.active { background: linear-gradient(to bottom, #ff3333, #cc0000); border-color: #990000; color: #fff; text-shadow: 0 0.5px 0.5px rgba(0,0,0,0.5); animation: autoPulse 1.5s infinite; }
@@ -206,7 +213,7 @@ body.day-mode #tradeChart { background: #f5f5f5; border-color: #ccc; }
       <div id="topbar">
         <div id="time">GMT 00:00:00</div>
         <button id="connectBtn">Connect</button>
-        <input type="text" id="apiInput" placeholder="Enter Token_ID:">
+        <input type="password" id="apiInput" placeholder="Enter Token_ID:">
         <div id="saveGroup">
           <input type="checkbox" id="saveCheckbox">
           <label id="saveLabel" for="saveCheckbox">Save</label>
@@ -235,10 +242,10 @@ body.day-mode #tradeChart { background: #f5f5f5; border-color: #ccc; }
   <!-- YENİ: Trend Çizim Kutuları (Panel 1 ve Panel 2) -->
   <div id="trendDrawBox">
     <div class="draw-panel" id="drawPanel1">
-      <svg id="drawSvg1" viewBox="0 0 100 90" preserveAspectRatio="none"></svg>
+      <svg id="drawSvg1" viewBox="0 0 100 100" preserveAspectRatio="none"></svg>
     </div>
     <div class="draw-panel" id="drawPanel2">
-      <svg id="drawSvg2" viewBox="0 0 100 90" preserveAspectRatio="none"></svg>
+      <svg id="drawSvg2" viewBox="0 0 100 100" preserveAspectRatio="none"></svg>
     </div>
   </div>
 
@@ -247,6 +254,9 @@ body.day-mode #tradeChart { background: #f5f5f5; border-color: #ccc; }
     <span id="trendBellIcon">🔔</span>
     <span id="trendLabel">Trend</span>
   </div>
+  <div id="tradeChart">
+    <canvas id="tradeCanvas"></canvas>
+  </div>
   <div id="tradingPanel">
     <div class="panel-header-row">
       <div class="duration-container">
@@ -254,6 +264,8 @@ body.day-mode #tradeChart { background: #f5f5f5; border-color: #ccc; }
         <div class="panel-value">5</div>
       </div>
       <button id="autoTradeBtn">AUTO</button>
+      <button id="martingaleBtn">MARTİN</button>
+      <input type="number" id="martingaleInput" value="2.2" min="1" step="0.1">
     </div>
     <div class="panel-row">
       <div class="panel-label">STAKE:</div>
@@ -272,9 +284,7 @@ body.day-mode #tradeChart { background: #f5f5f5; border-color: #ccc; }
       <span class="balance-value" id="profitValue">$ 0.00</span>
     </div>
   </div>
-  <div id="tradeChart">
-    <canvas id="tradeCanvas"></canvas>
-  </div>
+  
 </div>
 ```
 
@@ -299,6 +309,20 @@ body.day-mode #tradeChart { background: #f5f5f5; border-color: #ccc; }
     let currentUpDownSignal = null;
     let lastUpDownSignal = null;
     let autoTradeEnabled = false;
+    let martingaleEnabled = false;
+    let martingaleMultiplier = 2.2;
+    let lastStake = 1;
+    let wsReconnectEnabled = false;
+    // Performans: throttle/debounce
+    let _rafPending = false;
+    let _lastTickRender = 0;
+    let _tickRenderThrottle = 80; // ms - her 80ms'de bir render
+    let _pendingRender = false;
+    let wsReconnectTimer = null;
+    let wsPingTimer = null;
+    let wsHeartbeatTimer = null;
+    let wsLastPong = 0;
+    let wsReconnectDelay = 5000;
     let autoTradeInProgress = false;
     let ws = null;
     let derivWS = null;
@@ -458,6 +482,12 @@ body.day-mode #tradeChart { background: #f5f5f5; border-color: #ccc; }
     }
 
     // ========== AUTO TRADE ==========
+    function toggleMartingale() {
+      martingaleEnabled = !martingaleEnabled;
+      const btn = document.getElementById('martingaleBtn');
+      if(martingaleEnabled) { btn.classList.add('active'); }
+      else { btn.classList.remove('active'); }
+    }
     function toggleAutoTrade() {
       autoTradeEnabled = !autoTradeEnabled;
       const btn = document.getElementById('autoTradeBtn');
@@ -592,7 +622,7 @@ body.day-mode #tradeChart { background: #f5f5f5; border-color: #ccc; }
     }
 
     function drawThreePointPanel(svg, points) {
-      const W = 100, H = 90;
+      const W = 100, H = 100;
       const RADIUS = 8;
       const GAP = 6;
       const ns = 'http://www.w3.org/2000/svg';
@@ -622,7 +652,7 @@ body.day-mode #tradeChart { background: #f5f5f5; border-color: #ccc; }
       const allVals = [firstVal, midVal, lastVal];
       const minAll = Math.min(...allVals);
       const maxAll = Math.max(...allVals);
-      const topY = 8, botY = H - 8;
+      const topY = 10, botY = H - 10;
       let midY;
       if (midVal === maxAll) {
         midY = topY;
@@ -761,7 +791,7 @@ body.day-mode #tradeChart { background: #f5f5f5; border-color: #ccc; }
       chart.options.scales.x.grid.color=isDark?'rgba(255,255,255,0.1)':'rgba(0,0,0,0.1)';
       chart.options.scales.y.ticks.color=isDark?'#fff':'#000';
       chart.options.scales.x.ticks.color=isDark?'#fff':'#000';
-      chart.update();
+      chart.update('none');
     }
     function toggleTheme() {
       const body = document.body; const btn = document.getElementById('themeToggle');
@@ -795,7 +825,7 @@ body.day-mode #tradeChart { background: #f5f5f5; border-color: #ccc; }
       else if (currentGraph==='ZZ') currentGraph='Z.Z';
       else currentGraph='XZ';
       document.getElementById('graphToggle').innerText=currentGraph;
-      if (chart) chart.update();
+      if (chart) chart.update('none');
       renderXYArea(); renderTwoRowGrid(); renderStartOverlay();
     }
     function selectPair(pair) {
@@ -816,14 +846,102 @@ body.day-mode #tradeChart { background: #f5f5f5; border-color: #ccc; }
     }
 
     // ========== API ==========
+    function _triggerReconnect() {
+      if(!wsReconnectEnabled) return;
+      clearInterval(wsPingTimer);
+      clearInterval(wsHeartbeatTimer);
+      // AUTO'yu durdur - bağlantı kopukken işlem açılmasın
+      if(autoTradeEnabled){ autoTradeEnabled = false; const ab=document.getElementById('autoTradeBtn'); if(ab) ab.classList.remove('active'); }
+      // Kullanıcıya sarı uyarı
+      const btn = document.getElementById('connectBtn');
+      if(btn){ btn.textContent = 'Bağlanıyor...'; btn.style.background = '#b8860b'; }
+      // Exponential backoff: 5s → 10s → 20s → max 30s
+      clearTimeout(wsReconnectTimer);
+      wsReconnectTimer = setTimeout(function(){
+        if(wsReconnectEnabled){ wsReconnectDelay = Math.min(wsReconnectDelay * 2, 30000); _openWS(); }
+      }, wsReconnectDelay);
+    }
+    function _setupWSEvents() {
+      derivWS.onclose = function(e) {
+        if(!wsReconnectEnabled) return;
+        _triggerReconnect();
+      };
+      derivWS.onerror = function(e) {
+        if(derivWS) { try { derivWS.close(); } catch(ex){} }
+      };
+    }
+    function _scheduleRender() {
+      if(_pendingRender) return; // Zaten bekleyen render var
+      _pendingRender = true;
+      const now = Date.now();
+      const elapsed = now - _lastTickRender;
+      const delay = Math.max(0, _tickRenderThrottle - elapsed);
+      setTimeout(function(){
+        _pendingRender = false;
+        _lastTickRender = Date.now();
+        renderWormLines('numbersTop', wormLinesTop.slice(-7));
+        renderXYArea();
+        renderStartOverlay();
+        drawTrendAngle();
+      }, delay);
+    }
+    function disconnectAPI() {
+      wsReconnectEnabled = false;
+      clearTimeout(wsReconnectTimer);
+      clearInterval(wsPingTimer);
+      clearInterval(wsHeartbeatTimer);
+      wsReconnectDelay = 5000;
+      if(derivWS) { try { derivWS.close(); } catch(e){} derivWS = null; }
+      apiToken = '';
+      document.getElementById('connectBtn').textContent = 'Connect';
+      document.getElementById('connectBtn').style.background = '#1a7a1a';
+      document.getElementById('apiInput').value = '';
+      document.getElementById('balanceValue').innerText = '$ 0.00';
+      document.getElementById('profitValue').innerText = '$ 0.00';
+    }
     function connectAPI() {
       apiToken=document.getElementById('apiInput').value.trim();
       if (!apiToken) { alert('Lütfen geçerli bir API token girin!'); return; }
+      wsReconnectEnabled = true;
+      _openWS();
+    }
+    function _openWS() {
+      if(derivWS && derivWS.readyState === WebSocket.OPEN) return;
       derivWS=new WebSocket('wss://ws.binaryws.com/websockets/v3?app_id=1089');
-      derivWS.onopen=function(){derivWS.send(JSON.stringify({authorize:apiToken}));};
+      derivWS.onopen=function(){
+        wsReconnectDelay = 5000; // başarılı bağlantıda delay sıfırla
+        wsLastPong = Date.now();
+        derivWS.send(JSON.stringify({authorize:apiToken}));
+
+        // Ping: her 25 saniyede bir gönder
+        clearInterval(wsPingTimer);
+        wsPingTimer = setInterval(function(){
+          if(derivWS && derivWS.readyState === WebSocket.OPEN){
+            derivWS.send(JSON.stringify({ping:1}));
+          }
+        }, 25000);
+
+        // Heartbeat: her 10 saniyede readyState + pong kontrolü
+        clearInterval(wsHeartbeatTimer);
+        wsHeartbeatTimer = setInterval(function(){
+          if(!wsReconnectEnabled) return;
+          // readyState OPEN değilse hemen reconnect
+          if(!derivWS || derivWS.readyState !== WebSocket.OPEN){
+            _triggerReconnect();
+            return;
+          }
+          // Son pong 60 saniyeden eskiyse bağlantı ölü say
+          if(Date.now() - wsLastPong > 60000){
+            derivWS.close();
+            _triggerReconnect();
+          }
+        }, 10000);
+      };
+      _setupWSEvents();
       derivWS.onmessage=function(msg){
         const data=JSON.parse(msg.data);
-        if(data.authorize){alert('API Bağlantısı Başarılı!');if(data.authorize.balance)document.getElementById('balanceValue').innerText='$ '+parseFloat(data.authorize.balance).toFixed(2);derivWS.send(JSON.stringify({balance:1,subscribe:1}));}
+        if(data.ping || data.pong){ wsLastPong = Date.now(); return; }
+        if(data.authorize){ document.getElementById('connectBtn').textContent='Disconnect'; document.getElementById('connectBtn').style.background='#d93025'; clearTimeout(wsReconnectTimer); alert('API Bağlantısı Başarılı!');if(data.authorize.balance)document.getElementById('balanceValue').innerText='$ '+parseFloat(data.authorize.balance).toFixed(2);derivWS.send(JSON.stringify({balance:1,subscribe:1}));}
         if(data.balance)document.getElementById('balanceValue').innerText='$ '+parseFloat(data.balance.balance).toFixed(2);
         if(data.proposal_open_contract){
           const contract=data.proposal_open_contract;
@@ -945,7 +1063,8 @@ body.day-mode #tradeChart { background: #f5f5f5; border-color: #ccc; }
       }
     }
     function renderTwoRowGrid() {
-      requestAnimationFrame(()=>{
+      if(_rafPending) return; _rafPending=true;
+      requestAnimationFrame(()=>{ _rafPending=false;
         const topRow=document.getElementById('gridTopRow'),botRow=document.getElementById('gridBottomRow'),dividerLine=document.getElementById('gridDividerLine');
         if(!topRow||!botRow||!dividerLine) return;
         topRow.innerHTML=''; botRow.innerHTML=''; const vis=gridHistory.length;
@@ -1019,11 +1138,11 @@ body.day-mode #tradeChart { background: #f5f5f5; border-color: #ccc; }
         const d=JSON.parse(msg.data);
         if(d.history){
           d.history.prices.forEach(function(p){
-            const priceStr=String(p),price=parseFloat(p); prices.push(price);
+            const priceStr=String(p),price=parseFloat(p); prices.push(price); if(prices.length>200) prices.shift();
             const parts=priceStr.split('.');const intPart=parts[0];let decPart=parts[1]||'0';if(decPart.length===1)decPart=decPart+'0';
-            const lastTwo=intPart.slice(-2); digits.push(lastTwo);
-            const lastDec=decPart.charAt(decPart.length-1)||'0'; decimalDigits.push(lastDec); xzTickCounter++;
-            const lastInt=intPart.slice(-1),firstDec=decPart.charAt(0)||'0'; combinedDigits.push(lastInt+','+firstDec); updateWorm();
+            const lastTwo=intPart.slice(-2); digits.push(lastTwo); if(digits.length>200) digits.shift();
+            const lastDec=decPart.charAt(decPart.length-1)||'0'; decimalDigits.push(lastDec); if(decimalDigits.length>200) decimalDigits.shift(); xzTickCounter++;
+            const lastInt=intPart.slice(-1),firstDec=decPart.charAt(0)||'0'; combinedDigits.push(lastInt+','+firstDec); if(combinedDigits.length>200) combinedDigits.shift(); updateWorm();
           });
         }
         if(d.tick){
@@ -1041,7 +1160,7 @@ body.day-mode #tradeChart { background: #f5f5f5; border-color: #ccc; }
         const sliceArr=activeArr.slice(-7); const fragment=document.createDocumentFragment();
         for(let i=0;i<sliceArr.length;i++){
           const globalIndex=activeArr.length-7+i,up=globalIndex>0&&prices[globalIndex]>prices[globalIndex-1],down=globalIndex>0&&prices[globalIndex]<prices[globalIndex-1];
-          const color=up?'blue':(down?'red':'#666'); numColors.push(color);
+          const color=up?'blue':(down?'red':'#666'); numColors.push(color); if(numColors.length>200) numColors.shift();
           const box=document.createElement('div'); box.className='num-box'; box.style.background=color;
           box.innerText=(currentGraph==='Z.Z')?(sliceArr[i]||'').replace(',','.'):(sliceArr[i]||'0'); fragment.appendChild(box);
         }
@@ -1054,10 +1173,10 @@ body.day-mode #tradeChart { background: #f5f5f5; border-color: #ccc; }
           chart.data.datasets[0].pointBackgroundColor=last11.map(function(p,i){if(i===0)return'gray';if(p>last11[i-1])return'blue';if(p<last11[i-1])return'red';return'gray';});
           chart.data.datasets[0].pointBorderColor=Array(last11.length).fill('transparent');
           chart.data.labels=Array.from({length:last11.length},function(_,i){return(i+1).toString();});
-          chart.update();
+          chart.update('none');
         }
         updateGridFromLast11();
-        setTimeout(function(){renderWormLines('numbersTop',wormLinesTop.slice(-7));renderXYArea();renderStartOverlay();drawTrendAngle();},40);
+        _scheduleRender();
       };
     }
 
@@ -1103,7 +1222,8 @@ body.day-mode #tradeChart { background: #f5f5f5; border-color: #ccc; }
     }
 
     // ========== BAŞLATMA ==========
-    document.addEventListener('DOMContentLoaded', function() {
+    document.
+addEventListener('DOMContentLoaded', function() {
       setTimeout(()=>{document.getElementById('loadingIndicator').style.opacity='0';setTimeout(()=>{document.getElementById('loadingIndicator').style.display='none';},300);},1000);
       initWebWorker();
       initChart();
@@ -1111,9 +1231,22 @@ body.day-mode #tradeChart { background: #f5f5f5; border-color: #ccc; }
       document.getElementById('themeToggle').addEventListener('click',toggleTheme);
       document.getElementById('graphToggle').addEventListener('click',toggleGraph);
       document.getElementById('startStopBtn').addEventListener('click',toggleStartStop);
-      document.getElementById('connectBtn').addEventListener('click',connectAPI);
+      // Periyodik bellek temizleme - her 5 dakikada bir
+      setInterval(function(){
+        // Diziler zaten shift ile limitli, ekstra temizlik yap
+        if(prices.length > 100) prices.splice(0, prices.length - 100);
+        if(digits.length > 100) digits.splice(0, digits.length - 100);
+        if(decimalDigits.length > 100) decimalDigits.splice(0, decimalDigits.length - 100);
+        if(combinedDigits.length > 100) combinedDigits.splice(0, combinedDigits.length - 100);
+        if(numColors.length > 100) numColors.splice(0, numColors.length - 100);
+        if(wormLinesTop.length > 100) wormLinesTop.splice(0, wormLinesTop.length - 100);
+      }, 300000); // 5 dakika
+
+      document.getElementById('connectBtn').addEventListener('click',function(){ if(document.getElementById('connectBtn').textContent.trim()==='Disconnect'){ disconnectAPI(); } else { connectAPI(); } });
       document.getElementById('saveCheckbox').addEventListener('change',toggleSaveToken);
       document.getElementById('autoTradeBtn').addEventListener('click',toggleAutoTrade);
+      document.getElementById('martingaleBtn').addEventListener('click',toggleMartingale);
+      document.getElementById('martingaleInput').addEventListener('change',function(){ martingaleMultiplier = parseFloat(this.value) || 2.2; });
       document.getElementById('callBtn').addEventListener('click',function(){placeTrade('CALL');});
       document.getElementById('putBtn').addEventListener('click',function(){placeTrade('PUT');});
       document.querySelectorAll('.pair-btn').forEach(function(btn){btn.addEventListener('click',function(){selectPair(this.getAttribute('data-pair'));});});
@@ -1126,6 +1259,39 @@ body.day-mode #tradeChart { background: #f5f5f5; border-color: #ccc; }
       let resizeTimeout;
       window.addEventListener('resize',function(){clearTimeout(resizeTimeout);resizeTimeout=setTimeout(function(){renderXYArea();renderStartOverlay();renderTwoRowGrid();drawTrendAngle();renderDrawPanels();},100);});
       if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('/service-worker.js').then(function(r){console.log('SW:',r.scope);},function(e){console.log('SW fail:',e);});});}
+
+    // ===== ARKA PLANDA ÇALIŞMA =====
+    var _wakeLock = null;
+    function _requestWakeLock() {
+      if('wakeLock' in navigator) {
+        navigator.wakeLock.request('screen').then(function(wl){
+          _wakeLock = wl;
+          wl.addEventListener('release', function(){ setTimeout(_requestWakeLock, 1000); });
+        }).catch(function(){});
+      }
+    }
+    var _audioCtx = null;
+    function _startSilentAudio() {
+      try {
+        if(_audioCtx) return;
+        _audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        var osc = _audioCtx.createOscillator();
+        var gain = _audioCtx.createGain();
+        gain.gain.value = 0.00001;
+        osc.connect(gain); gain.connect(_audioCtx.destination); osc.start();
+      } catch(e) {}
+    }
+    document.addEventListener('visibilitychange', function() {
+      if(document.visibilityState === 'visible') {
+        _requestWakeLock();
+        if(_audioCtx && _audioCtx.state === 'suspended') _audioCtx.resume();
+        if(wsReconnectEnabled && (!derivWS || derivWS.readyState !== WebSocket.OPEN)) _triggerReconnect();
+      }
+    });
+    document.addEventListener('click', function initAudio() {
+      _startSilentAudio(); _requestWakeLock();
+    }, { once: true });
+
     });
   </script>
 
