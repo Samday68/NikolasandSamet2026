@@ -384,7 +384,9 @@ body.day-mode #tradeInfoPanel { width: 100%; background: #111; border: 1px solid
     let startGlobalSpan = null;
     let tradeActive = false;
     let totalProfit = 0;
+    let tradeSettled = false;
     let bellMuted = false;
+    let tradeForceCloseTimer = null;
     let tradeType = '';
     let entrySpot = 0;
     let exitSpot = 0;
@@ -941,7 +943,7 @@ body.day-mode #tradeInfoPanel { width: 100%; background: #111; border: 1px solid
       document.getElementById('connectBtn').style.background = '#1a7a1a';
       document.getElementById('apiInput').value = '';
       document.getElementById('balanceValue').innerText = '$ 0.00';
-      document.getElementById('profitValue').innerText = '$ 0.00'; totalProfit = 0;
+      var _pv2=document.getElementById('profitValue'); _pv2.innerText='$ 0.00'; _pv2.style.color='#4caf50'; totalProfit = 0;
     }
     function connectAPI() {
       apiToken=document.getElementById('apiInput').value.trim();
@@ -998,14 +1000,16 @@ body.day-mode #tradeInfoPanel { width: 100%; background: #111; border: 1px solid
             if(_cv2){var _cx2=_cv2.getContext('2d');_cv2.width=_tc.offsetWidth||185;_cv2.height=85;_cx2.fillStyle='#000000';_cx2.fillRect(0,0,_cv2.width,_cv2.height);}}
             if(ticks.length>tradeData.length&&tradeData.length<6){for(let i=tradeData.length;i<Math.min(ticks.length,6);i++)tradeData.push(parseFloat(ticks[i].tick));drawTradeChart();}
           }
-          if(contract.status==='won'||contract.status==='lost'){
+          if((contract.status==='won'||contract.status==='lost'||contract.is_expired===1||contract.is_sold===1)&&!tradeSettled){
+            tradeSettled=true;
+            clearTimeout(tradeForceCloseTimer);
             if(contract.exit_tick)exitSpot=parseFloat(contract.exit_tick);
             const profit=parseFloat(contract.profit||0);
             const buyPr=parseFloat(contract.buy_price||contract.purchase||0);
             const finalPr=parseFloat(contract.sell_price||0);
-            totalProfit += profit; document.getElementById('profitValue').innerText=(totalProfit>=0?'$ +':'$ ')+totalProfit.toFixed(2);
+            totalProfit += profit; var _pv=document.getElementById('profitValue'); _pv.innerText=(totalProfit>=0?'$ +':'$ ')+totalProfit.toFixed(2); _pv.style.color=totalProfit>=0?'#4caf50':'#f44336';
             // tradeInfo panelini sonuçla güncelle
-            if(contract.status==='won'){
+            const _status = contract.status; if(_status==='won'||(_status==='sold'&&parseFloat(contract.profit||0)>0)){
               document.getElementById('tinfoL1').textContent='Buy price';
               document.getElementById('tinfoV1').textContent=buyPr.toFixed(2)+' USD';
               document.getElementById('tinfoL2').textContent='Final price';
@@ -1013,7 +1017,7 @@ body.day-mode #tradeInfoPanel { width: 100%; background: #111; border: 1px solid
               document.getElementById('tinfoL3').textContent='Profit';
               document.getElementById('tinfoV3').textContent='+'+profit.toFixed(2)+' USD';
               document.getElementById('tinfoV3').style.color='#4caf50';
-            } else {
+            } else if(_status==='lost'||_status==='sold'||contract.is_expired===1){
               document.getElementById('tinfoL1').textContent='Buy price';
               document.getElementById('tinfoV1').textContent=buyPr.toFixed(2)+' USD';
               document.getElementById('tinfoL2').textContent='Final price';
@@ -1036,7 +1040,17 @@ body.day-mode #tradeInfoPanel { width: 100%; background: #111; border: 1px solid
       const handleProposal=function(msg){
         const data=JSON.parse(msg.data);
         if(data.proposal){derivWS.send(JSON.stringify({buy:data.proposal.id,price:stake}));}
-        if(data.buy){contractId=data.buy.contract_id;tradeActive=true;tradeType=type;entrySpot=0;exitSpot=0;barrier=0;tradeData=[];
+        if(data.buy){contractId=data.buy.contract_id;tradeActive=true;tradeSettled=false;tradeType=type;entrySpot=0;exitSpot=0;barrier=0;tradeData=[];
+          // Eski subscription'ları temizle
+          derivWS.send(JSON.stringify({forget_all:'proposal_open_contract'}));
+          // Zorla kapanma timer - 15sn sonra paneli kapat
+          clearTimeout(tradeForceCloseTimer);
+          tradeForceCloseTimer = setTimeout(function(){
+            if(!tradeActive) return;
+            tradeActive = false;
+            document.getElementById('tradeChart').style.display='none';
+            document.getElementById('tradeInfoPanel').style.display='none';
+          }, 15000);
           // Canvas temizle - önceki işlem görüntüsü silinsin
           var _cv=document.getElementById('tradeCanvas');
           if(_cv){var _cx=_cv.getContext('2d');_cx.clearRect(0,0,_cv.width,_cv.height);}
