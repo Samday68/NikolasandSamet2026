@@ -28,8 +28,8 @@
     body.day-mode .pair-btn { background: #e0e0e0; color: #000; }
     .pair-btn.active { background: #000; color: #fff; }
     @media (max-width: 768px) { .pair-btn { padding: 3px 1px; font-size: 6.5px; min-width: 26px; } }
-    #startStopBtn { padding: 3px 5px; font-size: 7.5px; font-weight: 900; cursor: pointer; border: 2px solid #4CAF50; border-radius: 12px; background: #4CAF50; color: #fff; display: flex; align-items: center; justify-content: center; gap: 2px; white-space: nowrap; flex-shrink: 0; }
-    #startStopBtn.stopped { background: #d93025; border-color: #d93025; }
+    #startStopBtn { padding: 0; cursor: pointer; border: none; background: transparent; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    #startStopBtn.stopped { background: transparent; }
     @media (max-width: 768px) { #startStopBtn { padding: 4px 8px; font-size: 9px; } }
     #topbar { display: flex; gap: 3px; margin: 4px 0; align-items: center; flex-wrap: nowrap; }
     #time { background: #000; color: #fff; padding: 3px 6px; border-radius: 3px; font-weight: bold; font-size: 9px; white-space: nowrap; height: 21px; display: flex; align-items: center; }
@@ -240,9 +240,38 @@ body.day-mode #tradeInfoPanel { width: 100%; background: #111; border: 1px solid
           <button class="pair-btn" data-pair="RDBEAR">BEAR</button>
           <button class="pair-btn" data-pair="RDBULL">BULL</button>
         </div>
-        <button id="startStopBtn">
-          <span>⏻</span>
-          <span id="startStopText">START</span>
+        <button id="startStopBtn" title="Refresh">
+          <svg width="26" height="26" viewBox="0 0 100 100" style="display:block;">
+            <defs>
+              <radialGradient id="rgOuter" cx="40%" cy="30%" r="70%">
+                <stop offset="0%" stop-color="#ffffff"/>
+                <stop offset="30%" stop-color="#d0d0d0"/>
+                <stop offset="70%" stop-color="#a0a0a0"/>
+                <stop offset="100%" stop-color="#606060"/>
+              </radialGradient>
+              <radialGradient id="rgYellow" cx="38%" cy="32%" r="65%">
+                <stop offset="0%" stop-color="#fff176"/>
+                <stop offset="40%" stop-color="#fdd835"/>
+                <stop offset="80%" stop-color="#f9a825"/>
+                <stop offset="100%" stop-color="#e65100"/>
+              </radialGradient>
+              <radialGradient id="rgInner" cx="40%" cy="30%" r="65%">
+                <stop offset="0%" stop-color="#ffffff" stop-opacity="0.6"/>
+                <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+              </radialGradient>
+            </defs>
+            <!-- Nikelaj dış halka -->
+            <circle cx="50" cy="50" r="49" fill="url(#rgOuter)"/>
+            <!-- Sarı iç alan -->
+            <circle cx="50" cy="50" r="40" fill="url(#rgYellow)"/>
+            <!-- Parlama -->
+            <ellipse cx="42" cy="34" rx="16" ry="10" fill="white" opacity="0.35"/>
+            <!-- Ok simgesi -->
+            <path d="M50 24 A26 26 0 1 1 27 62" fill="none" stroke="#1a1a1a" stroke-width="11" stroke-linecap="round"/>
+            <polygon points="50,12 37,26 63,26" fill="#1a1a1a"/>
+            <!-- Nikelaj iç parlama -->
+            <circle cx="50" cy="50" r="49" fill="url(#rgInner)"/>
+          </svg>
         </button>
       </div>
       <div id="topbar">
@@ -900,7 +929,7 @@ body.day-mode #tradeInfoPanel { width: 100%; background: #111; border: 1px solid
       if(autoTradeEnabled){ autoTradeEnabled = false; const ab=document.getElementById('autoTradeBtn'); if(ab) ab.classList.remove('active'); }
       // Kullanıcıya sarı uyarı
       const btn = document.getElementById('connectBtn');
-      if(btn){ btn.textContent = 'Bağlanıyor...'; btn.style.background = '#b8860b'; }
+      if(btn){ btn.textContent = 'Connecting...'; btn.style.background = '#b8860b'; }
       // Exponential backoff: 5s → 10s → 20s → max 30s
       clearTimeout(wsReconnectTimer);
       wsReconnectTimer = setTimeout(function(){
@@ -943,7 +972,7 @@ body.day-mode #tradeInfoPanel { width: 100%; background: #111; border: 1px solid
       document.getElementById('connectBtn').style.background = '#1a7a1a';
       document.getElementById('apiInput').value = '';
       document.getElementById('balanceValue').innerText = '$ 0.00';
-      var _pv2=document.getElementById('profitValue'); _pv2.innerText='$ 0.00'; _pv2.style.color='#4caf50'; totalProfit = 0;
+      var _pv2=document.getElementById('profitValue'); _pv2.innerText='$ 0.00'; _pv2.style.color='#4caf50'; totalProfit = 0; document.getElementById('stakeInput').value='1';
     }
     function connectAPI() {
       apiToken=document.getElementById('apiInput').value.trim();
@@ -987,7 +1016,7 @@ body.day-mode #tradeInfoPanel { width: 100%; background: #111; border: 1px solid
       derivWS.onmessage=function(msg){
         const data=JSON.parse(msg.data);
         if(data.ping || data.pong){ wsLastPong = Date.now(); return; }
-        if(data.authorize){ document.getElementById('connectBtn').textContent='Disconnect'; document.getElementById('connectBtn').style.background='#d93025'; clearTimeout(wsReconnectTimer); alert('Соединение с API установлено успешно!');if(data.authorize.balance)document.getElementById('balanceValue').innerText='$ '+parseFloat(data.authorize.balance).toFixed(2);derivWS.send(JSON.stringify({balance:1,subscribe:1}));}
+        if(data.authorize){ document.getElementById('connectBtn').textContent='Disconnect'; document.getElementById('connectBtn').style.background='#d93025'; clearTimeout(wsReconnectTimer);if(data.authorize.balance)document.getElementById('balanceValue').innerText='$ '+parseFloat(data.authorize.balance).toFixed(2);derivWS.send(JSON.stringify({balance:1,subscribe:1}));}
         if(data.balance)document.getElementById('balanceValue').innerText='$ '+parseFloat(data.balance.balance).toFixed(2);
         if(data.proposal_open_contract){
           const contract=data.proposal_open_contract;
@@ -1332,7 +1361,30 @@ addEventListener('DOMContentLoaded', function() {
       document.querySelectorAll('.grid-cell, .num-box, #chartContainer, #xyBox').forEach(el=>{el.classList.add('performance-mode','hw-accelerate');});
       document.getElementById('themeToggle').addEventListener('click',toggleTheme);
       document.getElementById('graphToggle').addEventListener('click',toggleGraph);
-      document.getElementById('startStopBtn').addEventListener('click',toggleStartStop);
+      document.getElementById('startStopBtn').addEventListener('click', function(){
+        // Stake değerini sakla
+        var stakeVal = document.getElementById('stakeInput').value;
+        // Veri sıfırla - API bağlantısına dokunma
+        prices=[]; digits=[]; decimalDigits=[]; combinedDigits=[]; wormLinesTop=[]; numColors=[];
+        document.getElementById('numbersTop').innerHTML='';
+        gridHistory=[]; startCooldown=0; startGlobalSpan=null; xzTickCounter=0;
+        currentTrendData={direction:null,last3:[],colors:[],arrows:[]};
+        lastTrendSignal=null; trendStartGlobal=null;
+        trendDrawBuffer=[]; trendDrawStarted=false; lastStartSpanKey=null;
+        showTrendSignal(null); showUpDownSignal(null);
+        clearDrawPanels();
+        renderTwoRowGrid(); renderStartOverlay(); renderXYArea(); drawTrendAngle();
+        // Grafik sıfırla
+        if(chart){chart.data.datasets[0].data=Array(7).fill(null);chart.data.labels=Array.from({length:7},function(_,i){return(i+1).toString();});chart.update('none');}
+        // Fiyat sıfırla
+        document.getElementById('price').innerText='0.00';
+        document.getElementById('price').style.background='#0b57d0';
+        // Stake koru
+        document.getElementById('stakeInput').value = stakeVal;
+        // WS yeniden başlat (data WS - API DEĞİL)
+        if(ws){try{ws.close();}catch(e){}}
+        if(isRunning) startWS();
+      });
       // Periyodik bellek temizleme - her 5 dakikada bir
       setInterval(function(){
         // Diziler zaten shift ile limitli, ekstra temizlik yap
@@ -1359,6 +1411,7 @@ addEventListener('DOMContentLoaded', function() {
       setInterval(updateTime,1000); updateTime();
       startWS();
       loadSavedToken();
+
       updateLogos();
       document.body.addEventListener('click',function initAudioOnce(){initAudio();if(audioContext&&audioContext.state==='suspended')audioContext.resume();},{once:true});
       document.body.addEventListener('touchstart',function(){if(audioContext&&audioContext.state==='suspended')audioContext.resume();},{passive:true});
