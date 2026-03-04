@@ -224,7 +224,7 @@ body.day-mode #tradeInfoPanel { width: 100%; background: #111; border: 1px solid
   <div id="mainContainer">
     <div id="leftSection">
       <div id="headerSection">
-        <img id="headerLogo" src="https://raw.githubusercontent.com/Samday68/Foto-raflar/refs/heads/main/D354DBAF-3EC7-4B5F-ABC1-8EF876797DAA.jpeg" alt="logo" onerror="this.style.display='none';" />
+        <img id="headerLogo" loading="lazy" src="https://raw.githubusercontent.com/Samday68/Foto-raflar/refs/heads/main/D354DBAF-3EC7-4B5F-ABC1-8EF876797DAA.jpeg" alt="logo" onerror="this.style.display='none';" />
       </div>
       <div id="toggleRow">
         <button id="graphToggle">XZ</button>
@@ -285,7 +285,7 @@ body.day-mode #tradeInfoPanel { width: 100%; background: #111; border: 1px solid
         <div id="price">0.00</div>
       </div>
       <div id="chartContainer">
-        <img id="chartWatermark" src="https://raw.githubusercontent.com/Samday68/Foto-raflar/refs/heads/main/D354DBAF-3EC7-4B5F-ABC1-8EF876797DAA.jpeg" alt="" onerror="this.style.display='none';" />
+        <img id="chartWatermark" loading="lazy" src="https://raw.githubusercontent.com/Samday68/Foto-raflar/refs/heads/main/D354DBAF-3EC7-4B5F-ABC1-8EF876797DAA.jpeg" alt="" onerror="this.style.display='none';" />
         <canvas id="chart"></canvas>
       </div>
       <div id="xzRowWrap">
@@ -361,9 +361,7 @@ body.day-mode #tradeInfoPanel { width: 100%; background: #111; border: 1px solid
 
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
 
   <script>
     // ========== PERFORMANCE OPTIMIZATIONS ==========
@@ -393,7 +391,7 @@ body.day-mode #tradeInfoPanel { width: 100%; background: #111; border: 1px solid
     let wsPingTimer = null;
     let wsHeartbeatTimer = null;
     let wsLastPong = 0;
-    let wsReconnectDelay = 5000;
+    let wsReconnectDelay = 3000;
     let autoTradeInProgress = false;
     let ws = null;
     let derivWS = null;
@@ -984,7 +982,7 @@ body.day-mode #tradeInfoPanel { width: 100%; background: #111; border: 1px solid
       if(derivWS && derivWS.readyState === WebSocket.OPEN) return;
       derivWS=new WebSocket('wss://ws.binaryws.com/websockets/v3?app_id=1089');
       derivWS.onopen=function(){
-        wsReconnectDelay = 5000; // başarılı bağlantıda delay sıfırla
+        wsReconnectDelay = 3000; // başarılı bağlantıda delay sıfırla
         wsLastPong = Date.now();
         derivWS.send(JSON.stringify({authorize:apiToken}));
 
@@ -994,7 +992,7 @@ body.day-mode #tradeInfoPanel { width: 100%; background: #111; border: 1px solid
           if(derivWS && derivWS.readyState === WebSocket.OPEN){
             derivWS.send(JSON.stringify({ping:1}));
           }
-        }, 25000);
+        }, 20000);
 
         // Heartbeat: her 10 saniyede readyState + pong kontrolü
         clearInterval(wsHeartbeatTimer);
@@ -1010,7 +1008,7 @@ body.day-mode #tradeInfoPanel { width: 100%; background: #111; border: 1px solid
             derivWS.close();
             _triggerReconnect();
           }
-        }, 10000);
+        }, 8000);
       };
       _setupWSEvents();
       derivWS.onmessage=function(msg){
