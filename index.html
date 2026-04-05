@@ -184,7 +184,7 @@ body.day-mode #nikolasPanel { background: #f5f5f5; border-color: #ccc; }
 }
 body.day-mode #trPanel { background: #f5f5f5; border-color: #ccc; }
 @media (min-width: 769px) { #trPanel { width: 192px; } }
-@media (max-width: 768px) { #trPanel { width: 70px; border: 1.5px solid #666; padding: 4px; } }
+@media (max-width: 768px) { #trPanel { width: 185px; border: 1.5px solid #666; padding: 4px; } }
 
 .ap-title { font-size: 6px; font-weight: 900; letter-spacing: 1px; color: #666; text-transform: uppercase; font-family: monospace; padding-bottom: 2px; border-bottom: 1px solid #333; margin-bottom: 1px; }
 body.day-mode .ap-title { color: #888; border-color: #ddd; }
@@ -271,16 +271,9 @@ body.day-mode .np-val .nw, body.day-mode .tr-val .nw { color: #111; }
         <div id="gridDivider"><div id="gridDividerLine"></div></div>
         <div id="gridBottomRow"></div>
       </div>
+    </div>
 
 ```
-  <!-- TÜRKÇE ANALİZ PANELİ - grid altında -->
-  <div id="trPanel">
-    <div class="ap-title">ALGORİTMA xZ · ANALİZ</div>
-    <div id="trRows"></div>
-    <div id="trDecision"></div>
-  </div>
-</div>
-
 <div id="rightSection">
   <div id="trendDrawBox">
     <div class="draw-panel" id="drawPanel1"><svg id="drawSvg1" viewBox="0 0 100 100" preserveAspectRatio="none"></svg></div>
@@ -336,6 +329,13 @@ body.day-mode .np-val .nw, body.day-mode .tr-val .nw { color: #111; }
     <div class="ap-title">АЛГОРИТМ xZ · АНАЛИЗ</div>
     <div id="npRows"></div>
     <div id="npDecision"></div>
+  </div>
+
+  <!-- TÜRKÇE ANALİZ PANELİ -->
+  <div id="trPanel">
+    <div class="ap-title">ALGORİTMA xZ · ANALİZ</div>
+    <div id="trRows"></div>
+    <div id="trDecision"></div>
   </div>
 
 </div>
