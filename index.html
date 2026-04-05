@@ -11,8 +11,8 @@
     body { font-family: sans-serif; background: #1a1a1a; color: #fff; margin: 0; padding: 4px 3px; transition: background-color 0.3s, color 0.3s; overflow-x: auto; overflow-y: auto; }
     body.day-mode { background: #fff; color: #000; }
     #mainContainer { display: flex; gap: 4px; max-width: 100%; margin: 0 auto; overflow: visible; }
-    #leftSection { flex: 1; min-width: 0; max-width: 100%;  z-index: 2; position: relative; }
-    #rightSection { flex: 0 0 185px; display: flex; flex-direction: column; gap: 6px; align-items: stretch; overflow: visible;  z-index: 1; }
+    #leftSection { flex: 1; min-width: 0; max-width: 100%; z-index: 2; position: relative; }
+    #rightSection { flex: 0 0 185px; display: flex; flex-direction: column; gap: 6px; align-items: stretch; overflow: visible; z-index: 1; }
     @media (max-width: 768px) { #mainContainer { gap: 3px; } #leftSection { flex: 1; min-width: 0; } #rightSection { flex: 0 0 70px; } body { padding: 3px 2px; } }
     #headerSection { text-align: center; margin: 4px 0; width: 100%; }
     #headerLogo { width: 100%; height: 65px; display: block; object-fit: contain; object-position: center; margin: 0 auto; transition: opacity 0.3s; }
@@ -67,160 +67,155 @@
     .start-box { position: absolute; border: 2px solid #fff; pointer-events: none; z-index: 50; box-sizing: border-box; transition: border-color 0.3s; }
     body.day-mode .start-box { border-color: #000; }
     .start-label { position: absolute; top: -10px; left: 50%; transform: translateX(-50%); background: orange; color: #000; font-size: 8px; font-weight: 900; padding: 0 3px; line-height: 10px; border-radius: 2px; white-space: nowrap; }
+    #trendDrawBox { width: auto; display: flex; flex-direction: row; gap: 4px; margin-top: 0; overflow: visible; }
+    @media (max-width: 768px) { #trendDrawBox { width: auto; display: flex; flex-direction: row; gap: 4px; margin-top: 0; overflow: visible; } }
+    .draw-panel { width: 90px; height: 90px; flex: 0 0 90px; background: #111; border: 2px solid #444; border-radius: 6px; overflow: hidden; position: relative; }
+    body.day-mode .draw-panel { background: #f0f0f0; border-color: #bbb; }
+    @media (max-width: 768px) { .draw-panel { height: 75px; width: 75px; flex: 0 0 75px; } }
+    .draw-panel svg { width: 100%; height: 100%; display: block; }
+    #trendBellBox { width: calc(75% - 2px); height: 45px; background: #666; border: 2px solid #444; border-radius: 6px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; transition: background 0.3s, border-color 0.3s; flex-shrink: 0; align-self: flex-end; }
+    #trendBellBox.trend-up { background: #0066ff; border-color: #0044cc; }
+    #trendBellBox.trend-down { background: #cc0000; border-color: #990000; }
+    body.day-mode #trendBellBox { width: calc(75% - 2px); height: 45px; background: #666; border: 2px solid #444; border-radius: 6px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; transition: background 0.3s, border-color 0.3s; flex-shrink: 0; align-self: flex-end; }
+    body.day-mode #trendBellBox.trend-up { background: #0066ff; border-color: #0044cc; }
+    body.day-mode #trendBellBox.trend-down { background: #cc0000; border-color: #990000; }
+    @media (max-width: 768px) { #trendBellBox { width: calc(75% - 2px); height: 45px; background: #666; border: 2px solid #444; border-radius: 6px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; transition: background 0.3s, border-color 0.3s; flex-shrink: 0; align-self: flex-end; } }
+    #trendBellIcon { font-size: 18px; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.3)); }
+    @media (max-width: 768px) { #trendBellIcon { font-size: 16px; } }
+    #trendLabel { font-size: 9px; font-weight: 900; color: #fff; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); }
+    @media (max-width: 768px) { #trendLabel { font-size: 9px; } }
+    #tradingPanel { width: 100%; background: #000; border: 2px solid #666; border-radius: 6px; padding: 5px; display: flex; flex-direction: column; gap: 4px; flex-shrink: 0; }
+    body.day-mode #tradingPanel { background: #f5f5f5; border-color: #ccc; }
+    @media (max-width: 768px) { #tradingPanel { padding: 4px; gap: 3px; border: 1.5px solid #666; } body.day-mode #tradingPanel { border: 1.5px solid #ccc; } }
+    .panel-header-row { display: flex; justify-content: space-between; align-items: flex-start; width: 100%; position: relative; min-height: 24px; }
+    .duration-container { display: flex; flex-direction: column; gap: 1px; flex: 1; min-width: 0; }
+    .panel-label { font-size: 8px; font-weight: bold; white-space: nowrap; }
+    .panel-value { background: #555; color: #fff; padding: 3px 6px; border-radius: 4px; text-align: center; font-size: 10px; font-weight: bold; border: 1.5px solid #666; min-width: 30px; }
+    body.day-mode .panel-value { background: #fff; color: #000; border-color: #ccc; }
+    #martingaleBtn { position: absolute; top: 0; right: 36px; width: 32px; height: 12px; border-radius: 6px; border: 1px solid #666; background: linear-gradient(to bottom, #444, #222); color: #fff; font-size: 5.5px; font-weight: 900; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 10; }
+    #martingaleBtn.active { background: linear-gradient(to bottom, #00aa00, #006600); border-color: #004400; }
+    #martingaleBtn:hover { transform: translateY(-0.5px); }
+    #martingaleInput { position: absolute; top: 0; right: 72px; width: 32px; height: 12px; background: #333; color: #fff; border: 1px solid #666; border-radius: 3px; font-size: 6px; text-align: center; padding: 0 1px; }
+    @media (max-width: 768px) { #martingaleBtn { width: 16px; height: 8px; font-size: 3.5px; right: 20px; } #martingaleInput { width: 26px; height: 8px; font-size: 4.5px; right: 38px; } }
+    #autoTradeBtn { position: absolute; top: 0; right: 0; width: 32px; height: 12px; border-radius: 6px; border: 1px solid #666; background: linear-gradient(to bottom, #444, #222); color: #fff; font-size: 5.5px; font-weight: 900; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s; padding: 0; letter-spacing: 0.5px; box-shadow: 0 1px 2px rgba(0,0,0,0.5); z-index: 10; }
+    #autoTradeBtn:hover { transform: translateY(-0.5px); box-shadow: 0 1.5px 3px rgba(0,0,0,0.6); }
+    #autoTradeBtn:active { transform: translateY(0); box-shadow: 0 0.5px 1px rgba(0,0,0,0.4); }
+    #autoTradeBtn.active { background: linear-gradient(to bottom, #ff3333, #cc0000); border-color: #990000; color: #fff; text-shadow: 0 0.5px 0.5px rgba(0,0,0,0.5); animation: autoPulse 1.5s infinite; }
+    @keyframes autoPulse { 0%, 100% { opacity: 1; box-shadow: 0 1px 2px rgba(204,0,0,0.5); } 50% { opacity: 0.85; box-shadow: 0 1px 4px rgba(204,0,0,0.7); } }
+    body.day-mode #autoTradeBtn { background: linear-gradient(to bottom, #ddd, #bbb); color: #000; border-color: #999; box-shadow: 0 1px 2px rgba(0,0,0,0.2); }
+    body.day-mode #autoTradeBtn.active { background: linear-gradient(to bottom, #ff3333, #cc0000); border-color: #990000; color: #fff; }
+    .panel-row { display: flex; flex-direction: column; gap: 1px; margin-top: 2px; }
+    .panel-input { background: #555; color: #fff; padding: 4px; border-radius: 4px; text-align: center; font-size: 10px; font-weight: bold; border: 1.5px solid #666; width: 100%; }
+    body.day-mode .panel-input { background: #fff; color: #000; border-color: #ccc; }
+    @media (max-width: 768px) { .panel-label { font-size: 7px; } .panel-value, .panel-input { padding: 3px; font-size: 9px; border: 1px solid #666; } body.day-mode .panel-value, body.day-mode .panel-input { border: 1px solid #ccc; } #autoTradeBtn { width: 16px; height: 8px; font-size: 3.5px; border-radius: 4px; border: 1px solid #666; } .panel-header-row { min-height: 22px; } }
+    .trade-buttons { display: flex; flex-direction: column; gap: 6px; margin-top: 4px; }
+    @media (max-width: 768px) { .trade-buttons { gap: 4px; margin-top: 2px; } }
+    .metal-btn { width: 100%; height: 42px; border-radius: 50%; position: relative; border: none; cursor: pointer; background: radial-gradient(circle at 30% 30%, #ffffff, #bdbdbd 35%, #8f8f8f 55%, #f5f5f5 75%, #9b9b9b 100%); box-shadow: inset 0 2px 5px rgba(255,255,255,.9), inset 0 -5px 8px rgba(0,0,0,.7), 0 8px 15px rgba(0,0,0,.9); }
+    @media (max-width: 768px) { .metal-btn { height: 32px; box-shadow: inset 0 2px 4px rgba(255,255,255,.9), inset 0 -4px 6px rgba(0,0,0,.7), 0 6px 10px rgba(0,0,0,.9); } }
+    .metal-btn::before { content: ""; position: absolute; inset: 5px; border-radius: 50%; background: linear-gradient(to bottom, var(--light) 0%, var(--mid) 48%, var(--dark) 100%); }
+    @media (max-width: 768px) { .metal-btn::before { inset: 4px; } }
+    .metal-btn::after { content: ""; position: absolute; inset: 7px; border-radius: 50%; background: linear-gradient(to bottom, rgba(255,255,255,.45) 0%, rgba(255,255,255,.35) 35%, rgba(255,255,255,0) 36%); pointer-events: none; }
+    @media (max-width: 768px) { .metal-btn::after { inset: 5px; } }
+    .up { --light: #aebcff; --mid: #1e3dff; --dark: #0c1f7a; }
+    .down { --light: #ffb8b8; --mid: #c61f1f; --dark: #6b0000; }
+    .metal-btn:active { transform: translateY(2px); box-shadow: inset 0 5px 10px rgba(0,0,0,.8), 0 5px 8px rgba(0,0,0,.8); }
+    .balance-row { display: flex; justify-content: space-between; align-items: center; margin-top: 2px; }
+    .balance-label { font-size: 8px; font-weight: bold; }
+    .balance-value { color: #4CAF50; font-size: 8px; font-weight: bold; }
+    @media (max-width: 768px) { .balance-row { margin-top: 1px; } .balance-label, .balance-value { font-size: 7px; } }
+    #tradeInfoPanel { width: 100%; background: #111; border: 1px solid #4a7a4a; border-top: none; border-radius: 0 0 6px 6px; padding: 3px 2px; margin-top: 0; display: none; }
+    .tinfo-row { display: flex; justify-content: space-between; }
+    .tinfo-cell { flex: 1; text-align: center; }
+    .tinfo-label { font-size: 5px; color: #aaa; font-weight: bold; white-space: nowrap; }
+    .tinfo-val { font-size: 7px; color: #fff; font-weight: bold; margin-top: 1px; }
+    #tradeChart { width: 100%; height: 85px; background: #000000; border: 2px solid #4a7a4a; border-radius: 6px 6px 0 0; margin-top: 0; display: none; flex-shrink: 0; }
+    #tradeCanvas { width: 100%; height: 100%; background: transparent; display: block; }
+    body.day-mode #tradeInfoPanel { background: #f5f5f5; border-color: #ccc; }
+    @media (max-width: 768px) { #tradeChart { height: 70px; border: 1.5px solid #666; margin-top: 4px; } }
+    #loadingIndicator { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #1a1a1a; display: flex; align-items: center; justify-content: center; z-index: 1000; transition: opacity 0.3s; }
+    .spinner { width: 50px; height: 50px; border: 5px solid #333; border-top: 5px solid #0b57d0; border-radius: 50%; animation: spin 1s linear infinite; }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    .performance-mode { transform: translateZ(0); backface-visibility: hidden; perspective: 1000px; }
+    .hw-accelerate { transform: translate3d(0, 0, 0); }
+    .grid-arrow { position: absolute; left: 50%; transform: translateX(-50%); width: 0; height: 0; pointer-events: none; z-index: 5; }
+    .grid-arrow-up { border-left: 4px solid transparent; border-right: 4px solid transparent; border-bottom: 6px solid #1155ff; top: 2px; }
+    .grid-arrow-down { border-left: 4px solid transparent; border-right: 4px solid transparent; border-top: 6px solid #cc1111; bottom: 2px; }
+    @media (min-width: 769px) {
+      #rightSection { flex: 0 0 192px; min-width: 192px; max-width: 192px; align-items: flex-start; }
+      #trendDrawBox { display: flex !important; flex-direction: row !important; flex-wrap: nowrap !important; gap: 4px; width: 100%; }
+      .draw-panel { width: 90px !important; height: 90px !important; flex: 0 0 90px !important; min-width: 90px; max-width: 90px; }
+      #trendBellBox { width: calc(75% - 2px); align-self: flex-end; }
+      #tradingPanel { width: 100%; }
+      #npGraphPanel { width: 100%; }
+      #nikolasPanel { width: 100%; }
+      #tradeChart { width: 100%; }
+      #tradeInfoPanel { width: 100%; }
+      #topbar { flex-wrap: nowrap; }
+      #apiInput { max-width: 200px; }
+      #price { flex-shrink: 0; }
+    }
 
 ```
-/* ===== SAĞ BÖLÜM PANELLERİ ===== */
-
-/* ===== YENİ TREND ÇİZİM KUTULARI ===== */
-#trendDrawBox { width: auto; display: flex; flex-direction: row; gap: 4px; margin-top: 0; overflow: visible; }
-@media (max-width: 768px) { #trendDrawBox { width: auto; display: flex; flex-direction: row; gap: 4px; margin-top: 0; overflow: visible; } }
-
-.draw-panel {
-  width: 90px;
-  height: 90px;
-  flex: 0 0 90px;
-  background: #111;
-  border: 2px solid #444;
-  border-radius: 6px;
-  overflow: hidden;
-  position: relative;
+/* ===== GRAFİK PANELİ ===== */
+#npGraphPanel {
+  width: 100%; height: 90px; background: #111;
+  border: 2px solid #666; border-radius: 6px;
+  overflow: hidden; display: none; flex-shrink: 0;
 }
-body.day-mode .draw-panel { background: #f0f0f0; border-color: #bbb; }
-@media (max-width: 768px) { .draw-panel { height: 75px; width: 75px; flex: 0 0 75px; } }
+body.day-mode #npGraphPanel { background: #e8e8e8; border-color: #ccc; }
+#npGraphPanel svg { width: 100%; height: 90px; display: block; }
+@media (max-width: 768px) { #npGraphPanel { height: 70px; } #npGraphPanel svg { height: 70px; } }
 
-.draw-panel svg {
-  width: 100%;
-  height: 100%;
-  display: block;
+/* ===== RUSÇA ANALİZ PANELİ (sağda) ===== */
+#nikolasPanel {
+  width: 100%; background: #000; border: 2px solid #666;
+  border-radius: 6px; padding: 5px; display: none;
+  flex-direction: column; gap: 3px; flex-shrink: 0;
 }
-/* ===== YENİ TREND ÇİZİM KUTULARI SONU ===== */
+body.day-mode #nikolasPanel { background: #f5f5f5; border-color: #ccc; }
+@media (max-width: 768px) { #nikolasPanel { border: 1.5px solid #666; padding: 4px; } }
 
-#trendBellBox { width: calc(75% - 2px); height: 45px; background: #666; border: 2px solid #444; border-radius: 6px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; transition: background 0.3s, border-color 0.3s; flex-shrink: 0; align-self: flex-end; }
-#trendBellBox.trend-up { background: #0066ff; border-color: #0044cc; }
-#trendBellBox.trend-down { background: #cc0000; border-color: #990000; }
-body.day-mode #trendBellBox { width: calc(75% - 2px); height: 45px; background: #666; border: 2px solid #444; border-radius: 6px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; transition: background 0.3s, border-color 0.3s; flex-shrink: 0; align-self: flex-end; }
-body.day-mode #trendBellBox.trend-up { background: #0066ff; border-color: #0044cc; }
-body.day-mode #trendBellBox.trend-down { background: #cc0000; border-color: #990000; }
-@media (max-width: 768px) { #trendBellBox { width: calc(75% - 2px); height: 45px; background: #666; border: 2px solid #444; border-radius: 6px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; transition: background 0.3s, border-color 0.3s; flex-shrink: 0; align-self: flex-end; } }
-#trendBellIcon { font-size: 18px; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.3)); }
-@media (max-width: 768px) { #trendBellIcon { font-size: 16px; } }
-#trendLabel { font-size: 9px; font-weight: 900; color: #fff; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); }
-@media (max-width: 768px) { #trendLabel { font-size: 9px; } }
-
-#tradingPanel { width: 100%; background: #000; border: 2px solid #666; border-radius: 6px; padding: 5px; display: flex; flex-direction: column; gap: 4px; flex-shrink: 0; }
-body.day-mode #tradingPanel { background: #f5f5f5; border-color: #ccc; }
-@media (max-width: 768px) { #tradingPanel { padding: 4px; gap: 3px; border: 1.5px solid #666; } body.day-mode #tradingPanel { border: 1.5px solid #ccc; } }
-.panel-header-row { display: flex; justify-content: space-between; align-items: flex-start; width: 100%; position: relative; min-height: 24px; }
-.duration-container { display: flex; flex-direction: column; gap: 1px; flex: 1; min-width: 0; }
-.panel-label { font-size: 8px; font-weight: bold; white-space: nowrap; }
-.panel-value { background: #555; color: #fff; padding: 3px 6px; border-radius: 4px; text-align: center; font-size: 10px; font-weight: bold; border: 1.5px solid #666; min-width: 30px; }
-body.day-mode .panel-value { background: #fff; color: #000; border-color: #ccc; }
-
-#martingaleBtn { position: absolute; top: 0; right: 36px; width: 32px; height: 12px; border-radius: 6px; border: 1px solid #666; background: linear-gradient(to bottom, #444, #222); color: #fff; font-size: 5.5px; font-weight: 900; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 10; }
-#martingaleBtn.active { background: linear-gradient(to bottom, #00aa00, #006600); border-color: #004400; }
-#martingaleBtn:hover { transform: translateY(-0.5px); }
-#martingaleInput { position: absolute; top: 0; right: 72px; width: 32px; height: 12px; background: #333; color: #fff; border: 1px solid #666; border-radius: 3px; font-size: 6px; text-align: center; padding: 0 1px; }
-@media (max-width: 768px) { #martingaleBtn { width: 16px; height: 8px; font-size: 3.5px; right: 20px; } #martingaleInput { width: 26px; height: 8px; font-size: 4.5px; right: 38px; } }
-#autoTradeBtn { position: absolute; top: 0; right: 0; width: 32px; height: 12px; border-radius: 6px; border: 1px solid #666; background: linear-gradient(to bottom, #444, #222); color: #fff; font-size: 5.5px; font-weight: 900; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s; padding: 0; letter-spacing: 0.5px; box-shadow: 0 1px 2px rgba(0,0,0,0.5); z-index: 10; }
-#autoTradeBtn:hover { transform: translateY(-0.5px); box-shadow: 0 1.5px 3px rgba(0,0,0,0.6); }
-#autoTradeBtn:active { transform: translateY(0); box-shadow: 0 0.5px 1px rgba(0,0,0,0.4); }
-#autoTradeBtn.active { background: linear-gradient(to bottom, #ff3333, #cc0000); border-color: #990000; color: #fff; text-shadow: 0 0.5px 0.5px rgba(0,0,0,0.5); animation: autoPulse 1.5s infinite; }
-@keyframes autoPulse { 0%, 100% { opacity: 1; box-shadow: 0 1px 2px rgba(204,0,0,0.5); } 50% { opacity: 0.85; box-shadow: 0 1px 4px rgba(204,0,0,0.7); } }
-body.day-mode #autoTradeBtn { background: linear-gradient(to bottom, #ddd, #bbb); color: #000; border-color: #999; box-shadow: 0 1px 2px rgba(0,0,0,0.2); }
-body.day-mode #autoTradeBtn.active { background: linear-gradient(to bottom, #ff3333, #cc0000); border-color: #990000; color: #fff; }
-.panel-row { display: flex; flex-direction: column; gap: 1px; margin-top: 2px; }
-.panel-input { background: #555; color: #fff; padding: 4px; border-radius: 4px; text-align: center; font-size: 10px; font-weight: bold; border: 1.5px solid #666; width: 100%; }
-body.day-mode .panel-input { background: #fff; color: #000; border-color: #ccc; }
-@media (max-width: 768px) { .panel-label { font-size: 7px; } .panel-value, .panel-input { padding: 3px; font-size: 9px; border: 1px solid #666; } body.day-mode .panel-value, body.day-mode .panel-input { border: 1px solid #ccc; } #autoTradeBtn { width: 16px; height: 8px; font-size: 3.5px; border-radius: 4px; border: 1px solid #666; } .panel-header-row { min-height: 22px; } }
-.trade-buttons { display: flex; flex-direction: column; gap: 6px; margin-top: 4px; }
-@media (max-width: 768px) { .trade-buttons { gap: 4px; margin-top: 2px; } }
-.metal-btn { width: 100%; height: 42px; border-radius: 50%; position: relative; border: none; cursor: pointer; background: radial-gradient(circle at 30% 30%, #ffffff, #bdbdbd 35%, #8f8f8f 55%, #f5f5f5 75%, #9b9b9b 100%); box-shadow: inset 0 2px 5px rgba(255,255,255,.9), inset 0 -5px 8px rgba(0,0,0,.7), 0 8px 15px rgba(0,0,0,.9); }
-@media (max-width: 768px) { .metal-btn { height: 32px; box-shadow: inset 0 2px 4px rgba(255,255,255,.9), inset 0 -4px 6px rgba(0,0,0,.7), 0 6px 10px rgba(0,0,0,.9); } }
-.metal-btn::before { content: ""; position: absolute; inset: 5px; border-radius: 50%; background: linear-gradient(to bottom, var(--light) 0%, var(--mid) 48%, var(--dark) 100%); }
-@media (max-width: 768px) { .metal-btn::before { inset: 4px; } }
-.metal-btn::after { content: ""; position: absolute; inset: 7px; border-radius: 50%; background: linear-gradient(to bottom, rgba(255,255,255,.45) 0%, rgba(255,255,255,.35) 35%, rgba(255,255,255,0) 36%); pointer-events: none; }
-@media (max-width: 768px) { .metal-btn::after { inset: 5px; } }
-.up { --light: #aebcff; --mid: #1e3dff; --dark: #0c1f7a; }
-.down { --light: #ffb8b8; --mid: #c61f1f; --dark: #6b0000; }
-.metal-btn:active { transform: translateY(2px); box-shadow: inset 0 5px 10px rgba(0,0,0,.8), 0 5px 8px rgba(0,0,0,.8); }
-.balance-row { display: flex; justify-content: space-between; align-items: center; margin-top: 2px; }
-.balance-label { font-size: 8px; font-weight: bold; }
-.balance-value { color: #4CAF50; font-size: 8px; font-weight: bold; }
-@media (max-width: 768px) { .balance-row { margin-top: 1px; } .balance-label, .balance-value { font-size: 7px; } }
-#tradeInfoPanel { width: 100%; background: #111; border: 1px solid #4a7a4a; border-top: none; border-radius: 0 0 6px 6px; padding: 3px 2px; margin-top: 0; display: none; }
-  .tinfo-row { display: flex; justify-content: space-between; }
-  .tinfo-cell { flex: 1; text-align: center; }
-  .tinfo-label { font-size: 5px; color: #aaa; font-weight: bold; white-space: nowrap; }
-  .tinfo-val { font-size: 7px; color: #fff; font-weight: bold; margin-top: 1px; }
-  #tradeChart { width: 100%; height: 85px; background: #000000; border: 2px solid #4a7a4a; border-radius: 6px 6px 0 0; margin-top: 0; display: none; flex-shrink: 0; }
-  #tradeCanvas { width: 100%; height: 100%; background: transparent; display: block; }
-body.day-mode #tradeInfoPanel { width: 100%; background: #111; border: 1px solid #4a7a4a; border-top: none; border-radius: 0 0 6px 6px; padding: 3px 2px; margin-top: 0; display: none; }
-  .tinfo-row { display: flex; justify-content: space-between; }
-  .tinfo-cell { flex: 1; text-align: center; }
-  .tinfo-label { font-size: 5px; color: #aaa; font-weight: bold; white-space: nowrap; }
-  .tinfo-val { font-size: 7px; color: #fff; font-weight: bold; margin-top: 1px; }
-  #tradeChart { background: #f5f5f5; border-color: #ccc; }
-@media (max-width: 768px) { #tradeInfoPanel { width: 100%; background: #111; border: 1px solid #4a7a4a; border-top: none; border-radius: 0 0 6px 6px; padding: 3px 2px; margin-top: 0; display: none; }
-  .tinfo-row { display: flex; justify-content: space-between; }
-  .tinfo-cell { flex: 1; text-align: center; }
-  .tinfo-label { font-size: 5px; color: #aaa; font-weight: bold; white-space: nowrap; }
-  .tinfo-val { font-size: 7px; color: #fff; font-weight: bold; margin-top: 1px; }
-  #tradeChart { height: 70px; border: 1.5px solid #666; margin-top: 4px; } body.day-mode #tradeInfoPanel { width: 100%; background: #111; border: 1px solid #4a7a4a; border-top: none; border-radius: 0 0 6px 6px; padding: 3px 2px; margin-top: 0; display: none; }
-  .tinfo-row { display: flex; justify-content: space-between; }
-  .tinfo-cell { flex: 1; text-align: center; }
-  .tinfo-label { font-size: 5px; color: #aaa; font-weight: bold; white-space: nowrap; }
-  .tinfo-val { font-size: 7px; color: #fff; font-weight: bold; margin-top: 1px; }
-  #tradeChart { border: 1.5px solid #ccc; } }
-#tradeCanvas { width: 100%; height: 100%; display: block; }
-#loadingIndicator { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #1a1a1a; display: flex; align-items: center; justify-content: center; z-index: 1000; transition: opacity 0.3s; }
-.spinner { width: 50px; height: 50px; border: 5px solid #333; border-top: 5px solid #0b57d0; border-radius: 50%; animation: spin 1s linear infinite; }
-@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-.performance-mode { transform: translateZ(0); backface-visibility: hidden; perspective: 1000px; }
-.hw-accelerate { transform: translate3d(0, 0, 0); }
-
-/* Sayı sütunu ok işaretleri */
-.grid-arrow {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 0;
-  height: 0;
-  pointer-events: none;
-  z-index: 5;
+/* ===== TÜRKÇE ANALİZ PANELİ ===== */
+#trPanel {
+  width: 185px;
+  background: #000; border: 2px solid #666;
+  border-radius: 6px; padding: 5px; display: none;
+  flex-direction: column; gap: 3px; flex-shrink: 0;
 }
-.grid-arrow-up {
-  border-left: 4px solid transparent;
-  border-right: 4px solid transparent;
-  border-bottom: 6px solid #1155ff;
-  top: 2px;
-}
-.grid-arrow-down {
-  border-left: 4px solid transparent;
-  border-right: 4px solid transparent;
-  border-top: 6px solid #cc1111;
-  bottom: 2px;
-}
+body.day-mode #trPanel { background: #f5f5f5; border-color: #ccc; }
+@media (min-width: 769px) { #trPanel { width: 192px; } }
+@media (max-width: 768px) { #trPanel { width: 70px; border: 1.5px solid #666; padding: 4px; } }
 
-/* ===== DESKTOP FULL SCREEN ===== */
-@media (min-width: 769px) {
-  #rightSection { flex: 0 0 192px; min-width: 192px; align-items: flex-start; }
-  #trendDrawBox { display: flex !important; flex-direction: row !important; flex-wrap: nowrap !important; gap: 4px; width: 100%; }
-  .draw-panel { width: 90px !important; height: 90px !important; flex: 0 0 90px !important; min-width: 90px; max-width: 90px; }
-  #trendBellBox { width: calc(75% - 2px); align-self: flex-end; }
-  #tradingPanel { width: 100%; }
-  #tradeChart { width: 100%; }
-  #tradeInfoPanel { width: 100%; }
-  #topbar { flex-wrap: nowrap; }
-  #apiInput { max-width: 200px; }
-  #price { flex-shrink: 0; }
+.ap-title { font-size: 6px; font-weight: 900; letter-spacing: 1px; color: #666; text-transform: uppercase; font-family: monospace; padding-bottom: 2px; border-bottom: 1px solid #333; margin-bottom: 1px; }
+body.day-mode .ap-title { color: #888; border-color: #ddd; }
+
+#npRows, #trRows { display: flex; flex-direction: column; gap: 0; width: 100%; }
+.np-row, .tr-row { display: flex; gap: 0; align-items: flex-start; font-size: 6px; line-height: 1.5; padding: 2px 0; border-bottom: 1px solid #333; }
+body.day-mode .np-row, body.day-mode .tr-row { border-color: #ccc; }
+.np-lbl, .tr-lbl { font-family: monospace; font-size: 5.5px; color: #555; min-width: 44px; flex-shrink: 0; font-weight: bold; text-transform: uppercase; padding: 1px 3px 1px 0; border-right: 1px solid #444; margin-right: 3px; }
+body.day-mode .np-lbl, body.day-mode .tr-lbl { color: #999; border-color: #bbb; }
+.np-val, .tr-val { color: #999; font-size: 6px; word-break: break-word; min-width: 0; }
+body.day-mode .np-val, body.day-mode .tr-val { color: #444; }
+.np-val .nb, .tr-val .nb { color: #1d7ef5; font-weight: 900; }
+.np-val .nr, .tr-val .nr { color: #e63946; font-weight: 900; }
+.np-val .ng, .tr-val .ng { color: #3ecf7a; font-weight: 900; }
+.np-val .nw, .tr-val .nw { color: #ddd; font-weight: 900; }
+.np-val .ny, .tr-val .ny { color: #f4c430; font-weight: 900; }
+body.day-mode .np-val .nw, body.day-mode .tr-val .nw { color: #111; }
+
+#npDecision, #trDecision {
+  width: 100%; padding: 4px; border-radius: 4px;
+  text-align: center; font-size: 7px; font-weight: 900;
+  letter-spacing: 1px; display: none; font-family: monospace; margin-top: 2px;
 }
+#npDecision.up, #trDecision.up { background: rgba(29,126,245,0.12); border: 1px solid rgba(29,126,245,0.35); color: #1d7ef5; }
+#npDecision.down, #trDecision.down { background: rgba(230,57,70,0.12); border: 1px solid rgba(230,57,70,0.35); color: #e63946; }
+```
+
   </style>
-```
-
 </head>
 <body>
   <div id="loadingIndicator"><div class="spinner"></div></div>
-
   <div id="mainContainer">
     <div id="leftSection">
       <div id="headerSection">
@@ -243,33 +238,15 @@ body.day-mode #tradeInfoPanel { width: 100%; background: #111; border: 1px solid
         <button id="startStopBtn" title="Refresh">
           <svg width="26" height="26" viewBox="0 0 100 100" style="display:block;">
             <defs>
-              <radialGradient id="rgOuter" cx="40%" cy="30%" r="70%">
-                <stop offset="0%" stop-color="#ffffff"/>
-                <stop offset="30%" stop-color="#d0d0d0"/>
-                <stop offset="70%" stop-color="#a0a0a0"/>
-                <stop offset="100%" stop-color="#606060"/>
-              </radialGradient>
-              <radialGradient id="rgYellow" cx="38%" cy="32%" r="65%">
-                <stop offset="0%" stop-color="#fff176"/>
-                <stop offset="40%" stop-color="#fdd835"/>
-                <stop offset="80%" stop-color="#f9a825"/>
-                <stop offset="100%" stop-color="#e65100"/>
-              </radialGradient>
-              <radialGradient id="rgInner" cx="40%" cy="30%" r="65%">
-                <stop offset="0%" stop-color="#ffffff" stop-opacity="0.6"/>
-                <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
-              </radialGradient>
+              <radialGradient id="rgOuter" cx="40%" cy="30%" r="70%"><stop offset="0%" stop-color="#ffffff"/><stop offset="30%" stop-color="#d0d0d0"/><stop offset="70%" stop-color="#a0a0a0"/><stop offset="100%" stop-color="#606060"/></radialGradient>
+              <radialGradient id="rgYellow" cx="38%" cy="32%" r="65%"><stop offset="0%" stop-color="#fff176"/><stop offset="40%" stop-color="#fdd835"/><stop offset="80%" stop-color="#f9a825"/><stop offset="100%" stop-color="#e65100"/></radialGradient>
+              <radialGradient id="rgInner" cx="40%" cy="30%" r="65%"><stop offset="0%" stop-color="#ffffff" stop-opacity="0.6"/><stop offset="100%" stop-color="#ffffff" stop-opacity="0"/></radialGradient>
             </defs>
-            <!-- Nikelaj dış halka -->
             <circle cx="50" cy="50" r="49" fill="url(#rgOuter)"/>
-            <!-- Sarı iç alan -->
             <circle cx="50" cy="50" r="40" fill="url(#rgYellow)"/>
-            <!-- Parlama -->
             <ellipse cx="42" cy="34" rx="16" ry="10" fill="white" opacity="0.35"/>
-            <!-- Ok simgesi -->
             <path d="M50 24 A26 26 0 1 1 27 62" fill="none" stroke="#1a1a1a" stroke-width="11" stroke-linecap="round"/>
             <polygon points="50,12 37,26 63,26" fill="#1a1a1a"/>
-            <!-- Nikelaj iç parlama -->
             <circle cx="50" cy="50" r="49" fill="url(#rgInner)"/>
           </svg>
         </button>
@@ -288,9 +265,7 @@ body.day-mode #tradeInfoPanel { width: 100%; background: #111; border: 1px solid
         <img id="chartWatermark" loading="lazy" src="https://raw.githubusercontent.com/Samday68/Foto-raflar/refs/heads/main/D354DBAF-3EC7-4B5F-ABC1-8EF876797DAA.jpeg" alt="" onerror="this.style.display='none';" />
         <canvas id="chart"></canvas>
       </div>
-      <div id="xzRowWrap">
-        <div id="numbersTop"></div>
-      </div>
+      <div id="xzRowWrap"><div id="numbersTop"></div></div>
       <div id="gridWrap">
         <div id="gridTopRow"></div>
         <div id="gridDivider"><div id="gridDividerLine"></div></div>
@@ -298,29 +273,24 @@ body.day-mode #tradeInfoPanel { width: 100%; background: #111; border: 1px solid
       </div>
 
 ```
+  <!-- TÜRKÇE ANALİZ PANELİ - grid altında -->
+  <div id="trPanel">
+    <div class="ap-title">ALGORİTMA xZ · ANALİZ</div>
+    <div id="trRows"></div>
+    <div id="trDecision"></div>
+  </div>
 </div>
 
 <div id="rightSection">
-
-
-  <!-- YENİ: Trend Çizim Kutuları (Panel 1 ve Panel 2) -->
   <div id="trendDrawBox">
-    <div class="draw-panel" id="drawPanel1">
-      <svg id="drawSvg1" viewBox="0 0 100 100" preserveAspectRatio="none"></svg>
-    </div>
-    <div class="draw-panel" id="drawPanel2">
-      <svg id="drawSvg2" viewBox="0 0 100 100" preserveAspectRatio="none"></svg>
-    </div>
+    <div class="draw-panel" id="drawPanel1"><svg id="drawSvg1" viewBox="0 0 100 100" preserveAspectRatio="none"></svg></div>
+    <div class="draw-panel" id="drawPanel2"><svg id="drawSvg2" viewBox="0 0 100 100" preserveAspectRatio="none"></svg></div>
   </div>
-
-  <!-- Mevcut bell ve trading panelleri (sadece top değerleri güncellendi) -->
   <div id="trendBellBox">
     <span id="trendBellIcon">🔔</span>
     <span id="trendLabel">Trend</span>
   </div>
-  <div id="tradeChart">
-    <canvas id="tradeCanvas"></canvas>
-  </div>
+  <div id="tradeChart"><canvas id="tradeCanvas"></canvas></div>
   <div id="tradeInfoPanel">
     <div class="tinfo-row" id="tinfoRow1">
       <div class="tinfo-cell"><div class="tinfo-label" id="tinfoL1">-</div><div class="tinfo-val" id="tinfoV1">-</div></div>
@@ -355,7 +325,19 @@ body.day-mode #tradeInfoPanel { width: 100%; background: #111; border: 1px solid
       <span class="balance-value" id="profitValue">$ 0.00</span>
     </div>
   </div>
-  
+
+  <!-- GRAFİK - işlem paneli ile analiz paneli arasında -->
+  <div id="npGraphPanel">
+    <svg id="npSvg" viewBox="0 0 200 90" preserveAspectRatio="none"></svg>
+  </div>
+
+  <!-- RUSÇA ANALİZ PANELİ -->
+  <div id="nikolasPanel">
+    <div class="ap-title">АЛГОРИТМ xZ · АНАЛИЗ</div>
+    <div id="npRows"></div>
+    <div id="npDecision"></div>
+  </div>
+
 </div>
 ```
 
@@ -364,15 +346,11 @@ body.day-mode #tradeInfoPanel { width: 100%; background: #111; border: 1px solid
   <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
 
   <script>
-    // ========== PERFORMANCE OPTIMIZATIONS ==========
-    let lastFrameTime = 0;
-    const FRAME_INTERVAL = 16;
     const workerMessageQueue = [];
     let workerBusy = false;
-
-    // ========== GLOBAL DEĞİŞKENLER ==========
     let audioContext = null;
     let lastTrendSignal = null;
+    let npLastSignal = null; // Nikolas panel signal tracker
     let currentTrendData = { direction: null, last3: [], colors: [], arrows: [] };
     let trendStartGlobal = null;
     let currentUpDownSignal = null;
@@ -380,12 +358,10 @@ body.day-mode #tradeInfoPanel { width: 100%; background: #111; border: 1px solid
     let autoTradeEnabled = false;
     let martingaleEnabled = false;
     let martingaleMultiplier = 2.2;
-    let lastStake = 1;
     let wsReconnectEnabled = false;
-    // Performans: throttle/debounce
     let _rafPending = false;
     let _lastTickRender = 0;
-    let _tickRenderThrottle = 80; // ms - her 80ms'de bir render
+    let _tickRenderThrottle = 80;
     let _pendingRender = false;
     let wsReconnectTimer = null;
     let wsPingTimer = null;
@@ -421,1034 +397,647 @@ body.day-mode #tradeInfoPanel { width: 100%; background: #111; border: 1px solid
     let tradeData = [];
     let contractId = null;
     let chart = null;
+    let trendDrawBuffer = [];
+    let trendDrawStarted = false;
+    let lastStartSpanKey = null;
 
-    // ========== YENİ: TREND ÇİZİM DEĞİŞKENLERİ ==========
-    // start'tan itibaren toplanan 6 sayı tamponu
-    let trendDrawBuffer = [];      // {v, color} objeleri, max 6 adet
-    let trendDrawStarted = false;  // start algılandı mı
-    let lastStartSpanKey = null;   // aynı start'ı tekrar işlememek için
-
-    // ========== WEB WORKER ==========
+    // WEB WORKER
     let computationWorker = null;
     function initWebWorker() {
       if (window.Worker) {
         try {
-          const workerCode = `
-            self.onmessage = function(e) {
-              const { type, data } = e.data;
-              if (type === 'analyzeTrend') {
-                const { gridHistory, startGlobalSpan, xzTickCounter } = data;
-                if (!startGlobalSpan || !gridHistory || gridHistory.length < 6) { self.postMessage({ type: 'trendResult', result: null }); return; }
-                const vis = gridHistory.length;
-                const firstGlobal = xzTickCounter - vis;
-                const startFrom = startGlobalSpan.to - firstGlobal + 1;
-                if (startFrom < 0 || startFrom >= vis - 2) { self.postMessage({ type: 'trendResult', result: null }); return; }
-                const afterStart = [];
-                for (let i = startFrom; i < vis; i++) { afterStart.push({ v: gridHistory[i].v, row: gridHistory[i].row, color: gridHistory[i].effColor }); }
-                if (afterStart.length < 3) { self.postMessage({ type: 'trendResult', result: null }); return; }
-                const last3 = afterStart.slice(-3);
-                const v1 = last3[0].v, v2 = last3[1].v, v3 = last3[2].v;
-                const c1 = last3[0].color, c2 = last3[1].color, c3 = last3[2].color;
-                let trendDirection = null;
-                const compare12 = v2 > v1 ? 'up' : (v2 < v1 ? 'down' : 'flat');
-                const compare23 = v3 > v2 ? 'up' : (v3 < v2 ? 'down' : 'flat');
-                const compare13 = v3 > v1 ? 'up' : (v3 < v1 ? 'down' : 'flat');
-                if (compare12 === 'up' && compare23 === 'up' && compare13 === 'up') { trendDirection = 'UP'; }
-                else if (compare12 === 'down' && compare23 === 'down' && compare13 === 'down') { trendDirection = 'DOWN'; }
-                else if (compare12 === 'down' && compare23 === 'up') { if (v3 > v1 || v3 >= v2) trendDirection = 'UP'; }
-                else if (compare12 === 'up' && compare23 === 'down') { if (v3 < v1 || v3 <= v2) trendDirection = 'DOWN'; }
-                else {
-                  const blueCount = [c1,c2,c3].filter(c => c === 'blue').length;
-                  const redCount = [c1,c2,c3].filter(c => c === 'red').length;
-                  if (blueCount >= 2 && compare13 === 'up') trendDirection = 'UP';
-                  else if (redCount >= 2 && compare13 === 'down') trendDirection = 'DOWN';
-                }
-                self.postMessage({ type: 'trendResult', result: { direction: trendDirection, last3: [v1,v2,v3], colors: [c1,c2,c3] } });
-              }
-            };
-          `;
-          const blob = new Blob([workerCode], { type: 'application/javascript' });
-          computationWorker = new Worker(URL.createObjectURL(blob));
-          computationWorker.onmessage = function(e) {
-            if (e.data.type === 'trendResult') {
-              if (e.data.result) { currentTrendData = e.data.result; showTrendSignal(e.data.result.direction); }
-              workerBusy = false;
-              processWorkerQueue();
+          const wc=`self.onmessage=function(e){const{type,data}=e.data;if(type==='analyzeTrend'){const{gridHistory,startGlobalSpan,xzTickCounter}=data;if(!startGlobalSpan||!gridHistory||gridHistory.length<6){self.postMessage({type:'trendResult',result:null});return;}const vis=gridHistory.length;const firstGlobal=xzTickCounter-vis;const startFrom=startGlobalSpan.to-firstGlobal+1;if(startFrom<0||startFrom>=vis-2){self.postMessage({type:'trendResult',result:null});return;}const afterStart=[];for(let i=startFrom;i<vis;i++){afterStart.push({v:gridHistory[i].v,row:gridHistory[i].row,color:gridHistory[i].effColor});}if(afterStart.length<3){self.postMessage({type:'trendResult',result:null});return;}const last3=afterStart.slice(-3);const v1=last3[0].v,v2=last3[1].v,v3=last3[2].v;const c1=last3[0].color,c2=last3[1].color,c3=last3[2].color;let td=null;const c12=v2>v1?'up':(v2<v1?'down':'flat');const c23=v3>v2?'up':(v3<v2?'down':'flat');const c13=v3>v1?'up':(v3<v1?'down':'flat');if(c12==='up'&&c23==='up'&&c13==='up')td='UP';else if(c12==='down'&&c23==='down'&&c13==='down')td='DOWN';else if(c12==='down'&&c23==='up'){if(v3>v1||v3>=v2)td='UP';}else if(c12==='up'&&c23==='down'){if(v3<v1||v3<=v2)td='DOWN';}else{const bc=[c1,c2,c3].filter(c=>c==='blue').length;const rc=[c1,c2,c3].filter(c=>c==='red').length;if(bc>=2&&c13==='up')td='UP';else if(rc>=2&&c13==='down')td='DOWN';}self.postMessage({type:'trendResult',result:{direction:td,last3:[v1,v2,v3],colors:[c1,c2,c3]}});}};`;
+          const blob=new Blob([wc],{type:'application/javascript'});
+          computationWorker=new Worker(URL.createObjectURL(blob));
+          computationWorker.onmessage=function(e){if(e.data.type==='trendResult'){if(e.data.result){currentTrendData=e.data.result;showTrendSignal(e.data.result.direction);}workerBusy=false;processWorkerQueue();}};
+        } catch(err){}
+      }
+    }
+    function processWorkerQueue(){if(workerBusy||workerMessageQueue.length===0)return;const t=workerMessageQueue.shift();workerBusy=true;if(computationWorker)computationWorker.postMessage(t);else{setTimeout(()=>{handleWorkerTask(t);workerBusy=false;processWorkerQueue();},0);}}
+    function handleWorkerTask(task){if(task.type==='analyzeTrend'){const r=analyzeTrendFallback(task.data);if(r){currentTrendData=r;showTrendSignal(r.direction);}}}
+    function analyzeTrendFallback(data){
+      const{gridHistory,startGlobalSpan,xzTickCounter}=data;
+      if(!startGlobalSpan||!gridHistory||gridHistory.length<6)return null;
+      const vis=gridHistory.length,firstGlobal=xzTickCounter-vis,startFrom=startGlobalSpan.to-firstGlobal+1;
+      if(startFrom<0||startFrom>=vis-2)return null;
+      const afterStart=[];for(let i=startFrom;i<vis;i++)afterStart.push({v:gridHistory[i].v,row:gridHistory[i].row,color:gridHistory[i].effColor});
+      if(afterStart.length<3)return null;
+      const last3=afterStart.slice(-3),v1=last3[0].v,v2=last3[1].v,v3=last3[2].v,c1=last3[0].color,c2=last3[1].color,c3=last3[2].color;
+      let td=null;
+      const c12=v2>v1?'up':(v2<v1?'down':'flat'),c23=v3>v2?'up':(v3<v2?'down':'flat'),c13=v3>v1?'up':(v3<v1?'down':'flat');
+      if(c12==='up'&&c23==='up'&&c13==='up')td='UP';else if(c12==='down'&&c23==='down'&&c13==='down')td='DOWN';else if(c12==='down'&&c23==='up'){if(v3>v1||v3>=v2)td='UP';}else if(c12==='up'&&c23==='down'){if(v3<v1||v3<=v2)td='DOWN';}else{const bc=[c1,c2,c3].filter(c=>c==='blue').length,rc=[c1,c2,c3].filter(c=>c==='red').length;if(bc>=2&&c13==='up')td='UP';else if(rc>=2&&c13==='down')td='DOWN';}
+      return{direction:td,last3:[v1,v2,v3],colors:[c1,c2,c3]};
+    }
+
+    // AUDIO
+    function initAudio(){if(!audioContext){try{audioContext=new(window.AudioContext||window.webkitAudioContext)();}catch(e){}}if(audioContext&&audioContext.state==='suspended')audioContext.resume();return audioContext;}
+    function playUpTrendSound(){requestAnimationFrame(()=>{const ctx=initAudio();if(!ctx)return;const now=ctx.currentTime;[{freq:261.63,start:0,duration:0.3},{freq:329.63,start:0.25,duration:0.3},{freq:392.00,start:0.5,duration:0.3},{freq:523.25,start:0.75,duration:0.5}].forEach(note=>{const osc=ctx.createOscillator(),gain=ctx.createGain();osc.type='sine';osc.frequency.value=note.freq;const s=now+note.start;gain.gain.setValueAtTime(0,s);gain.gain.linearRampToValueAtTime(0.12,s+0.05);gain.gain.exponentialRampToValueAtTime(0.01,s+note.duration);osc.connect(gain);gain.connect(ctx.destination);osc.start(s);osc.stop(s+note.duration);});});}
+    function playDownTrendSound(){requestAnimationFrame(()=>{const ctx=initAudio();if(!ctx)return;const now=ctx.currentTime;[{freq:392.00,start:0,duration:0.3},{freq:329.63,start:0.25,duration:0.3},{freq:261.63,start:0.5,duration:0.3},{freq:220.00,start:0.75,duration:0.5}].forEach(note=>{const osc=ctx.createOscillator(),gain=ctx.createGain();osc.type='sine';osc.frequency.value=note.freq;const s=now+note.start;gain.gain.setValueAtTime(0,s);gain.gain.linearRampToValueAtTime(0.12,s+0.05);gain.gain.exponentialRampToValueAtTime(0.01,s+note.duration);osc.connect(gain);gain.connect(ctx.destination);osc.start(s);osc.stop(s+note.duration);});});}
+
+    // AUTO TRADE
+    function toggleMartingale(){martingaleEnabled=!martingaleEnabled;document.getElementById('martingaleBtn').classList.toggle('active',martingaleEnabled);}
+    function toggleAutoTrade(){autoTradeEnabled=!autoTradeEnabled;document.getElementById('autoTradeBtn').classList.toggle('active',autoTradeEnabled);}
+    function executeAutoTrade(){if(!autoTradeEnabled||autoTradeInProgress||tradeActive||!currentUpDownSignal)return;if(!apiToken||!derivWS||derivWS.readyState!==WebSocket.OPEN)return;autoTradeInProgress=true;if(currentUpDownSignal==='UP')placeTrade('CALL');else if(currentUpDownSignal==='DOWN')placeTrade('PUT');setTimeout(()=>{autoTradeInProgress=false;},6000);}
+    function analyzeUpDownSignal(arrows){if(!arrows||arrows.length<2)return null;const la=arrows.slice(-3);if(la.length<2)return null;let u=0,d=0;la.forEach(a=>{if(a==='up')u++;else if(a==='down')d++;});if(u>=2&&d>=1)return'UP';if(d>=2&&u>=1)return'DOWN';return null;}
+    function showUpDownSignal(signal){if(signal==='UP'){currentUpDownSignal='UP';if(lastUpDownSignal!=='UP')executeAutoTrade();lastUpDownSignal='UP';}else if(signal==='DOWN'){currentUpDownSignal='DOWN';if(lastUpDownSignal!=='DOWN')executeAutoTrade();lastUpDownSignal='DOWN';}else{currentUpDownSignal=null;lastUpDownSignal=null;}}
+
+    // TREND - original (only fires if NP panel has no signal)
+    function checkAndSignalTrend(){if(currentGraph!=='XZ'||!startGlobalSpan||!trendStartGlobal||gridHistory.length<6){showTrendSignal(null);drawTrendAngle();return;}workerMessageQueue.push({type:'analyzeTrend',data:{gridHistory,startGlobalSpan,xzTickCounter}});if(!workerBusy)processWorkerQueue();drawTrendAngle();}
+    function showTrendSignal(direction){
+      // Nikolas paneli aktifse veya sinyal verdiyse ezme — zil siyah kalır
+      if(npLastSignal)return;
+      const panel=document.getElementById('nikolasPanel');
+      if(panel&&panel.style.display==='flex')return;
+      const box=document.getElementById('trendBellBox'),label=document.getElementById('trendLabel');
+      box.classList.remove('trend-up','trend-down');
+      box.style.background='';box.style.borderColor='';
+      if(direction==='UP'){box.classList.add('trend-up');label.textContent='Trend ↑';if(lastTrendSignal!=='UP'){if(!bellMuted)playUpTrendSound();lastTrendSignal='UP';}}
+      else if(direction==='DOWN'){box.classList.add('trend-down');label.textContent='Trend ↓';if(lastTrendSignal!=='DOWN'){if(!bellMuted)playDownTrendSound();lastTrendSignal='DOWN';}}
+      else{label.textContent='Trend';lastTrendSignal=null;}
+    }
+    function drawTrendAngle(){const uds=analyzeUpDownSignal(currentTrendData.arrows);showUpDownSignal(uds);}
+
+    // TREND DRAW PANELS
+    function updateTrendDrawBuffer(){
+      if(currentGraph!=='XZ'||!startGlobalSpan){trendDrawBuffer=[];trendDrawStarted=false;lastStartSpanKey=null;clearDrawPanels();return;}
+      const spanKey=startGlobalSpan.from+'_'+startGlobalSpan.to;
+      if(spanKey!==lastStartSpanKey){trendDrawBuffer=[];trendDrawStarted=true;lastStartSpanKey=spanKey;}
+      if(!trendDrawStarted)return;
+      const vis=gridHistory.length,firstGlobal=xzTickCounter-vis,startFromLocal=startGlobalSpan.from-firstGlobal;
+      if(startFromLocal<0||startFromLocal>=vis)return;
+      const nb=[];for(let i=startFromLocal;i<vis&&nb.length<6;i++)nb.push({v:gridHistory[i].v,color:gridHistory[i].effColor});
+      trendDrawBuffer=nb;renderDrawPanels();renderTwoRowGrid();
+    }
+    function clearDrawPanels(){const s1=document.getElementById('drawSvg1'),s2=document.getElementById('drawSvg2');if(s1)s1.innerHTML='';if(s2)s2.innerHTML='';}
+    function renderDrawPanels(){
+      const s1=document.getElementById('drawSvg1'),s2=document.getElementById('drawSvg2');if(!s1||!s2)return;
+      s1.innerHTML='';s2.innerHTML='';const buf=trendDrawBuffer;
+      if(buf.length<3)return;
+      drawThreePointPanel(s1,[buf[0],buf[1],buf[2]]);
+      if(buf[0].v===buf[2].v||buf.length<6)return;
+      drawThreePointPanel(s2,[buf[3],buf[4],buf[5]]);
+    }
+    function drawThreePointPanel(svg,points){
+      const W=100,H=100,RADIUS=8,GAP=6,ns='http://www.w3.org/2000/svg';
+      const sign=p=>p.color==='red'?-p.v:p.v;
+      const fv=sign(points[0]),lv=sign(points[2]),mv=sign(points[1]);
+      const lh=lv>fv,oy=H/2;
+      const fy=lh?oy+RADIUS+GAP:oy-RADIUS-GAP,ly=lh?oy-RADIUS-GAP:oy+RADIUS+GAP;
+      const av=[fv,mv,lv],mn=Math.min(...av),mx=Math.max(...av);
+      let my;if(mv===mx)my=10;else if(mv===mn)my=H-10;else{const diff=Math.abs(fv-lv),r=diff>0?(mv-Math.min(fv,lv))/diff:0.5,hy=Math.min(fy,ly),lo=Math.max(fy,ly);my=lo-r*(lo-hy);}
+      const xs=[18,W/2,W-18],ys=[fy,my,ly];
+      const line=document.createElementNS(ns,'line');line.setAttribute('x1','4');line.setAttribute('y1',String(oy));line.setAttribute('x2',String(W-4));line.setAttribute('y2',String(oy));line.setAttribute('stroke','#e08000');line.setAttribute('stroke-width','2.5');line.setAttribute('stroke-linecap','round');svg.appendChild(line);
+      const pl=document.createElementNS(ns,'polyline');pl.setAttribute('points',xs.map((x,i)=>`${x},${ys[i]}`).join(' '));pl.setAttribute('fill','none');pl.setAttribute('stroke','white');pl.setAttribute('stroke-width','2');pl.setAttribute('stroke-linejoin','round');pl.setAttribute('stroke-linecap','round');svg.appendChild(pl);
+      points.forEach((p,i)=>{
+        const cx=xs[i],cy=ys[i],neg=p.color==='red',fc=neg?'#cc1111':'#1133cc';
+        const oc=document.createElementNS(ns,'circle');oc.setAttribute('cx',String(cx));oc.setAttribute('cy',String(cy));oc.setAttribute('r',String(RADIUS+1.5));oc.setAttribute('fill','white');svg.appendChild(oc);
+        const ic=document.createElementNS(ns,'circle');ic.setAttribute('cx',String(cx));ic.setAttribute('cy',String(cy));ic.setAttribute('r',String(RADIUS));ic.setAttribute('fill',fc);svg.appendChild(ic);
+        const tx=document.createElementNS(ns,'text');tx.setAttribute('x',String(cx));tx.setAttribute('y',String(cy));tx.setAttribute('text-anchor','middle');tx.setAttribute('dominant-baseline','central');tx.setAttribute('fill','white');tx.setAttribute('font-size','11');tx.setAttribute('font-weight','900');tx.setAttribute('font-family','Georgia, serif');tx.textContent=String(p.v);svg.appendChild(tx);
+      });
+      const la=ly<oy,ac=la?'#1155ff':'#cc1111',ax=W-8,aw=5,ah=7;
+      let ap;if(la){const ay=10;ap=ax+','+(ay-ah/2)+' '+(ax-aw)+','+(ay+ah/2)+' '+(ax+aw)+','+(ay+ah/2);}else{const ay=H-10;ap=ax+','+(ay+ah/2)+' '+(ax-aw)+','+(ay-ah/2)+' '+(ax+aw)+','+(ay-ah/2);}
+      const poly=document.createElementNS('http://www.w3.org/2000/svg','polygon');poly.setAttribute('points',ap);poly.setAttribute('fill',ac);svg.appendChild(poly);
+      const stem=document.createElementNS('http://www.w3.org/2000/svg','line');
+      if(la){stem.setAttribute('x1',String(ax));stem.setAttribute('y1',String(10+ah/2));stem.setAttribute('x2',String(ax));stem.setAttribute('y2',String(10+ah/2+6));}
+      else{stem.setAttribute('x1',String(ax));stem.setAttribute('y1',String(H-10-ah/2));stem.setAttribute('x2',String(ax));stem.setAttribute('y2',String(H-10-ah/2-6));}
+      stem.setAttribute('stroke',ac);stem.setAttribute('stroke-width','2.5');stem.setAttribute('stroke-linecap','round');svg.appendChild(stem);
+    }
+
+    // ===== NIKOLAS ANALİZ FONKSİYONLARI =====
+    function npSV(v,color){if(color==='red')return v===0?10:-v;return v;}
+    function npCmp(va,ca,vb,cb){if(ca!==cb)return ca==='blue'?'a':'b';const sa=npSV(va,ca),sb=npSV(vb,cb);if(sa>sb)return'a';if(sa<sb)return'b';return'eq';}
+
+    function npRender(){
+      const panel=document.getElementById('nikolasPanel');
+      const decEl=document.getElementById('npDecision');
+      const rowsEl=document.getElementById('npRows');
+      const gp=document.getElementById('npGraphPanel');
+      const tp=document.getElementById('trPanel');
+      if(!panel)return;
+      if(currentGraph!=='XZ'||!startGlobalSpan||gridHistory.length<2){
+        panel.style.display='none'; if(gp)gp.style.display='none';
+        if(tp)tp.style.display='none'; decEl.style.display='none'; return;
+      }
+      const vis=gridHistory.length,fg=xzTickCounter-vis,sfl=startGlobalSpan.from-fg;
+      if(sfl<0||sfl>=vis){panel.style.display='none';if(gp)gp.style.display='none';if(tp)tp.style.display='none';return;}
+      const seq=[];for(let i=sfl;i<vis;i++)seq.push({v:gridHistory[i].v,color:gridHistory[i].effColor});
+      if(seq.length<2){panel.style.display='none';if(gp)gp.style.display='none';if(tp)tp.style.display='none';return;}
+      panel.style.display='flex';
+      if(gp)gp.style.display='block';
+      if(tp)tp.style.display='flex';
+
+      const even=seq.filter(x=>x.v%2===0),odd=seq.filter(x=>x.v%2!==0);
+
+      function stepInfo(arr){
+        if(!arr.length)return{dir:'—',ru:'—',cls:'',sz:'',ez:''};
+        const f=arr[0],l=arr[arr.length-1];
+        const sz=f.color==='blue'?'синяя':'красная',ez=l.color==='blue'?'синяя':'красная';
+        const c=npCmp(f.v,f.color,l.v,l.color);
+        if(c==='a')return{dir:'↓',ru:'падение',cls:'nr',sz,ez};
+        if(c==='b')return{dir:'↑',ru:'рост',cls:'ng',sz,ez};
+        return{dir:'→',ru:'флэт',cls:'ny',sz,ez};
+      }
+      const ei=stepInfo(even),oi=stepInfo(odd);
+
+      // Flat tespiti - tüm flatler
+      let flatItems=[];
+      for(let i=1;i<seq.length;i++){
+        if(seq[i].v===seq[i-1].v&&seq[i].color===seq[i-1].color){
+          const fc=seq[i].color==='blue'?'nb':'nr';
+          const label=`<span class="${fc}">${seq[i].v}${seq[i].color==='blue'?'с':'к'}</span>`;
+          flatItems.push(label+'-'+label);
+        }
+      }
+
+      // VZ tespiti - 1 birim fark (ardışık olmak zorunda değil, tüm çiftler)
+      let vzItems=[];
+      for(let i=0;i<seq.length;i++){
+        for(let j=i+1;j<seq.length;j++){
+          const a=seq[i],b=seq[j];
+          // 1 birim fark: kırmızıda büyük sayı aşağı, mavi büyük sayı yukarı
+          // Sayısal fark 1 olmalı
+          const diff=Math.abs(a.v-b.v);
+          if(diff===1){
+            const ac=a.color==='blue'?'nb':'nr';
+            const bc=b.color==='blue'?'nb':'nr';
+            vzItems.push(`<span class="${ac}">${a.v}${a.color==='blue'?'с':'к'}</span>·<span class="${bc}">${b.v}${b.color==='blue'?'с':'к'}</span>`);
+          }
+        }
+      }
+      // VZ fazla olabilir, sadece benzersiz kombinasyonları göster
+      vzItems=[...new Set(vzItems)].slice(0,4);
+
+      // Decision
+      let decision=null,decRu='';
+      if(even.length>=1&&odd.length>=1){
+        const le=even[even.length-1],se=even[0],lo=odd[odd.length-1],so=odd[0];
+        if(ei.dir==='↑'&&oi.dir==='↑'){decision='UP';decRu='Оба шага растут';}
+        else if(ei.dir==='↓'&&oi.dir==='↓'){decision='DOWN';decRu='Оба шага падают';}
+        else if(ei.dir==='↓'&&oi.dir==='↑'){
+          const eMin=even.reduce((a,x)=>npSV(x.v,x.color)<npSV(a.v,a.color)?x:a);
+          const oMax=odd.reduce((a,x)=>npSV(x.v,x.color)>npSV(a.v,a.color)?x:a);
+          const c=npCmp(oMax.v,oMax.color,eMin.v,eMin.color);
+          if(c==='b'||c==='eq'){decision='DOWN';decRu='Чётный давит вниз';}
+          else{decision='UP';decRu='Нечётный пробил минимум чётного → ВВЕРХ';}
+        } else if(ei.dir==='↑'&&oi.dir==='↓'){
+          const oMin=odd.reduce((a,x)=>npSV(x.v,x.color)<npSV(a.v,a.color)?x:a);
+          const eMax=even.reduce((a,x)=>npSV(x.v,x.color)>npSV(a.v,a.color)?x:a);
+          const c=npCmp(eMax.v,eMax.color,oMin.v,oMin.color);
+          if(c==='b'||c==='eq'){decision='UP';decRu='Чётный давит вверх';}
+          else{decision='DOWN';decRu='Нечётный пробил минимум чётного → ВНИЗ';}
+        } else {
+          // Флэт или неопределённость — сравниваем последние точки
+          const c1=npCmp(le.v,le.color,so.v,so.color);
+          const c2=npCmp(lo.v,lo.color,se.v,se.color);
+          if(c1==='b'){decision='DOWN';decRu='Последний чётный ниже старта нечётного → ВНИЗ';}
+          else if(c1==='a'){decision='UP';decRu='Последний чётный выше старта нечётного → ВВЕРХ';}
+          else if(c2==='a'){decision='UP';decRu='Нечётный выше старта чётного → ВВЕРХ';}
+          else if(c2==='b'){decision='DOWN';decRu='Нечётный ниже старта чётного → ВНИЗ';}
+          else {
+            // Son çare: son gelen sayının rengi
+            const last=seq[seq.length-1];
+            const prev=seq[seq.length-2];
+            const cLast=npCmp(last.v,last.color,prev.v,prev.color);
+            if(cLast==='a'){decision='DOWN';decRu='Последнее движение вниз';}
+            else if(cLast==='b'){decision='UP';decRu='Последнее движение вверх';}
+            else{
+              // En son çare: çift adım yönü belirler
+              if(ei.dir==='↑'){decision='UP';decRu='Давление чётного → ВВЕРХ';}
+              else if(ei.dir==='↓'){decision='DOWN';decRu='Давление чётного → ВНИЗ';}
+              else if(oi.dir==='↑'){decision='UP';decRu='Давление нечётного → ВВЕРХ';}
+              else{decision='DOWN';decRu='Давление нечётного → ВНИЗ';}
             }
-          };
-        } catch(error) { console.log('Worker fallback:', error); }
-      }
-    }
-
-    function processWorkerQueue() {
-      if (workerBusy || workerMessageQueue.length === 0) return;
-      const nextTask = workerMessageQueue.shift();
-      workerBusy = true;
-      if (computationWorker) { computationWorker.postMessage(nextTask); }
-      else { setTimeout(() => { handleWorkerTask(nextTask); workerBusy = false; processWorkerQueue(); }, 0); }
-    }
-
-    function handleWorkerTask(task) {
-      if (task.type === 'analyzeTrend') {
-        const result = analyzeTrendFallback(task.data);
-        if (result) { currentTrendData = result; showTrendSignal(result.direction); }
-      }
-    }
-
-    function analyzeTrendFallback(data) {
-      const { gridHistory, startGlobalSpan, xzTickCounter } = data;
-      if (!startGlobalSpan || !gridHistory || gridHistory.length < 6) return null;
-      const vis = gridHistory.length;
-      const firstGlobal = xzTickCounter - vis;
-      const startFrom = startGlobalSpan.to - firstGlobal + 1;
-      if (startFrom < 0 || startFrom >= vis - 2) return null;
-      const afterStart = [];
-      for (let i = startFrom; i < vis; i++) afterStart.push({ v: gridHistory[i].v, row: gridHistory[i].row, color: gridHistory[i].effColor });
-      if (afterStart.length < 3) return null;
-      const last3 = afterStart.slice(-3);
-      const v1 = last3[0].v, v2 = last3[1].v, v3 = last3[2].v;
-      const c1 = last3[0].color, c2 = last3[1].color, c3 = last3[2].color;
-      let trendDirection = null;
-      const compare12 = v2 > v1 ? 'up' : (v2 < v1 ? 'down' : 'flat');
-      const compare23 = v3 > v2 ? 'up' : (v3 < v2 ? 'down' : 'flat');
-      const compare13 = v3 > v1 ? 'up' : (v3 < v1 ? 'down' : 'flat');
-      if (compare12==='up'&&compare23==='up'&&compare13==='up') trendDirection='UP';
-      else if (compare12==='down'&&compare23==='down'&&compare13==='down') trendDirection='DOWN';
-      else if (compare12==='down'&&compare23==='up') { if(v3>v1||v3>=v2) trendDirection='UP'; }
-      else if (compare12==='up'&&compare23==='down') { if(v3<v1||v3<=v2) trendDirection='DOWN'; }
-      else {
-        const blueCount=[c1,c2,c3].filter(c=>c==='blue').length;
-        const redCount=[c1,c2,c3].filter(c=>c==='red').length;
-        if(blueCount>=2&&compare13==='up') trendDirection='UP';
-        else if(redCount>=2&&compare13==='down') trendDirection='DOWN';
-      }
-      return { direction: trendDirection, last3: [v1,v2,v3], colors: [c1,c2,c3] };
-    }
-
-    // ========== AUDIO ==========
-    function initAudio() {
-      if (!audioContext) { try { audioContext = new (window.AudioContext || window.webkitAudioContext)(); } catch(e) {} }
-      if (audioContext && audioContext.state === 'suspended') audioContext.resume();
-      return audioContext;
-    }
-    function playUpTrendSound() {
-      requestAnimationFrame(() => {
-        const ctx = initAudio(); if (!ctx) return;
-        const now = ctx.currentTime;
-        [{freq:261.63,start:0,duration:0.3},{freq:329.63,start:0.25,duration:0.3},{freq:392.00,start:0.5,duration:0.3},{freq:523.25,start:0.75,duration:0.5}].forEach(function(note) {
-          const osc = ctx.createOscillator(); const gain = ctx.createGain(); osc.type='sine'; osc.frequency.value=note.freq;
-          const s=now+note.start; gain.gain.setValueAtTime(0,s); gain.gain.linearRampToValueAtTime(0.12,s+0.05); gain.gain.exponentialRampToValueAtTime(0.01,s+note.duration);
-          osc.connect(gain); gain.connect(ctx.destination); osc.start(s); osc.stop(s+note.duration);
-        });
-      });
-    }
-    function playDownTrendSound() {
-      requestAnimationFrame(() => {
-        const ctx = initAudio(); if (!ctx) return;
-        const now = ctx.currentTime;
-        [{freq:392.00,start:0,duration:0.3},{freq:329.63,start:0.25,duration:0.3},{freq:261.63,start:0.5,duration:0.3},{freq:220.00,start:0.75,duration:0.5}].forEach(function(note) {
-          const osc = ctx.createOscillator(); const gain = ctx.createGain(); osc.type='sine'; osc.frequency.value=note.freq;
-          const s=now+note.start; gain.gain.setValueAtTime(0,s); gain.gain.linearRampToValueAtTime(0.12,s+0.05); gain.gain.exponentialRampToValueAtTime(0.01,s+note.duration);
-          osc.connect(gain); gain.connect(ctx.destination); osc.start(s); osc.stop(s+note.duration);
-        });
-      });
-    }
-
-    // ========== AUTO TRADE ==========
-    function toggleMartingale() {
-      martingaleEnabled = !martingaleEnabled;
-      const btn = document.getElementById('martingaleBtn');
-      if(martingaleEnabled) { btn.classList.add('active'); }
-      else { btn.classList.remove('active'); }
-    }
-    function toggleAutoTrade() {
-      autoTradeEnabled = !autoTradeEnabled;
-      const btn = document.getElementById('autoTradeBtn');
-      if (autoTradeEnabled) btn.classList.add('active'); else btn.classList.remove('active');
-    }
-    function executeAutoTrade() {
-      if (!autoTradeEnabled || autoTradeInProgress || tradeActive || !currentUpDownSignal) return;
-      if (!apiToken || !derivWS || derivWS.readyState !== WebSocket.OPEN) return;
-      autoTradeInProgress = true;
-      if (currentUpDownSignal === 'UP') placeTrade('CALL');
-      else if (currentUpDownSignal === 'DOWN') placeTrade('PUT');
-      setTimeout(function() { autoTradeInProgress = false; }, 6000);
-    }
-
-    // ========== UP/DOWN SİNYAL ==========
-    function analyzeUpDownSignal(arrows) {
-      if (!arrows || arrows.length < 2) return null;
-      const lastArrows = arrows.slice(-3); if (lastArrows.length < 2) return null;
-      let upCount = 0, downCount = 0;
-      lastArrows.forEach(function(arrow) { if(arrow==='up') upCount++; else if(arrow==='down') downCount++; });
-      if (upCount >= 2 && downCount >= 1) return 'UP';
-      if (downCount >= 2 && upCount >= 1) return 'DOWN';
-      return null;
-    }
-    function showUpDownSignal(signal) {
-      if (signal === 'UP') { currentUpDownSignal='UP'; if(lastUpDownSignal!=='UP') executeAutoTrade(); lastUpDownSignal='UP'; }
-      else if (signal === 'DOWN') { currentUpDownSignal='DOWN'; if(lastUpDownSignal!=='DOWN') executeAutoTrade(); lastUpDownSignal='DOWN'; }
-      else { currentUpDownSignal=null; lastUpDownSignal=null; }
-    }
-
-    // ========== TREND ANALİZ ==========
-    function checkAndSignalTrend() {
-      if (currentGraph !== 'XZ' || !startGlobalSpan || !trendStartGlobal || gridHistory.length < 6) {
-        showTrendSignal(null); drawTrendAngle(); return;
-      }
-      workerMessageQueue.push({ type: 'analyzeTrend', data: { gridHistory, startGlobalSpan, xzTickCounter } });
-      if (!workerBusy) processWorkerQueue();
-      drawTrendAngle();
-    }
-    function showTrendSignal(direction) {
-      const box = document.getElementById('trendBellBox');
-      const label = document.getElementById('trendLabel');
-      box.classList.remove('trend-up', 'trend-down');
-      if (direction === 'UP') { box.classList.add('trend-up'); label.textContent='Trend ↑'; if(lastTrendSignal!=='UP'){if(!bellMuted)playUpTrendSound();lastTrendSignal='UP';} }
-      else if (direction === 'DOWN') { box.classList.add('trend-down'); label.textContent='Trend ↓'; if(lastTrendSignal!=='DOWN'){if(!bellMuted)playDownTrendSound();lastTrendSignal='DOWN';} }
-      else { label.textContent='Trend'; lastTrendSignal=null; }
-    }
-
-    // drawTrendAngle - trendAngleBox kaldırıldı
-    function drawTrendAngle() {
-      const uds = analyzeUpDownSignal(currentTrendData.arrows);
-      showUpDownSignal(uds);
-    }
-
-    // ========== YENİ: TREND ÇİZİM FONKSİYONLARI ==========
-
-    // Start'tan itibaren gelen sayıları tampona ekle
-    function updateTrendDrawBuffer() {
-      if (currentGraph !== 'XZ' || !startGlobalSpan) {
-        trendDrawBuffer = [];
-        trendDrawStarted = false;
-        lastStartSpanKey = null;
-        clearDrawPanels();
-        return;
+          }
+        }
       }
 
-      const spanKey = startGlobalSpan.from + '_' + startGlobalSpan.to;
+      // Rows
+      rowsEl.innerHTML='';
+      const s0=seq[0],s1=seq[1];
+      const sc=npCmp(s0.v,s0.color,s1.v,s1.color);
+      const top=sc==='a'?s0:s1,bot=sc==='a'?s1:s0;
+      rowsEl.innerHTML+=`<div class="np-row"><div class="np-lbl">Старт:</div><div class="np-val"><span class="${top.color==='blue'?'nb':'nr'}">${top.v}${top.color==='blue'?'с':'к'}</span> выше · <span class="${bot.color==='blue'?'nb':'nr'}">${bot.v}${bot.color==='blue'?'с':'к'}</span> ниже</div></div>`;
+      if(even.length>=1){const es=even.map(x=>`<span class="${x.color==='blue'?'nb':'nr'}">${x.v}</span>`).join('→');rowsEl.innerHTML+=`<div class="np-row"><div class="np-lbl">Чётный:</div><div class="np-val">${es} · <span class="${ei.cls}">${ei.ru} ${ei.dir}</span> · ${ei.sz}→${ei.ez}</div></div>`;}
+      if(odd.length>=1){const os=odd.map(x=>`<span class="${x.color==='blue'?'nb':'nr'}">${x.v}</span>`).join('→');rowsEl.innerHTML+=`<div class="np-row"><div class="np-lbl">Нечётный:</div><div class="np-val">${os} · <span class="${oi.cls}">${oi.ru} ${oi.dir}</span> · ${oi.sz}→${oi.ez}</div></div>`;}
+      if(flatItems.length>0)rowsEl.innerHTML+=`<div class="np-row"><div class="np-lbl">Флэт:</div><div class="np-val">${flatItems.join(' · ')}</div></div>`;
+      if(vzItems.length>0)rowsEl.innerHTML+=`<div class="np-row"><div class="np-lbl">VZ (1ед):</div><div class="np-val">${vzItems.join(' · ')}</div></div>`;
+      if(decision)rowsEl.innerHTML+=`<div class="np-row"><div class="np-lbl">Итог:</div><div class="np-val nw">${decRu}</div></div>`;
 
-      // Yeni bir start algılandıysa tamponu sıfırla
-      if (spanKey !== lastStartSpanKey) {
-        trendDrawBuffer = [];
-        trendDrawStarted = true;
-        lastStartSpanKey = spanKey;
-      }
+      // Decision badge
+      // Start'tan sonra en az 2 çift + 2 tek daha gelmeli (toplam 3+3)
+      // Baskın olan yön sinyali verir — net değilse daha fazla bekle
+      const hasMinNumbers = even.length >= 3 && odd.length >= 3;
 
-      if (!trendDrawStarted) return;
-
-      // Start çerçevesinin 1. sayısından (from) itibaren 6 sayı topla
-      // İlk 3 → panel 1, sonraki 3 → panel 2
-      const vis = gridHistory.length;
-      const firstGlobal = xzTickCounter - vis;
-      const startFromLocal = startGlobalSpan.from - firstGlobal; // 1. sayının local indexi
-
-      if (startFromLocal < 0 || startFromLocal >= vis) return;
-
-      // startFromLocal'dan itibaren max 6 sayı topla
-      const newBuffer = [];
-      for (let i = startFromLocal; i < vis && newBuffer.length < 6; i++) {
-        newBuffer.push({
-          v: gridHistory[i].v,
-          color: gridHistory[i].effColor
-        });
-      }
-
-      trendDrawBuffer = newBuffer;
-      renderDrawPanels();
-      renderTwoRowGrid();
-    }
-
-    function clearDrawPanels() {
-      const svg1 = document.getElementById('drawSvg1');
-      const svg2 = document.getElementById('drawSvg2');
-      if (svg1) svg1.innerHTML = '';
-      if (svg2) svg2.innerHTML = '';
-    }
-
-    function renderDrawPanels() {
-      const svg1 = document.getElementById('drawSvg1');
-      const svg2 = document.getElementById('drawSvg2');
-      if (!svg1 || !svg2) return;
-
-      svg1.innerHTML = '';
-      svg2.innerHTML = '';
-
-      const buf = trendDrawBuffer;
-
-      // Panel 1: ilk 3 sayı (buf[0], buf[1], buf[2])
-      if (buf.length < 3) return;
-
-      const p1 = [buf[0], buf[1], buf[2]];
-      drawThreePointPanel(svg1, p1);
-
-      // Açı kontrolü: 1. ve 3. sayı farklıysa açı var
-      const hasAngle = (p1[0].v !== p1[2].v);
-      if (!hasAngle) return;
-
-      // Panel 2: sonraki 3 sayı (buf[3], buf[4], buf[5])
-      if (buf.length < 6) return;
-
-      const p2 = [buf[3], buf[4], buf[5]];
-      drawThreePointPanel(svg2, p2);
-    }
-
-    function drawThreePointPanel(svg, points) {
-      const W = 100, H = 100;
-      const RADIUS = 8;
-      const GAP = 6;
-      const ns = 'http://www.w3.org/2000/svg';
-
-      // Renk: mavi=pozitif(üst), kırmızı=negatif(alt)
-      // Y pozisyonu için: mavi sayılar çizginin üstünde, kırmızı altında
-      // val hesabı: mavi → +v, kırmızı → -v (negatif)
-      const sign = function(p) { return p.color === 'red' ? -p.v : p.v; };
-      const firstVal = sign(points[0]);
-      const lastVal  = sign(points[2]);
-      const midVal   = sign(points[1]);
-
-      const lastHigher = lastVal > firstVal;
-
-      const orangeY = H / 2;
-
-      // 1. ve 3. dairenin Y konumu
-      const firstY = lastHigher
-        ? orangeY + RADIUS + GAP    // 1. daire çizginin ALTINDA
-        : orangeY - RADIUS - GAP;  // 1. daire çizginin ÜSTÜNDE
-
-      const lastY = lastHigher
-        ? orangeY - RADIUS - GAP   // 3. daire çizginin ÜSTÜNDE
-        : orangeY + RADIUS + GAP;  // 3. daire çizginin ALTINDA
-
-      // 2. (orta) nokta Y konumu - PDF mantığıyla birebir
-      const allVals = [firstVal, midVal, lastVal];
-      const minAll = Math.min(...allVals);
-      const maxAll = Math.max(...allVals);
-      const topY = 10, botY = H - 10;
-      let midY;
-      if (midVal === maxAll) {
-        midY = topY;
-      } else if (midVal === minAll) {
-        midY = botY;
+      if(hasMinNumbers && decision !== null){
+        decEl.style.display='block';
+        decEl.className=decision==='UP'?'up':'down';
+        decEl.textContent=decision==='UP'?'↑ СТАВКА ВВЕРХ':'↓ СТАВКА ВНИЗ';
+        npUpdateBell(decision);
       } else {
-        const diff = Math.abs(firstVal - lastVal);
-        const ratio = diff > 0
-          ? (midVal - Math.min(firstVal, lastVal)) / diff
-          : 0.5;
-        const hiY = Math.min(firstY, lastY);
-        const loY = Math.max(firstY, lastY);
-        midY = loY - ratio * (loY - hiY);
+        decEl.style.display='none';
+        npUpdateBell(null);
       }
 
-      // X konumları
-      const x1 = 18, x2 = W / 2, x3 = W - 18;
-      const ys = [firstY, midY, lastY];
-      const xs = [x1, x2, x3];
+      // Grafik çiz
+      npDrawSvg(seq,decision);
+      // Türkçe panel
+      trRender(seq,even,odd,ei,oi,flatItems,vzItems,decision,decRu);
+    }
 
-      // Turuncu çizgi (düz, simetrik)
-      const line = document.createElementNS(ns, 'line');
-      line.setAttribute('x1', '4');
-      line.setAttribute('y1', String(orangeY));
-      line.setAttribute('x2', String(W - 4));
-      line.setAttribute('y2', String(orangeY));
-      line.setAttribute('stroke', '#e08000');
-      line.setAttribute('stroke-width', '2.5');
-      line.setAttribute('stroke-linecap', 'round');
-      svg.appendChild(line);
+    function trRender(seq, even, odd, ei, oi, flatItems, vzItems, decision, decRu){
+      const decEl=document.getElementById('trDecision');
+      const rowsEl=document.getElementById('trRows');
+      if(!rowsEl)return;
+      rowsEl.innerHTML='';
 
-      // Beyaz bağlantı çizgisi
-      const polyline = document.createElementNS(ns, 'polyline');
-      polyline.setAttribute('points', xs.map((x, i) => `${x},${ys[i]}`).join(' '));
-      polyline.setAttribute('fill', 'none');
-      polyline.setAttribute('stroke', 'white');
-      polyline.setAttribute('stroke-width', '2');
-      polyline.setAttribute('stroke-linejoin', 'round');
-      polyline.setAttribute('stroke-linecap', 'round');
-      svg.appendChild(polyline);
+      // Türkçe yön çevirisi
+      const trDir=(dir)=>dir==='↑'?'yükseliş ↑':dir==='↓'?'düşüş ↓':'flat →';
+      const trCls=(cls)=>cls;
 
-      // Daireler ve sayılar
-      points.forEach(function(p, i) {
-        const cx = xs[i], cy = ys[i];
-        const isNeg = p.color === 'red';
-        const fillColor = isNeg ? '#cc1111' : '#1133cc';
+      // Start
+      const s0=seq[0],s1=seq[1];
+      const sc=npCmp(s0.v,s0.color,s1.v,s1.color);
+      const top=sc==='a'?s0:s1,bot=sc==='a'?s1:s0;
+      rowsEl.innerHTML+=`<div class="tr-row"><div class="tr-lbl">Başlangıç:</div><div class="tr-val"><span class="${top.color==='blue'?'nb':'nr'}">${top.v}${top.color==='blue'?'m':'k'}</span> üstte · <span class="${bot.color==='blue'?'nb':'nr'}">${bot.v}${bot.color==='blue'?'m':'k'}</span> altta</div></div>`;
 
-        // Beyaz halka
-        const outerCircle = document.createElementNS(ns, 'circle');
-        outerCircle.setAttribute('cx', String(cx));
-        outerCircle.setAttribute('cy', String(cy));
-        outerCircle.setAttribute('r', String(RADIUS + 1.5));
-        outerCircle.setAttribute('fill', 'white');
-        svg.appendChild(outerCircle);
+      // Çift adım
+      if(even.length>=1){
+        const es=even.map(x=>`<span class="${x.color==='blue'?'nb':'nr'}">${x.v}</span>`).join('→');
+        rowsEl.innerHTML+=`<div class="tr-row"><div class="tr-lbl">Çift adım:</div><div class="tr-val">${es} · <span class="${ei.cls}">${trDir(ei.dir)}</span> · ${ei.sz==='синяя'?'mavi':'kırmızı'}→${ei.ez==='синяя'?'mavi':'kırmızı'}</div></div>`;
+      }
 
-        // Renkli iç daire
-        const innerCircle = document.createElementNS(ns, 'circle');
-        innerCircle.setAttribute('cx', String(cx));
-        innerCircle.setAttribute('cy', String(cy));
-        innerCircle.setAttribute('r', String(RADIUS));
-        innerCircle.setAttribute('fill', fillColor);
-        svg.appendChild(innerCircle);
+      // Tek adım
+      if(odd.length>=1){
+        const os=odd.map(x=>`<span class="${x.color==='blue'?'nb':'nr'}">${x.v}</span>`).join('→');
+        rowsEl.innerHTML+=`<div class="tr-row"><div class="tr-lbl">Tek adım:</div><div class="tr-val">${os} · <span class="${oi.cls}">${trDir(oi.dir)}</span> · ${oi.sz==='синяя'?'mavi':'kırmızı'}→${oi.ez==='синяя'?'mavi':'kırmızı'}</div></div>`;
+      }
 
-        // Sayı
-        const text = document.createElementNS(ns, 'text');
-        text.setAttribute('x', String(cx));
-        text.setAttribute('y', String(cy));
-        text.setAttribute('text-anchor', 'middle');
-        text.setAttribute('dominant-baseline', 'central');
-        text.setAttribute('fill', 'white');
-        text.setAttribute('font-size', '11');
-        text.setAttribute('font-weight', '900');
-        text.setAttribute('font-family', 'Georgia, serif');
-        text.textContent = String(p.v);
-        svg.appendChild(text);
+      // Flat
+      if(flatItems.length>0)rowsEl.innerHTML+=`<div class="tr-row"><div class="tr-lbl">Flat:</div><div class="tr-val">${flatItems.join(' · ')}</div></div>`;
+
+      // VZ
+      if(vzItems.length>0)rowsEl.innerHTML+=`<div class="tr-row"><div class="tr-lbl">VZ (1br):</div><div class="tr-val">${vzItems.join(' · ')}</div></div>`;
+
+      // Sonuç
+      const trDecRu=(d)=>{
+        if(!d)return d;
+        return d.replace('Оба шага растут','Her iki adım yükseliyor')
+                .replace('Оба шага падают','Her iki adım düşüyor')
+                .replace('ВВЕРХ','YUKARI').replace('ВНИЗ','AŞAĞI')
+                .replace('Чётный давит вниз','Çift adım aşağı baskılı')
+                .replace('Чётный давит вверх','Çift adım yukarı baskılı')
+                .replace('Нечётный пробил минимум чётного','Tek adım çift minimumu geçti')
+                .replace('Последний чётный ниже старта нечётного','Son çift, tek başlangıcından aşağıda')
+                .replace('Последний чётный выше старта нечётного','Son çift, tek başlangıcından yukarıda')
+                .replace('Нечётный выше старта чётного','Tek adım çift başlangıcından yukarıda')
+                .replace('Нечётный ниже старта чётного','Tek adım çift başlangıcından aşağıda')
+                .replace('Последнее движение вниз','Son hareket aşağı')
+                .replace('Последнее движение вверх','Son hareket yukarı')
+                .replace('Давление чётного','Çift adım baskısı')
+                .replace('Давление нечётного','Tek adım baskısı');
+      };
+      if(decision)rowsEl.innerHTML+=`<div class="tr-row"><div class="tr-lbl">Sonuç:</div><div class="tr-val nw">${trDecRu(decRu)}</div></div>`;
+
+      // Karar badge
+      const hasMin=even.length>=3&&odd.length>=3;
+      if(hasMin&&decision){
+        decEl.style.display='block';
+        decEl.className=decision==='UP'?'up':'down';
+        decEl.textContent=decision==='UP'?'↑ BAHİS YUKARI':'↓ BAHİS AŞAĞI';
+      } else {
+        decEl.style.display='none';
+      }
+    }
+    function npUpdateBell(decision){
+      const box=document.getElementById('trendBellBox'),label=document.getElementById('trendLabel');
+      if(!box||!label)return;
+      box.classList.remove('trend-up','trend-down');
+      box.style.background='';
+      box.style.borderColor='';
+      if(decision==='UP'){
+        box.classList.add('trend-up');label.textContent='Trend ↑';
+        if(npLastSignal!=='UP'){if(!bellMuted)playUpTrendSound();npLastSignal='UP';lastTrendSignal='UP';}
+      } else if(decision==='DOWN'){
+        box.classList.add('trend-down');label.textContent='Trend ↓';
+        if(npLastSignal!=='DOWN'){if(!bellMuted)playDownTrendSound();npLastSignal='DOWN';lastTrendSignal='DOWN';}
+      } else {
+        // Sinyal yok — zil paneli siyah
+        box.style.background='#000';
+        box.style.borderColor='#333';
+        label.textContent='Trend';
+        npLastSignal=null;lastTrendSignal=null;
+      }
+    }
+
+    function npDrawSvg(seq,decision){
+      const svg=document.getElementById('npSvg');if(!svg)return;
+      svg.innerHTML='';
+      const ns='http://www.w3.org/2000/svg',W=200,H=90,vzY=H/2,n=seq.length;
+      if(n<1)return;
+
+      // Zone backgrounds
+      const bz=document.createElementNS(ns,'rect');bz.setAttribute('x','0');bz.setAttribute('y','0');bz.setAttribute('width',String(W));bz.setAttribute('height',String(vzY));bz.setAttribute('fill','rgba(29,126,245,0.10)');svg.appendChild(bz);
+      const rz=document.createElementNS(ns,'rect');rz.setAttribute('x','0');rz.setAttribute('y',String(vzY));rz.setAttribute('width',String(W));rz.setAttribute('height',String(H-vzY));rz.setAttribute('fill','rgba(230,57,70,0.10)');svg.appendChild(rz);
+
+      // VZ line
+      const vl=document.createElementNS(ns,'line');vl.setAttribute('x1','0');vl.setAttribute('y1',String(vzY));vl.setAttribute('x2',String(W));vl.setAttribute('y2',String(vzY));vl.setAttribute('stroke','#e08000');vl.setAttribute('stroke-width','1');vl.setAttribute('stroke-dasharray','4,3');vl.setAttribute('opacity','0.8');svg.appendChild(vl);
+      const vt=document.createElementNS(ns,'text');vt.setAttribute('x',String(W-2));vt.setAttribute('y',String(vzY-2));vt.setAttribute('text-anchor','end');vt.setAttribute('fill','#e08000');vt.setAttribute('font-size','6');vt.setAttribute('font-family','monospace');vt.setAttribute('font-weight','900');vt.textContent='VZ';svg.appendChild(vt);
+
+      // Zone labels
+      const bt=document.createElementNS(ns,'text');bt.setAttribute('x','3');bt.setAttribute('y','9');bt.setAttribute('fill','rgba(29,126,245,0.7)');bt.setAttribute('font-size','5.5');bt.setAttribute('font-family','monospace');bt.setAttribute('font-weight','900');bt.textContent='СИНЯЯ';svg.appendChild(bt);
+      const rt=document.createElementNS(ns,'text');rt.setAttribute('x',String(W-3));rt.setAttribute('y',String(H-3));rt.setAttribute('text-anchor','end');rt.setAttribute('fill','rgba(230,57,70,0.7)');rt.setAttribute('font-size','5.5');rt.setAttribute('font-family','monospace');rt.setAttribute('font-weight','900');rt.textContent='КРАСНАЯ';svg.appendChild(rt);
+
+      const R=7,pad=R+5;
+      const step=n>1?(W-pad*2)/(n-1):0;
+      const gx=i=>pad+i*step;
+      const gy=(v,color)=>{
+        const mg=R+7;
+        if(color==='blue'){return vzY-mg-(v/9)*(vzY-mg*1.5);}
+        else{const val=v===0?10:v;return vzY+mg+((10-val)/10)*(H-vzY-mg*1.5);}
+      };
+
+      const pts=seq.map((x,i)=>({x:gx(i),y:gy(x.v,x.color),...x}));
+      const ePts=pts.filter(p=>p.v%2===0);
+      const oPts=pts.filter(p=>p.v%2!==0);
+
+      // Odd line (solid)
+      if(oPts.length>1){const pl=document.createElementNS(ns,'polyline');pl.setAttribute('points',oPts.map(p=>`${p.x},${p.y}`).join(' '));pl.setAttribute('fill','none');pl.setAttribute('stroke',oPts[oPts.length-1].color==='blue'?'#1d7ef5':'#e63946');pl.setAttribute('stroke-width','2');pl.setAttribute('stroke-linejoin','round');pl.setAttribute('stroke-linecap','round');pl.setAttribute('opacity','0.9');svg.appendChild(pl);}
+      // Even line (dashed)
+      if(ePts.length>1){const pl=document.createElementNS(ns,'polyline');pl.setAttribute('points',ePts.map(p=>`${p.x},${p.y}`).join(' '));pl.setAttribute('fill','none');pl.setAttribute('stroke',ePts[ePts.length-1].color==='blue'?'#1d7ef5':'#e63946');pl.setAttribute('stroke-width','2');pl.setAttribute('stroke-dasharray','5,3');pl.setAttribute('stroke-linejoin','round');pl.setAttribute('stroke-linecap','round');pl.setAttribute('opacity','0.9');svg.appendChild(pl);}
+
+      // START box around first 2 points
+      if(pts.length>=2){
+        const p0=pts[0],p1=pts[1];
+        const bx=Math.min(p0.x,p1.x)-R-4,by=Math.min(p0.y,p1.y)-R-10,bw=Math.abs(p1.x-p0.x)+(R+4)*2,bh=Math.abs(p1.y-p0.y)+R*2+16;
+        const sr=document.createElementNS(ns,'rect');sr.setAttribute('x',String(bx));sr.setAttribute('y',String(by));sr.setAttribute('width',String(bw));sr.setAttribute('height',String(bh));sr.setAttribute('fill','none');sr.setAttribute('stroke','#f4c430');sr.setAttribute('stroke-width','1.5');sr.setAttribute('stroke-dasharray','4,3');sr.setAttribute('rx','4');svg.appendChild(sr);
+        const sl=document.createElementNS(ns,'text');sl.setAttribute('x',String(bx+bw/2));sl.setAttribute('y',String(by-2));sl.setAttribute('text-anchor','middle');sl.setAttribute('fill','#f4c430');sl.setAttribute('font-size','5');sl.setAttribute('font-family','monospace');sl.setAttribute('font-weight','900');sl.textContent='СТАРТ';svg.appendChild(sl);
+      }
+
+      // Nodes
+      pts.forEach((p,i)=>{
+        const cx=p.x,cy=p.y,isEven=p.v%2===0,clr=p.color==='blue'?'#1d7ef5':'#e63946';
+        // White ring
+        const oc=document.createElementNS(ns,'circle');oc.setAttribute('cx',String(cx));oc.setAttribute('cy',String(cy));oc.setAttribute('r',String(R+2));oc.setAttribute('fill','white');svg.appendChild(oc);
+        // Colored circle
+        const ic=document.createElementNS(ns,'circle');ic.setAttribute('cx',String(cx));ic.setAttribute('cy',String(cy));ic.setAttribute('r',String(R));
+        if(isEven){ic.setAttribute('fill','#1a1a1a');ic.setAttribute('stroke',clr);ic.setAttribute('stroke-width','2');}
+        else{ic.setAttribute('fill',clr);}
+        svg.appendChild(ic);
+        // Number
+        const tx=document.createElementNS(ns,'text');tx.setAttribute('x',String(cx));tx.setAttribute('y',String(cy));tx.setAttribute('text-anchor','middle');tx.setAttribute('dominant-baseline','central');tx.setAttribute('fill',isEven?clr:'white');tx.setAttribute('font-size','7');tx.setAttribute('font-weight','900');tx.setAttribute('font-family','monospace');tx.textContent=String(p.v);svg.appendChild(tx);
       });
 
-      // Ok işareti: 3. nokta (lastY) turuncu çizginin üstünde mi altında mı?
-      // SVG Y: küçük=yukarı (üst), büyük=aşağı (alt)
-      // lastY < orangeY → mavi yukarı ok → sağ üst köşe
-      // lastY > orangeY → kırmızı aşağı ok → sağ alt köşe
-      const lastAbove = lastY < orangeY;
-      const arrowColor = lastAbove ? '#1155ff' : '#cc1111';
-      const ax = W - 8;   // ok merkezi X
-      const aw = 5;        // ok yarı genişliği
-      const ah = 7;        // ok yüksekliği
-      let arrowPts;
-      if (lastAbove) {
-        // Yukarı ok ▲ - sağ üst köşe
-        const ay = 10;
-        arrowPts = (ax)+','+(ay-ah/2)+' '+(ax-aw)+','+(ay+ah/2)+' '+(ax+aw)+','+(ay+ah/2);
-      } else {
-        // Aşağı ok ▼ - sağ alt köşe
-        const ay = H - 10;
-        arrowPts = (ax)+','+(ay+ah/2)+' '+(ax-aw)+','+(ay-ah/2)+' '+(ax+aw)+','+(ay-ah/2);
-      }
-      const arrowPoly = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
-      arrowPoly.setAttribute('points', arrowPts);
-      arrowPoly.setAttribute('fill', arrowColor);
-      svg.appendChild(arrowPoly);
-      // Ok sapı
-      const arrowStem = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-      if (lastAbove) {
-        arrowStem.setAttribute('x1', String(ax)); arrowStem.setAttribute('y1', String(10 + ah/2));
-        arrowStem.setAttribute('x2', String(ax)); arrowStem.setAttribute('y2', String(10 + ah/2 + 6));
-      } else {
-        arrowStem.setAttribute('x1', String(ax)); arrowStem.setAttribute('y1', String(H - 10 - ah/2));
-        arrowStem.setAttribute('x2', String(ax)); arrowStem.setAttribute('y2', String(H - 10 - ah/2 - 6));
-      }
-      arrowStem.setAttribute('stroke', arrowColor);
-      arrowStem.setAttribute('stroke-width', '2.5');
-      arrowStem.setAttribute('stroke-linecap', 'round');
-      svg.appendChild(arrowStem);
-    }
-    // ========== YENİ TREND ÇİZİM SONU ==========
-
-    // ========== TEMA ==========
-    function updateLogos() {
-      const headerLogo = document.getElementById('headerLogo');
-      const watermark = document.getElementById('chartWatermark');
-      const isDark = !document.body.classList.contains('day-mode');
-      if (isDark) {
-        headerLogo.src='https://raw.githubusercontent.com/Samday68/Foto-raflar/refs/heads/main/D354DBAF-3EC7-4B5F-ABC1-8EF876797DAA.jpeg';
-        watermark.src='https://raw.githubusercontent.com/Samday68/Foto-raflar/refs/heads/main/D354DBAF-3EC7-4B5F-ABC1-8EF876797DAA.jpeg';
-      } else {
-        headerLogo.src='https://raw.githubusercontent.com/Samday68/Foto-raflar/refs/heads/main/B3F65E6D-3FB0-45E3-A46A-7E788A46DEC7.jpeg';
-        watermark.src='https://raw.githubusercontent.com/Samday68/Foto-raflar/refs/heads/main/B3F65E6D-3FB0-45E3-A46A-7E788A46DEC7.jpeg';
+      // Decision arrow
+      if(decision){
+        const ac=decision==='UP'?'#1d7ef5':'#e63946',ax=W-8,aw=5,ah=7;
+        const ay=decision==='UP'?14:H-14;
+        const aPts=decision==='UP'?`${ax},${ay-ah} ${ax-aw},${ay} ${ax+aw},${ay}`:`${ax},${ay+ah} ${ax-aw},${ay} ${ax+aw},${ay}`;
+        const al=document.createElementNS(ns,'line');al.setAttribute('x1',String(ax));al.setAttribute('y1',String(decision==='UP'?ay:ay));al.setAttribute('x2',String(ax));al.setAttribute('y2',String(decision==='UP'?ay+8:ay-8));al.setAttribute('stroke',ac);al.setAttribute('stroke-width','2.5');al.setAttribute('stroke-linecap','round');svg.appendChild(al);
+        const ap=document.createElementNS(ns,'polygon');ap.setAttribute('points',aPts);ap.setAttribute('fill',ac);svg.appendChild(ap);
       }
     }
-    function updateChartColors() {
-      if (!chart) return;
-      const isDark = !document.body.classList.contains('day-mode');
-      chart.data.datasets[0].borderColor=isDark?'#fff':'#000';
-      chart.data.datasets[0].backgroundColor=isDark?'rgba(255,255,255,0.05)':'rgba(0,0,0,0.05)';
-      chart.options.scales.y.grid.color=isDark?'rgba(255,255,255,0.1)':'rgba(0,0,0,0.1)';
-      chart.options.scales.x.grid.color=isDark?'rgba(255,255,255,0.1)':'rgba(0,0,0,0.1)';
-      chart.options.scales.y.ticks.color=isDark?'#fff':'#000';
-      chart.options.scales.x.ticks.color=isDark?'#fff':'#000';
-      chart.update('none');
-    }
-    function toggleTheme() {
-      const body = document.body; const btn = document.getElementById('themeToggle');
-      body.classList.toggle('day-mode');
-      btn.innerText = body.classList.contains('day-mode') ? '☀️' : '🌙';
-      updateLogos(); updateChartColors(); renderXYArea(); drawTrendAngle();
-      renderDrawPanels();
-      if (tradeActive) drawTradeChart();
-    }
 
-    // ========== TOKEN ==========
-    function loadSavedToken() {
-      const saved = localStorage.getItem('apiToken');
-      if (saved) { document.getElementById('apiInput').value=saved; document.getElementById('saveCheckbox').checked=true; }
-    }
-    function toggleSaveToken() {
-      const checkbox=document.getElementById('saveCheckbox'); const input=document.getElementById('apiInput');
-      if (checkbox.checked) { if(input.value.trim()) localStorage.setItem('apiToken',input.value.trim()); }
-      else localStorage.removeItem('apiToken');
-    }
+    // TEMA
+    function updateLogos(){const isDark=!document.body.classList.contains('day-mode');document.getElementById('headerLogo').src=isDark?'https://raw.githubusercontent.com/Samday68/Foto-raflar/refs/heads/main/D354DBAF-3EC7-4B5F-ABC1-8EF876797DAA.jpeg':'https://raw.githubusercontent.com/Samday68/Foto-raflar/refs/heads/main/B3F65E6D-3FB0-45E3-A46A-7E788A46DEC7.jpeg';document.getElementById('chartWatermark').src=isDark?'https://raw.githubusercontent.com/Samday68/Foto-raflar/refs/heads/main/D354DBAF-3EC7-4B5F-ABC1-8EF876797DAA.jpeg':'https://raw.githubusercontent.com/Samday68/Foto-raflar/refs/heads/main/B3F65E6D-3FB0-45E3-A46A-7E788A46DEC7.jpeg';}
+    function updateChartColors(){if(!chart)return;const isDark=!document.body.classList.contains('day-mode');chart.data.datasets[0].borderColor=isDark?'#fff':'#000';chart.data.datasets[0].backgroundColor=isDark?'rgba(255,255,255,0.05)':'rgba(0,0,0,0.05)';chart.options.scales.y.grid.color=isDark?'rgba(255,255,255,0.1)':'rgba(0,0,0,0.1)';chart.options.scales.x.grid.color=isDark?'rgba(255,255,255,0.1)':'rgba(0,0,0,0.1)';chart.options.scales.y.ticks.color=isDark?'#fff':'#000';chart.options.scales.x.ticks.color=isDark?'#fff':'#000';chart.update('none');}
+    function toggleTheme(){document.body.classList.toggle('day-mode');document.getElementById('themeToggle').innerText=document.body.classList.contains('day-mode')?'☀️':'🌙';updateLogos();updateChartColors();renderXYArea();drawTrendAngle();renderDrawPanels();npRender();if(tradeActive)drawTradeChart();}
 
-    // ========== KONTROL ==========
-    function toggleStartStop() {
-      isRunning = !isRunning;
-      const btn=document.getElementById('startStopBtn'); const text=document.getElementById('startStopText');
-      if (isRunning) { btn.classList.remove('stopped'); text.innerText='START'; startWS(); }
-      else { btn.classList.add('stopped'); text.innerText='STOP'; if(ws) ws.close(); }
+    // TOKEN
+    function loadSavedToken(){const s=localStorage.getItem('apiToken');if(s){document.getElementById('apiInput').value=s;document.getElementById('saveCheckbox').checked=true;}}
+    function toggleSaveToken(){const cb=document.getElementById('saveCheckbox'),inp=document.getElementById('apiInput');if(cb.checked){if(inp.value.trim())localStorage.setItem('apiToken',inp.value.trim());}else localStorage.removeItem('apiToken');}
+
+    // KONTROL
+    function toggleGraph(){if(currentGraph==='XZ')currentGraph='ZZ';else if(currentGraph==='ZZ')currentGraph='Z.Z';else currentGraph='XZ';document.getElementById('graphToggle').innerText=currentGraph;if(chart)chart.update('none');renderXYArea();renderTwoRowGrid();renderStartOverlay();npRender();}
+    function npResetPanel(){
+      const p=document.getElementById('nikolasPanel');if(p)p.style.display='none';
+      const tp=document.getElementById('trPanel');if(tp)tp.style.display='none';
+      const gp=document.getElementById('npGraphPanel');if(gp)gp.style.display='none';
+      const d=document.getElementById('npDecision');if(d)d.style.display='none';
+      const td=document.getElementById('trDecision');if(td)td.style.display='none';
+      const svg=document.getElementById('npSvg');if(svg)svg.innerHTML='';
+      npLastSignal=null;
+      npUpdateBell(null);
     }
-    function toggleGraph() {
-      if (currentGraph==='XZ') currentGraph='ZZ';
-      else if (currentGraph==='ZZ') currentGraph='Z.Z';
-      else currentGraph='XZ';
-      document.getElementById('graphToggle').innerText=currentGraph;
-      if (chart) chart.update('none');
-      renderXYArea(); renderTwoRowGrid(); renderStartOverlay();
-    }
-    function selectPair(pair) {
+    function selectPair(pair){
       currentPair=pair;
-      document.querySelectorAll('.pair-btn').forEach(function(b){b.classList.remove('active');});
+      document.querySelectorAll('.pair-btn').forEach(b=>b.classList.remove('active'));
       document.querySelector('.pair-btn[data-pair="'+pair+'"]').classList.add('active');
-      if (ws) ws.close();
-      prices=[]; digits=[]; decimalDigits=[]; combinedDigits=[]; wormLinesTop=[]; numColors=[];
+      if(ws)ws.close();
+      prices=[];digits=[];decimalDigits=[];combinedDigits=[];wormLinesTop=[];numColors=[];
       document.getElementById('numbersTop').innerHTML='';
-      gridHistory=[]; startCooldown=0; startGlobalSpan=null; xzTickCounter=0;
+      gridHistory=[];startCooldown=0;startGlobalSpan=null;xzTickCounter=0;
       currentTrendData={direction:null,last3:[],colors:[],arrows:[]};
-      lastTrendSignal=null; trendStartGlobal=null;
-      trendDrawBuffer=[]; trendDrawStarted=false; lastStartSpanKey=null;
-      showTrendSignal(null); showUpDownSignal(null);
-      clearDrawPanels();
-      renderTwoRowGrid(); renderStartOverlay(); renderXYArea(); drawTrendAngle();
-      if (isRunning) startWS();
+      lastTrendSignal=null;trendStartGlobal=null;
+      trendDrawBuffer=[];trendDrawStarted=false;lastStartSpanKey=null;
+      showTrendSignal(null);showUpDownSignal(null);clearDrawPanels();npResetPanel();
+      renderTwoRowGrid();renderStartOverlay();renderXYArea();drawTrendAngle();
+      if(isRunning)startWS();
     }
 
-    // ========== API ==========
-    function _triggerReconnect() {
-      if(!wsReconnectEnabled) return;
-      clearInterval(wsPingTimer);
-      clearInterval(wsHeartbeatTimer);
-      // AUTO'yu durdur - bağlantı kopukken işlem açılmasın
-      if(autoTradeEnabled){ autoTradeEnabled = false; const ab=document.getElementById('autoTradeBtn'); if(ab) ab.classList.remove('active'); }
-      // Kullanıcıya sarı uyarı
-      const btn = document.getElementById('connectBtn');
-      if(btn){ btn.textContent = 'Connecting...'; btn.style.background = '#b8860b'; }
-      // Exponential backoff: 5s → 10s → 20s → max 30s
-      clearTimeout(wsReconnectTimer);
-      wsReconnectTimer = setTimeout(function(){
-        if(wsReconnectEnabled){ wsReconnectDelay = Math.min(wsReconnectDelay * 2, 30000); _openWS(); }
-      }, wsReconnectDelay);
-    }
-    function _setupWSEvents() {
-      derivWS.onclose = function(e) {
-        if(!wsReconnectEnabled) return;
-        _triggerReconnect();
-      };
-      derivWS.onerror = function(e) {
-        if(derivWS) { try { derivWS.close(); } catch(ex){} }
-      };
-    }
-    function _scheduleRender() {
-      if(_pendingRender) return; // Zaten bekleyen render var
-      _pendingRender = true;
-      const now = Date.now();
-      const elapsed = now - _lastTickRender;
-      const delay = Math.max(0, _tickRenderThrottle - elapsed);
-      setTimeout(function(){
-        _pendingRender = false;
-        _lastTickRender = Date.now();
-        renderWormLines('numbersTop', wormLinesTop.slice(-7));
-        renderXYArea();
-        renderStartOverlay();
-        drawTrendAngle();
-      }, delay);
-    }
-    function disconnectAPI() {
-      wsReconnectEnabled = false;
-      clearTimeout(wsReconnectTimer);
-      clearInterval(wsPingTimer);
-      clearInterval(wsHeartbeatTimer);
-      wsReconnectDelay = 5000;
-      if(derivWS) { try { derivWS.close(); } catch(e){} derivWS = null; }
-      apiToken = '';
-      document.getElementById('connectBtn').textContent = 'Connect';
-      document.getElementById('connectBtn').style.background = '#1a7a1a';
-      document.getElementById('apiInput').value = '';
-      document.getElementById('balanceValue').innerText = '$ 0.00';
-      var _pv2=document.getElementById('profitValue'); _pv2.innerText='$ 0.00'; _pv2.style.color='#4caf50'; totalProfit = 0; document.getElementById('stakeInput').value='1';
-    }
-    function connectAPI() {
-      apiToken=document.getElementById('apiInput').value.trim();
-      if (!apiToken) { alert('Пожалуйста, введите действительный API токен!'); return; }
-      wsReconnectEnabled = true;
-      _openWS();
-    }
-    function _openWS() {
-      if(derivWS && derivWS.readyState === WebSocket.OPEN) return;
+    // API
+    function _triggerReconnect(){if(!wsReconnectEnabled)return;clearInterval(wsPingTimer);clearInterval(wsHeartbeatTimer);if(autoTradeEnabled){autoTradeEnabled=false;document.getElementById('autoTradeBtn').classList.remove('active');}const btn=document.getElementById('connectBtn');if(btn){btn.textContent='Connecting...';btn.style.background='#b8860b';}clearTimeout(wsReconnectTimer);wsReconnectTimer=setTimeout(()=>{if(wsReconnectEnabled){wsReconnectDelay=Math.min(wsReconnectDelay*2,30000);_openWS();}},wsReconnectDelay);}
+    function _setupWSEvents(){derivWS.onclose=e=>{if(!wsReconnectEnabled)return;_triggerReconnect();};derivWS.onerror=e=>{if(derivWS){try{derivWS.close();}catch(ex){}}};}
+    function _scheduleRender(){if(_pendingRender)return;_pendingRender=true;const now=Date.now(),elapsed=now-_lastTickRender,delay=Math.max(0,_tickRenderThrottle-elapsed);setTimeout(()=>{_pendingRender=false;_lastTickRender=Date.now();renderWormLines('numbersTop',wormLinesTop.slice(-7));renderXYArea();renderStartOverlay();drawTrendAngle();},delay);}
+    function disconnectAPI(){wsReconnectEnabled=false;clearTimeout(wsReconnectTimer);clearInterval(wsPingTimer);clearInterval(wsHeartbeatTimer);wsReconnectDelay=5000;if(derivWS){try{derivWS.close();}catch(e){}derivWS=null;}apiToken='';document.getElementById('connectBtn').textContent='Connect';document.getElementById('connectBtn').style.background='#1a7a1a';document.getElementById('apiInput').value='';document.getElementById('balanceValue').innerText='$ 0.00';const pv=document.getElementById('profitValue');pv.innerText='$ 0.00';pv.style.color='#4caf50';totalProfit=0;document.getElementById('stakeInput').value='1';}
+    function connectAPI(){apiToken=document.getElementById('apiInput').value.trim();if(!apiToken){alert('Пожалуйста, введите действительный API токен!');return;}wsReconnectEnabled=true;_openWS();}
+    function _openWS(){
+      if(derivWS&&derivWS.readyState===WebSocket.OPEN)return;
       derivWS=new WebSocket('wss://ws.binaryws.com/websockets/v3?app_id=1089');
-      derivWS.onopen=function(){
-        wsReconnectDelay = 3000; // başarılı bağlantıda delay sıfırla
-        wsLastPong = Date.now();
-        derivWS.send(JSON.stringify({authorize:apiToken}));
-
-        // Ping: her 25 saniyede bir gönder
-        clearInterval(wsPingTimer);
-        wsPingTimer = setInterval(function(){
-          if(derivWS && derivWS.readyState === WebSocket.OPEN){
-            derivWS.send(JSON.stringify({ping:1}));
-          }
-        }, 20000);
-
-        // Heartbeat: her 10 saniyede readyState + pong kontrolü
-        clearInterval(wsHeartbeatTimer);
-        wsHeartbeatTimer = setInterval(function(){
-          if(!wsReconnectEnabled) return;
-          // readyState OPEN değilse hemen reconnect
-          if(!derivWS || derivWS.readyState !== WebSocket.OPEN){
-            _triggerReconnect();
-            return;
-          }
-          // Son pong 60 saniyeden eskiyse bağlantı ölü say
-          if(Date.now() - wsLastPong > 60000){
-            derivWS.close();
-            _triggerReconnect();
-          }
-        }, 8000);
-      };
+      derivWS.onopen=()=>{wsReconnectDelay=3000;wsLastPong=Date.now();derivWS.send(JSON.stringify({authorize:apiToken}));clearInterval(wsPingTimer);wsPingTimer=setInterval(()=>{if(derivWS&&derivWS.readyState===WebSocket.OPEN)derivWS.send(JSON.stringify({ping:1}));},20000);clearInterval(wsHeartbeatTimer);wsHeartbeatTimer=setInterval(()=>{if(!wsReconnectEnabled)return;if(!derivWS||derivWS.readyState!==WebSocket.OPEN){_triggerReconnect();return;}if(Date.now()-wsLastPong>60000){derivWS.close();_triggerReconnect();}},8000);};
       _setupWSEvents();
-      derivWS.onmessage=function(msg){
+      derivWS.onmessage=msg=>{
         const data=JSON.parse(msg.data);
-        if(data.ping || data.pong){ wsLastPong = Date.now(); return; }
-        if(data.authorize){ document.getElementById('connectBtn').textContent='Disconnect'; document.getElementById('connectBtn').style.background='#d93025'; clearTimeout(wsReconnectTimer);if(data.authorize.balance)document.getElementById('balanceValue').innerText='$ '+parseFloat(data.authorize.balance).toFixed(2);derivWS.send(JSON.stringify({balance:1,subscribe:1}));}
+        if(data.ping||data.pong){wsLastPong=Date.now();return;}
+        if(data.authorize){document.getElementById('connectBtn').textContent='Disconnect';document.getElementById('connectBtn').style.background='#d93025';clearTimeout(wsReconnectTimer);if(data.authorize.balance)document.getElementById('balanceValue').innerText='$ '+parseFloat(data.authorize.balance).toFixed(2);derivWS.send(JSON.stringify({balance:1,subscribe:1}));}
         if(data.balance)document.getElementById('balanceValue').innerText='$ '+parseFloat(data.balance.balance).toFixed(2);
         if(data.proposal_open_contract){
           const contract=data.proposal_open_contract;
-          if(tradeActive&&contract.tick_stream){
-            const ticks=contract.tick_stream;
-            if(tradeData.length===0&&ticks.length>0){entrySpot=parseFloat(ticks[0].tick);barrier=parseFloat(contract.barrier||entrySpot);tradeData=[entrySpot];
-            var _tc=document.getElementById('tradeChart');
-            _tc.style.display='block';
-            var _cv2=document.getElementById('tradeCanvas');
-            if(_cv2){var _cx2=_cv2.getContext('2d');_cv2.width=_tc.offsetWidth||185;_cv2.height=85;_cx2.fillStyle='#000000';_cx2.fillRect(0,0,_cv2.width,_cv2.height);}}
-            if(ticks.length>tradeData.length&&tradeData.length<6){for(let i=tradeData.length;i<Math.min(ticks.length,6);i++)tradeData.push(parseFloat(ticks[i].tick));drawTradeChart();}
-          }
-          if((contract.status==='won'||contract.status==='lost'||contract.is_expired===1||contract.is_sold===1)&&!tradeSettled){
-            tradeSettled=true;
-            clearTimeout(tradeForceCloseTimer);
-            if(contract.exit_tick)exitSpot=parseFloat(contract.exit_tick);
-            const profit=parseFloat(contract.profit||0);
-            const buyPr=parseFloat(contract.buy_price||contract.purchase||0);
-            const finalPr=parseFloat(contract.sell_price||0);
-            totalProfit += profit; var _pv=document.getElementById('profitValue'); _pv.innerText=(totalProfit>=0?'$ +':'$ ')+totalProfit.toFixed(2); _pv.style.color=totalProfit>=0?'#4caf50':'#f44336';
-            // tradeInfo panelini sonuçla güncelle
-            const _status = contract.status; if(_status==='won'||(_status==='sold'&&parseFloat(contract.profit||0)>0)){
-              document.getElementById('tinfoL1').textContent='Buy price';
-              document.getElementById('tinfoV1').textContent=buyPr.toFixed(2)+' USD';
-              document.getElementById('tinfoL2').textContent='Final price';
-              document.getElementById('tinfoV2').textContent=finalPr.toFixed(2)+' USD';
-              document.getElementById('tinfoL3').textContent='Profit';
-              document.getElementById('tinfoV3').textContent='+'+profit.toFixed(2)+' USD';
-              document.getElementById('tinfoV3').style.color='#4caf50';
-            } else if(_status==='lost'||_status==='sold'||contract.is_expired===1){
-              document.getElementById('tinfoL1').textContent='Buy price';
-              document.getElementById('tinfoV1').textContent=buyPr.toFixed(2)+' USD';
-              document.getElementById('tinfoL2').textContent='Final price';
-              document.getElementById('tinfoV2').textContent=finalPr.toFixed(2)+' USD';
-              document.getElementById('tinfoL3').textContent='Loss';
-              document.getElementById('tinfoV3').textContent=profit.toFixed(2)+' USD';
-              document.getElementById('tinfoV3').style.color='#f44336';
-            }
-            drawTradeChart();tradeActive=false;setTimeout(function(){document.getElementById('tradeChart').style.display='none';document.getElementById('tradeInfoPanel').style.display='none';},2000);}
+          if(tradeActive&&contract.tick_stream){const ticks=contract.tick_stream;if(tradeData.length===0&&ticks.length>0){entrySpot=parseFloat(ticks[0].tick);barrier=parseFloat(contract.barrier||entrySpot);tradeData=[entrySpot];const tc=document.getElementById('tradeChart');tc.style.display='block';const cv=document.getElementById('tradeCanvas');if(cv){const cx=cv.getContext('2d');cv.width=tc.offsetWidth||185;cv.height=85;cx.fillStyle='#000000';cx.fillRect(0,0,cv.width,cv.height);}}if(ticks.length>tradeData.length&&tradeData.length<6){for(let i=tradeData.length;i<Math.min(ticks.length,6);i++)tradeData.push(parseFloat(ticks[i].tick));drawTradeChart();}}
+          if((contract.status==='won'||contract.status==='lost'||contract.is_expired===1||contract.is_sold===1)&&!tradeSettled){tradeSettled=true;clearTimeout(tradeForceCloseTimer);if(contract.exit_tick)exitSpot=parseFloat(contract.exit_tick);const profit=parseFloat(contract.profit||0),buyPr=parseFloat(contract.buy_price||contract.purchase||0),finalPr=parseFloat(contract.sell_price||0);totalProfit+=profit;const pv=document.getElementById('profitValue');pv.innerText=(totalProfit>=0?'$ +':'$ ')+totalProfit.toFixed(2);pv.style.color=totalProfit>=0?'#4caf50':'#f44336';const st=contract.status;if(st==='won'||(st==='sold'&&profit>0)){document.getElementById('tinfoL1').textContent='Buy price';document.getElementById('tinfoV1').textContent=buyPr.toFixed(2)+' USD';document.getElementById('tinfoL2').textContent='Final price';document.getElementById('tinfoV2').textContent=finalPr.toFixed(2)+' USD';document.getElementById('tinfoL3').textContent='Profit';document.getElementById('tinfoV3').textContent='+'+profit.toFixed(2)+' USD';document.getElementById('tinfoV3').style.color='#4caf50';}else{document.getElementById('tinfoL1').textContent='Buy price';document.getElementById('tinfoV1').textContent=buyPr.toFixed(2)+' USD';document.getElementById('tinfoL2').textContent='Final price';document.getElementById('tinfoV2').textContent=finalPr.toFixed(2)+' USD';document.getElementById('tinfoL3').textContent='Loss';document.getElementById('tinfoV3').textContent=profit.toFixed(2)+' USD';document.getElementById('tinfoV3').style.color='#f44336';}drawTradeChart();tradeActive=false;setTimeout(()=>{document.getElementById('tradeChart').style.display='none';document.getElementById('tradeInfoPanel').style.display='none';},2000);}
         }
         if(data.error)alert('Ошибка API: '+data.error.message);
       };
     }
-    function placeTrade(type) {
+    function placeTrade(type){
       if(!apiToken||!derivWS||derivWS.readyState!==WebSocket.OPEN){alert('Сначала установите соединение с API!');return;}
-      const stakeInput=document.getElementById('stakeInput'); let stake=parseFloat(stakeInput.value);
-      if(isNaN(stake)||stake<0.35){alert('Минимальная ставка должна быть 0.35 USD!');stakeInput.value='1';return;}
+      const si=document.getElementById('stakeInput');let stake=parseFloat(si.value);
+      if(isNaN(stake)||stake<0.35){alert('Минимальная ставка должна быть 0.35 USD!');si.value='1';return;}
       const proposal={proposal:1,amount:stake,basis:'stake',contract_type:type,currency:'USD',duration:5,duration_unit:'t',symbol:currentPair};
       derivWS.send(JSON.stringify(proposal));
-      const handleProposal=function(msg){
+      const handleProposal=msg=>{
         const data=JSON.parse(msg.data);
-        if(data.proposal){derivWS.send(JSON.stringify({buy:data.proposal.id,price:stake}));}
-        if(data.buy){contractId=data.buy.contract_id;tradeActive=true;tradeSettled=false;tradeType=type;entrySpot=0;exitSpot=0;barrier=0;tradeData=[];
-          // Eski subscription'ları temizle
-          derivWS.send(JSON.stringify({forget_all:'proposal_open_contract'}));
-          // Zorla kapanma timer - 15sn sonra paneli kapat
-          clearTimeout(tradeForceCloseTimer);
-          tradeForceCloseTimer = setTimeout(function(){
-            if(!tradeActive) return;
-            tradeActive = false;
-            document.getElementById('tradeChart').style.display='none';
-            document.getElementById('tradeInfoPanel').style.display='none';
-          }, 15000);
-          // Canvas temizle - önceki işlem görüntüsü silinsin
-          var _cv=document.getElementById('tradeCanvas');
-          if(_cv){var _cx=_cv.getContext('2d');_cx.clearRect(0,0,_cv.width,_cv.height);}
-          // tradeInfo panelini göster - işlem açık
-          var _buyPrice = data.buy.buy_price || 0;
-          var _payout = data.buy.payout || 0;
-          var _potProfit = (_payout - _buyPrice).toFixed(2);
-          document.getElementById('tinfoL1').textContent='Potential Payout';
-          document.getElementById('tinfoV1').textContent=parseFloat(_payout).toFixed(2)+' USD';
-          document.getElementById('tinfoL2').textContent='Total Cost';
-          document.getElementById('tinfoV2').textContent=parseFloat(_buyPrice).toFixed(2)+' USD';
-          document.getElementById('tinfoL3').textContent='Potential Profit';
-          document.getElementById('tinfoV3').textContent=_potProfit+' USD';
-          document.getElementById('tinfoV3').style.color='#4caf50';
-          document.getElementById('tradeInfoPanel').style.display='block';
-          derivWS.send(JSON.stringify({proposal_open_contract:1,contract_id:contractId,subscribe:1}));derivWS.removeEventListener('message',handleProposal);}
+        if(data.proposal)derivWS.send(JSON.stringify({buy:data.proposal.id,price:stake}));
+        if(data.buy){contractId=data.buy.contract_id;tradeActive=true;tradeSettled=false;tradeType=type;entrySpot=0;exitSpot=0;barrier=0;tradeData=[];derivWS.send(JSON.stringify({forget_all:'proposal_open_contract'}));clearTimeout(tradeForceCloseTimer);tradeForceCloseTimer=setTimeout(()=>{if(!tradeActive)return;tradeActive=false;document.getElementById('tradeChart').style.display='none';document.getElementById('tradeInfoPanel').style.display='none';},15000);const cv=document.getElementById('tradeCanvas');if(cv){const cx=cv.getContext('2d');cx.clearRect(0,0,cv.width,cv.height);}const bp=data.buy.buy_price||0,py=data.buy.payout||0,pp=(py-bp).toFixed(2);document.getElementById('tinfoL1').textContent='Potential Payout';document.getElementById('tinfoV1').textContent=parseFloat(py).toFixed(2)+' USD';document.getElementById('tinfoL2').textContent='Total Cost';document.getElementById('tinfoV2').textContent=parseFloat(bp).toFixed(2)+' USD';document.getElementById('tinfoL3').textContent='Potential Profit';document.getElementById('tinfoV3').textContent=pp+' USD';document.getElementById('tinfoV3').style.color='#4caf50';document.getElementById('tradeInfoPanel').style.display='block';derivWS.send(JSON.stringify({proposal_open_contract:1,contract_id:contractId,subscribe:1}));derivWS.removeEventListener('message',handleProposal);}
         if(data.error){alert('Ошибка сделки: '+data.error.message);derivWS.removeEventListener('message',handleProposal);}
       };
       derivWS.addEventListener('message',handleProposal);
     }
 
-    // ========== TRADE CHART ==========
-    function drawTradeChart() {
-      requestAnimationFrame(()=>{
-        const canvas=document.getElementById('tradeCanvas'); if(!canvas||tradeData.length===0) return;
-        const rect=canvas.getBoundingClientRect(); const dpr=window.devicePixelRatio||1;
-        canvas.width=rect.width*dpr; canvas.height=rect.height*dpr;
-        const ctx=canvas.getContext('2d'); ctx.setTransform(dpr,0,0,dpr,0,0); ctx.clearRect(0,0,rect.width,rect.height); ctx.fillStyle='#000000'; ctx.fillRect(0,0,rect.width,rect.height);
-        const isDark=!document.body.classList.contains('day-mode');
-        const width=rect.width,height=rect.height,padding=12;
-        const allValues=tradeData.concat([barrier]); const minVal=Math.min(...allValues),maxVal=Math.max(...allValues);
-        const range=maxVal-minVal||0.001; const aMin=minVal-(range*0.1),aMax=maxVal+(range*0.1),aRange=aMax-aMin;
-        function getY(val){return height-padding-((val-aMin)/aRange)*(height-2*padding);}
-        if(tradeData.length>0){ctx.strokeStyle='#FF8C00';ctx.lineWidth=1.5;ctx.setLineDash([4,2]);ctx.beginPath();ctx.moveTo(padding,padding);ctx.lineTo(padding,height-padding);ctx.stroke();ctx.setLineDash([]);ctx.font='7px sans-serif';ctx.fillStyle='#FF8C00';ctx.textAlign='center';ctx.fillText('Entry',padding,padding-2);}
-        if(barrier>0){const bY=getY(barrier);ctx.strokeStyle=isDark?'#fff':'#000';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(padding,bY);ctx.lineTo(width-padding,bY);ctx.stroke();ctx.font='7px sans-serif';ctx.fillStyle=isDark?'#fff':'#000';ctx.textAlign='left';ctx.fillText('Barrier',padding+2,bY-3);}
-        if(tradeData.length>0){const stepX=(width-2*padding)/5;ctx.strokeStyle='#6B8CAE';ctx.lineWidth=1.5;ctx.beginPath();tradeData.forEach(function(val,i){const x=padding+(i*stepX),y=getY(val);if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);});ctx.stroke();tradeData.forEach(function(val,i){if(i<1)return;const x=padding+(i*stepX),y=getY(val);ctx.fillStyle='#6B8CAE';ctx.beginPath();ctx.arc(x,y,3,0,Math.PI*2);ctx.fill();});if(tradeData.length===6){const exitX=padding+(5*stepX);ctx.strokeStyle='#FF8C00';ctx.lineWidth=1.5;ctx.setLineDash([4,2]);ctx.beginPath();ctx.moveTo(exitX,padding);ctx.lineTo(exitX,height-padding);ctx.stroke();ctx.setLineDash([]);ctx.font='7px sans-serif';ctx.fillStyle='#FF8C00';ctx.textAlign='center';ctx.fillText('Exit',exitX,padding-2);}}
-        if(tradeData.length===6&&exitSpot>0){const won=(tradeType==='CALL'&&exitSpot>barrier)||(tradeType==='PUT'&&exitSpot<barrier);ctx.fillStyle=won?'rgba(76,175,80,0.15)':'rgba(244,67,54,0.15)';ctx.fillRect(0,0,width,height);}
-      });
-    }
+    // TRADE CHART
+    function drawTradeChart(){requestAnimationFrame(()=>{const canvas=document.getElementById('tradeCanvas');if(!canvas||tradeData.length===0)return;const rect=canvas.getBoundingClientRect(),dpr=window.devicePixelRatio||1;canvas.width=rect.width*dpr;canvas.height=rect.height*dpr;const ctx=canvas.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,rect.width,rect.height);ctx.fillStyle='#000000';ctx.fillRect(0,0,rect.width,rect.height);const isDark=!document.body.classList.contains('day-mode'),w=rect.width,h=rect.height,p=12;const av=tradeData.concat([barrier]),mn=Math.min(...av),mx=Math.max(...av),rng=mx-mn||0.001,am=mn-(rng*0.1),ax=mx+(rng*0.1),ar=ax-am;const gY=v=>h-p-((v-am)/ar)*(h-2*p);if(tradeData.length>0){ctx.strokeStyle='#FF8C00';ctx.lineWidth=1.5;ctx.setLineDash([4,2]);ctx.beginPath();ctx.moveTo(p,p);ctx.lineTo(p,h-p);ctx.stroke();ctx.setLineDash([]);ctx.font='7px sans-serif';ctx.fillStyle='#FF8C00';ctx.textAlign='center';ctx.fillText('Entry',p,p-2);}if(barrier>0){const bY=gY(barrier);ctx.strokeStyle=isDark?'#fff':'#000';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(p,bY);ctx.lineTo(w-p,bY);ctx.stroke();ctx.font='7px sans-serif';ctx.fillStyle=isDark?'#fff':'#000';ctx.textAlign='left';ctx.fillText('Barrier',p+2,bY-3);}if(tradeData.length>0){const sx=(w-2*p)/5;ctx.strokeStyle='#6B8CAE';ctx.lineWidth=1.5;ctx.beginPath();tradeData.forEach((v,i)=>{const x=p+(i*sx),y=gY(v);if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);});ctx.stroke();tradeData.forEach((v,i)=>{if(i<1)return;const x=p+(i*sx),y=gY(v);ctx.fillStyle='#6B8CAE';ctx.beginPath();ctx.arc(x,y,3,0,Math.PI*2);ctx.fill();});if(tradeData.length===6){const ex=p+(5*sx);ctx.strokeStyle='#FF8C00';ctx.lineWidth=1.5;ctx.setLineDash([4,2]);ctx.beginPath();ctx.moveTo(ex,p);ctx.lineTo(ex,h-p);ctx.stroke();ctx.setLineDash([]);ctx.font='7px sans-serif';ctx.fillStyle='#FF8C00';ctx.textAlign='center';ctx.fillText('Exit',ex,p-2);}}if(tradeData.length===6&&exitSpot>0){const won=(tradeType==='CALL'&&exitSpot>barrier)||(tradeType==='PUT'&&exitSpot<barrier);ctx.fillStyle=won?'rgba(76,175,80,0.15)':'rgba(244,67,54,0.15)';ctx.fillRect(0,0,w,h);}});}
 
-    // ========== WORM ==========
-    function updateWorm() {
-      if(prices.length<20) return;
-      const last20=prices.slice(-20),max=Math.max(...last20.slice(0,-1)),min=Math.min(...last20.slice(0,-1)),last=last20[last20.length-1];
-      let color='lightgreen'; if(last>max) color='blue'; else if(last<min) color='red';
-      wormLinesTop.push(color); if(wormLinesTop.length>20) wormLinesTop.shift();
-    }
-    function renderWormLines(containerId,wormArray) {
-      requestAnimationFrame(()=>{
-        const c=document.getElementById(containerId); c.querySelectorAll('.worm-line').forEach(function(e){e.remove();});
-        const boxes=c.querySelectorAll('.num-box');
-        boxes.forEach(function(box,idx){
-          if(!wormArray[idx]) return;
-          const line=document.createElement('div'); line.className='worm-line';
-          line.style.width=box.offsetWidth+'px'; line.style.left=box.offsetLeft+'px';
-          line.style.top=(box.offsetTop+box.offsetHeight+0.2)+'px'; line.style.borderTopColor=wormArray[idx];
-          c.appendChild(line);
-        });
-      });
-    }
+    // WORM
+    function updateWorm(){if(prices.length<20)return;const l20=prices.slice(-20),mx=Math.max(...l20.slice(0,-1)),mn=Math.min(...l20.slice(0,-1)),last=l20[l20.length-1];let c='lightgreen';if(last>mx)c='blue';else if(last<mn)c='red';wormLinesTop.push(c);if(wormLinesTop.length>20)wormLinesTop.shift();}
+    function renderWormLines(cid,wa){requestAnimationFrame(()=>{const c=document.getElementById(cid);c.querySelectorAll('.worm-line').forEach(e=>e.remove());const boxes=c.querySelectorAll('.num-box');boxes.forEach((box,idx)=>{if(!wa[idx])return;const line=document.createElement('div');line.className='worm-line';line.style.width=box.offsetWidth+'px';line.style.left=box.offsetLeft+'px';line.style.top=(box.offsetTop+box.offsetHeight+0.2)+'px';line.style.borderTopColor=wa[idx];c.appendChild(line);});});}
+    function renderXYArea(){}
 
-    // ========== XY AREA ==========
-    function renderXYArea() { /* kaldırıldı */ }
-
-    // ========== GRID ==========
+    // GRID
     function isEven(n){return(n%2)===0;}
-    function decideRow(prev,currV,effColor){
-      if(!prev) return (effColor==='blue')?'top':'bottom';
-      if(currV===prev.v&&effColor===prev.effColor) return prev.row;
-      if(prev.effColor!==effColor) return (effColor==='blue')?'top':'bottom';
-      if(effColor==='blue') return (currV>prev.v)?'top':'bottom';
-      else return (currV<prev.v)?'top':'bottom';
-    }
-    function updateGridFromLast11() {
-      if(currentGraph!=='XZ'){gridHistory=[];startGlobalSpan=null;startCooldown=0;renderTwoRowGrid();renderStartOverlay();return;}
+    function decideRow(prev,currV,effColor){if(!prev)return effColor==='blue'?'top':'bottom';if(currV===prev.v&&effColor===prev.effColor)return prev.row;if(prev.effColor!==effColor)return effColor==='blue'?'top':'bottom';if(effColor==='blue')return currV>prev.v?'top':'bottom';else return currV<prev.v?'top':'bottom';}
+    function updateGridFromLast11(){
+      if(currentGraph!=='XZ'){gridHistory=[];startGlobalSpan=null;startCooldown=0;renderTwoRowGrid();renderStartOverlay();npRender();return;}
       const vis=Math.min(7,decimalDigits.length);
-      if(vis<=0){gridHistory=[];renderTwoRowGrid();renderStartOverlay();return;}
-      const decSlice=decimalDigits.slice(-vis).map(function(x){let v=parseInt((x||'0'),10);if(isNaN(v))v=0;return v;});
-      const colSlice=numColors.slice(-vis); const newHist=[];
-      for(let i=0;i<vis;i++){
-        const raw=colSlice[i]||'#666'; const rawColor=(raw==='blue'||raw==='red')?raw:'#666';
-        const prev=newHist.length?newHist[newHist.length-1]:null;
-        let effColor=rawColor; if(effColor!=='blue'&&effColor!=='red') effColor=prev?prev.effColor:'blue';
-        const row=decideRow(prev,decSlice[i],effColor);
-        newHist.push({v:decSlice[i],rawColor:rawColor,effColor:effColor,row:row});
-      }
+      if(vis<=0){gridHistory=[];renderTwoRowGrid();renderStartOverlay();npRender();return;}
+      const decSlice=decimalDigits.slice(-vis).map(x=>{let v=parseInt((x||'0'),10);if(isNaN(v))v=0;return v;});
+      const colSlice=numColors.slice(-vis),newHist=[];
+      for(let i=0;i<vis;i++){const raw=colSlice[i]||'#666',rawColor=(raw==='blue'||raw==='red')?raw:'#666';const prev=newHist.length?newHist[newHist.length-1]:null;let effColor=rawColor;if(effColor!=='blue'&&effColor!=='red')effColor=prev?prev.effColor:'blue';const row=decideRow(prev,decSlice[i],effColor);newHist.push({v:decSlice[i],rawColor,effColor,row});}
       gridHistory=newHist;
-      if(startCooldown>0) startCooldown--;
-      detectStartGlobal();
-      renderTwoRowGrid();
-      renderStartOverlay();
-      checkAndSignalTrend();
-      // YENİ: trend çizim tamponunu güncelle
-      updateTrendDrawBuffer();
+      if(startCooldown>0)startCooldown--;
+      detectStartGlobal();renderTwoRowGrid();renderStartOverlay();checkAndSignalTrend();updateTrendDrawBuffer();npRender();
       setTimeout(renderStartOverlay,0);
     }
-    function detectStartGlobal() {
-      if(currentGraph!=='XZ') return; if(startCooldown>0) return; if(gridHistory.length<2) return;
-      const vis=gridHistory.length,firstGlobal=xzTickCounter-vis,n=vis;
-      const a=gridHistory[n-2].v, b=gridHistory[n-1].v;
-      // Tek+çift veya çift+tek yan yana gelirse start
-      const cond = (isEven(a) && !isEven(b)) || (!isEven(a) && isEven(b));
+    function detectStartGlobal(){
+      if(currentGraph!=='XZ')return;if(startCooldown>0)return;if(gridHistory.length<2)return;
+      const vis=gridHistory.length,firstGlobal=xzTickCounter-vis,n=vis,a=gridHistory[n-2].v,b=gridHistory[n-1].v;
+      const cond=(isEven(a)&&!isEven(b))||(!isEven(a)&&isEven(b));
       if(cond){
         startGlobalSpan={from:firstGlobal+(n-2),to:firstGlobal+(n-1)};
-        startCooldown=6; trendStartGlobal=firstGlobal+(n-1);
-        lastTrendSignal=null; showTrendSignal(null);
-        currentTrendData={direction:null,last3:[],colors:[],arrows:[]};
-        showUpDownSignal(null);
-        // YENİ: Yeni start algılandığında çizim tamponunu sıfırla
-        trendDrawBuffer=[]; trendDrawStarted=false; lastStartSpanKey=null;
-        clearDrawPanels();
+        startCooldown=6;trendStartGlobal=firstGlobal+(n-1);
+        lastTrendSignal=null;npLastSignal=null;
+        showTrendSignal(null);currentTrendData={direction:null,last3:[],colors:[],arrows:[]};showUpDownSignal(null);
+        trendDrawBuffer=[];trendDrawStarted=false;lastStartSpanKey=null;clearDrawPanels();npResetPanel();
       }
     }
-    function renderTwoRowGrid() {
-      if(_rafPending) return; _rafPending=true;
-      requestAnimationFrame(()=>{ _rafPending=false;
-        const topRow=document.getElementById('gridTopRow'),botRow=document.getElementById('gridBottomRow'),dividerLine=document.getElementById('gridDividerLine');
-        if(!topRow||!botRow||!dividerLine) return;
-        topRow.innerHTML=''; botRow.innerHTML=''; const vis=gridHistory.length;
-        if(vis===0){dividerLine.style.width='0px';return;}
-        const topFragment=document.createDocumentFragment(),botFragment=document.createDocumentFragment();
-        // Buffer bilgisini önceden hazırla: hangi global index'lere ok gidecek
-        const arrowMap = {}; // globalIndex -> 'up' | 'down'
-        if(trendDrawBuffer && trendDrawBuffer.length >= 2 && startGlobalSpan) {
-          const firstGlobalBuf = xzTickCounter - vis;
-          const bufStartIdx = startGlobalSpan.from - firstGlobalBuf;
-          [[0,1],[2,3],[4,5]].forEach(function(pair) {
-            const bi0=pair[0], bi1=pair[1];
-            if(trendDrawBuffer.length <= bi1) return;
-            const gi0=bufStartIdx+bi0, gi1=bufStartIdx+bi1;
-            if(gi0<0||gi0>=vis||gi1<0||gi1>=vis) return;
-            const it0=trendDrawBuffer[bi0], it1=trendDrawBuffer[bi1];
-            const s0=it0.color==='red'?-it0.v:it0.v;
-            const s1=it1.color==='red'?-it1.v:it1.v;
-            arrowMap[gi0] = s0>s1 ? 'up' : 'down';
-            arrowMap[gi1] = s1>s0 ? 'up' : 'down';
+    function renderTwoRowGrid(){
+      if(_rafPending)return;_rafPending=true;
+      requestAnimationFrame(()=>{_rafPending=false;
+        const topRow=document.getElementById('gridTopRow'),botRow=document.getElementById('gridBottomRow'),divLine=document.getElementById('gridDividerLine');
+        if(!topRow||!botRow||!divLine)return;
+        topRow.innerHTML='';botRow.innerHTML='';const vis=gridHistory.length;
+        if(vis===0){divLine.style.width='0px';return;}
+        const tf=document.createDocumentFragment(),bf=document.createDocumentFragment();
+        const arrowMap={};
+        if(trendDrawBuffer&&trendDrawBuffer.length>=2&&startGlobalSpan){
+          const fg=xzTickCounter-vis,bsi=startGlobalSpan.from-fg;
+          [[0,1],[2,3],[4,5]].forEach(pair=>{
+            const bi0=pair[0],bi1=pair[1];if(trendDrawBuffer.length<=bi1)return;
+            const gi0=bsi+bi0,gi1=bsi+bi1;if(gi0<0||gi0>=vis||gi1<0||gi1>=vis)return;
+            const it0=trendDrawBuffer[bi0],it1=trendDrawBuffer[bi1];
+            const s0=it0.color==='red'?-it0.v:it0.v,s1=it1.color==='red'?-it1.v:it1.v;
+            arrowMap[gi0]=s0>s1?'up':'down';arrowMap[gi1]=s1>s0?'up':'down';
           });
         }
-
         for(let i=0;i<vis;i++){
-          const item=gridHistory[i],cellTop=document.createElement('div'),cellBot=document.createElement('div');
-          cellTop.className='grid-cell grid-top'; cellBot.className='grid-cell grid-bottom';
-          const showColor=(item.rawColor==='blue'||item.rawColor==='red')?item.rawColor:item.effColor;
-          if(item.row==='top'){cellTop.style.color=showColor;cellTop.textContent=String(item.v);cellBot.textContent='';}
-          else{cellBot.style.color=showColor;cellBot.textContent=String(item.v);cellTop.textContent='';}
-          // Ok ekle
-          if(arrowMap[i]) {
-            const targetCell = item.row==='top' ? cellTop : cellBot;
-            const arrow = document.createElement('div');
-            arrow.className = 'grid-arrow grid-arrow-' + arrowMap[i];
-            targetCell.appendChild(arrow);
-          }
-          topFragment.appendChild(cellTop); botFragment.appendChild(cellBot);
+          const item=gridHistory[i],ct=document.createElement('div'),cb=document.createElement('div');
+          ct.className='grid-cell grid-top';cb.className='grid-cell grid-bottom';
+          const sc=(item.rawColor==='blue'||item.rawColor==='red')?item.rawColor:item.effColor;
+          if(item.row==='top'){ct.style.color=sc;ct.textContent=String(item.v);cb.textContent='';}
+          else{cb.style.color=sc;cb.textContent=String(item.v);ct.textContent='';}
+          if(arrowMap[i]){const tc=item.row==='top'?ct:cb;const arr=document.createElement('div');arr.className='grid-arrow grid-arrow-'+arrowMap[i];tc.appendChild(arr);}
+          tf.appendChild(ct);bf.appendChild(cb);
         }
-        topRow.appendChild(topFragment); botRow.appendChild(botFragment);
-        const firstCell=topRow.querySelector('.grid-cell'); const cellW=firstCell?firstCell.getBoundingClientRect().width:36;
-        dividerLine.style.width=(vis*cellW)+'px';
-
-
+        topRow.appendChild(tf);botRow.appendChild(bf);
+        const fc=topRow.querySelector('.grid-cell');const cw=fc?fc.getBoundingClientRect().width:36;
+        divLine.style.width=(vis*cw)+'px';
       });
     }
-    function renderStartOverlay() {
+    function renderStartOverlay(){
       requestAnimationFrame(()=>{
-        document.querySelectorAll('.start-box').forEach(function(e){e.remove();}); if(!startGlobalSpan) return; if(currentGraph!=='XZ') return;
-        const wrap=document.getElementById('gridWrap'),topRow=document.getElementById('gridTopRow'),botRow=document.getElementById('gridBottomRow');
-        if(!wrap||!topRow||!botRow) return;
-        const topCells=topRow.querySelectorAll('.grid-cell'),botCells=botRow.querySelectorAll('.grid-cell'),vis=topCells.length;
-        if(vis===0) return;
-        const firstGlobal=xzTickCounter-vis,fromLocal=startGlobalSpan.from-firstGlobal,toLocal=startGlobalSpan.to-firstGlobal;
-        if(fromLocal<0||toLocal>=vis) return;
-        const c1=topCells[fromLocal],c2=topCells[toLocal],b1=botCells[fromLocal],b2=botCells[toLocal];
-        if(!c1||!c2||!b1||!b2) return;
-        const rWrap=wrap.getBoundingClientRect(),r1=c1.getBoundingClientRect(),r2=c2.getBoundingClientRect(),rb1=b1.getBoundingClientRect(),rb2=b2.getBoundingClientRect();
-        const left=Math.min(r1.left,rb1.left)-rWrap.left,right=Math.max(r2.right,rb2.right)-rWrap.left,top=Math.min(r1.top,rb1.top)-rWrap.top,bottom=Math.max(r2.bottom,rb2.bottom)-rWrap.top;
-        const box=document.createElement('div'); box.className='start-box';
-        box.style.left=(left-2)+'px'; box.style.top=(top-2)+'px'; box.style.width=(right-left+4)+'px'; box.style.height=(bottom-top+4)+'px';
-        const label=document.createElement('div'); label.className='start-label'; label.textContent='start'; box.appendChild(label);
+        document.querySelectorAll('.start-box').forEach(e=>e.remove());if(!startGlobalSpan)return;if(currentGraph!=='XZ')return;
+        const wrap=document.getElementById('gridWrap'),tr=document.getElementById('gridTopRow'),br=document.getElementById('gridBottomRow');
+        if(!wrap||!tr||!br)return;
+        const tc=tr.querySelectorAll('.grid-cell'),bc=br.querySelectorAll('.grid-cell'),vis=tc.length;
+        if(vis===0)return;
+        const fg=xzTickCounter-vis,fl=startGlobalSpan.from-fg,tl=startGlobalSpan.to-fg;
+        if(fl<0||tl>=vis)return;
+        const c1=tc[fl],c2=tc[tl],b1=bc[fl],b2=bc[tl];if(!c1||!c2||!b1||!b2)return;
+        const rw=wrap.getBoundingClientRect(),r1=c1.getBoundingClientRect(),r2=c2.getBoundingClientRect(),rb1=b1.getBoundingClientRect(),rb2=b2.getBoundingClientRect();
+        const left=Math.min(r1.left,rb1.left)-rw.left,right=Math.max(r2.right,rb2.right)-rw.left,top=Math.min(r1.top,rb1.top)-rw.top,bottom=Math.max(r2.bottom,rb2.bottom)-rw.top;
+        const box=document.createElement('div');box.className='start-box';
+        box.style.left=(left-2)+'px';box.style.top=(top-2)+'px';box.style.width=(right-left+4)+'px';box.style.height=(bottom-top+4)+'px';
+        const lbl=document.createElement('div');lbl.className='start-label';lbl.textContent='start';box.appendChild(lbl);
         wrap.appendChild(box);
       });
     }
 
-    // ========== WEBSOCKET ==========
-    function startWS() {
+    // WEBSOCKET
+    function startWS(){
       ws=new WebSocket('wss://ws.binaryws.com/websockets/v3?app_id=1089');
-      ws.onopen=function(){ws.send(JSON.stringify({ticks_history:currentPair,end:"latest",count:20,subscribe:1}));};
-      ws.onmessage=function(msg){
+      ws.onopen=()=>ws.send(JSON.stringify({ticks_history:currentPair,end:"latest",count:20,subscribe:1}));
+      ws.onmessage=msg=>{
         const d=JSON.parse(msg.data);
-        if(d.history){
-          d.history.prices.forEach(function(p){
-            const priceStr=String(p),price=parseFloat(p); prices.push(price); if(prices.length>200) prices.shift();
-            const parts=priceStr.split('.');const intPart=parts[0];let decPart=parts[1]||'0';if(decPart.length===1)decPart=decPart+'0';
-            const lastTwo=intPart.slice(-2); digits.push(lastTwo); if(digits.length>200) digits.shift();
-            const lastDec=decPart.charAt(decPart.length-1)||'0'; decimalDigits.push(lastDec); if(decimalDigits.length>200) decimalDigits.shift(); xzTickCounter++;
-            const lastInt=intPart.slice(-1),firstDec=decPart.charAt(0)||'0'; combinedDigits.push(lastInt+','+firstDec); if(combinedDigits.length>200) combinedDigits.shift(); updateWorm();
-          });
-        }
-        if(d.tick){
-          const priceStr=d.tick.quote.toString(),price=parseFloat(d.tick.quote); prices.push(price); if(prices.length>20) prices.shift();
-          const parts=priceStr.split('.');const intPart=parts[0];let decPart=parts[1]||'0';if(decPart.length===1)decPart=decPart+'0';
-          const lastTwo=intPart.slice(-2); digits.push(lastTwo); if(digits.length>20) digits.shift();
-          const lastDec=decPart.charAt(decPart.length-1)||'0'; decimalDigits.push(lastDec); if(decimalDigits.length>20) decimalDigits.shift();
-          xzTickCounter++; const lastInt=intPart.slice(-1),firstDec=decPart.charAt(0)||'0'; combinedDigits.push(lastInt+','+firstDec); if(combinedDigits.length>20) combinedDigits.shift();
-          updateWorm();
-          const priceEl=document.getElementById('price'); let displayPrice=intPart+(decPart&&decPart!=='00'?','+decPart:',00'); priceEl.innerText=displayPrice;
-          if(prices.length>1){const prev=prices[prices.length-2];if(price>prev)priceEl.style.background='blue';else if(price<prev)priceEl.style.background='red';else priceEl.style.background='#0b57d0';}
-        }
-        const row=document.getElementById('numbersTop'); row.innerHTML=''; numColors=[];
-        const activeArr=(currentGraph==='XZ'?decimalDigits:(currentGraph==='ZZ'?digits:combinedDigits));
-        const sliceArr=activeArr.slice(-7); const fragment=document.createDocumentFragment();
-        for(let i=0;i<sliceArr.length;i++){
-          const globalIndex=activeArr.length-7+i,up=globalIndex>0&&prices[globalIndex]>prices[globalIndex-1],down=globalIndex>0&&prices[globalIndex]<prices[globalIndex-1];
-          const color=up?'blue':(down?'red':'#666'); numColors.push(color); if(numColors.length>200) numColors.shift();
-          const box=document.createElement('div'); box.className='num-box'; box.style.background=color;
-          box.innerText=(currentGraph==='Z.Z')?(sliceArr[i]||'').replace(',','.'):(sliceArr[i]||'0'); fragment.appendChild(box);
-        }
-        row.appendChild(fragment);
-
-
-        const last11=prices.slice(-7);
-        if(chart){
-          chart.data.datasets[0].data=last11;
-          chart.data.datasets[0].pointBackgroundColor=last11.map(function(p,i){if(i===0)return'gray';if(p>last11[i-1])return'blue';if(p<last11[i-1])return'red';return'gray';});
-          chart.data.datasets[0].pointBorderColor=Array(last11.length).fill('transparent');
-          chart.data.labels=Array.from({length:last11.length},function(_,i){return(i+1).toString();});
-          chart.update('none');
-        }
-        updateGridFromLast11();
-        _scheduleRender();
+        if(d.history){d.history.prices.forEach(p=>{const ps=String(p),pr=parseFloat(p);prices.push(pr);if(prices.length>200)prices.shift();const parts=ps.split('.');const ip=parts[0];let dp=parts[1]||'0';if(dp.length===1)dp+=0;const lt=ip.slice(-2);digits.push(lt);if(digits.length>200)digits.shift();const ld=dp.charAt(dp.length-1)||'0';decimalDigits.push(ld);if(decimalDigits.length>200)decimalDigits.shift();xzTickCounter++;const li=ip.slice(-1),fd=dp.charAt(0)||'0';combinedDigits.push(li+','+fd);if(combinedDigits.length>200)combinedDigits.shift();updateWorm();});}
+        if(d.tick){const ps=d.tick.quote.toString(),pr=parseFloat(d.tick.quote);prices.push(pr);if(prices.length>20)prices.shift();const parts=ps.split('.');const ip=parts[0];let dp=parts[1]||'0';if(dp.length===1)dp+='0';const lt=ip.slice(-2);digits.push(lt);if(digits.length>20)digits.shift();const ld=dp.charAt(dp.length-1)||'0';decimalDigits.push(ld);if(decimalDigits.length>20)decimalDigits.shift();xzTickCounter++;const li=ip.slice(-1),fd=dp.charAt(0)||'0';combinedDigits.push(li+','+fd);if(combinedDigits.length>20)combinedDigits.shift();updateWorm();const pe=document.getElementById('price');let dp2=ip+(dp&&dp!=='00'?','+dp:',00');pe.innerText=dp2;if(prices.length>1){const prev=prices[prices.length-2];if(pr>prev)pe.style.background='blue';else if(pr<prev)pe.style.background='red';else pe.style.background='#0b57d0';}}
+        const row=document.getElementById('numbersTop');row.innerHTML='';numColors=[];
+        const aa=currentGraph==='XZ'?decimalDigits:(currentGraph==='ZZ'?digits:combinedDigits);
+        const sa=aa.slice(-7);const frag=document.createDocumentFragment();
+        for(let i=0;i<sa.length;i++){const gi=aa.length-7+i,up=gi>0&&prices[gi]>prices[gi-1],dn=gi>0&&prices[gi]<prices[gi-1];const c=up?'blue':(dn?'red':'#666');numColors.push(c);if(numColors.length>200)numColors.shift();const box=document.createElement('div');box.className='num-box';box.style.background=c;box.innerText=currentGraph==='Z.Z'?(sa[i]||'').replace(',','.'):(sa[i]||'0');frag.appendChild(box);}
+        row.appendChild(frag);
+        const l7=prices.slice(-7);
+        if(chart){chart.data.datasets[0].data=l7;chart.data.datasets[0].pointBackgroundColor=l7.map((p,i)=>{if(i===0)return'gray';if(p>l7[i-1])return'blue';if(p<l7[i-1])return'red';return'gray';});chart.data.datasets[0].pointBorderColor=Array(l7.length).fill('transparent');chart.data.labels=Array.from({length:l7.length},(_,i)=>(i+1).toString());chart.update('none');}
+        updateGridFromLast11();_scheduleRender();
       };
     }
-
-    // ========== ZAMAN ==========
     function updateTime(){const now=new Date();document.getElementById('time').innerText='GMT '+now.getUTCHours().toString().padStart(2,'0')+':'+now.getUTCMinutes().toString().padStart(2,'0')+':'+now.getUTCSeconds().toString().padStart(2,'0');}
 
-    // ========== CHART ==========
-    function initChart() {
+    // CHART
+    function initChart(){
       const ctx=document.getElementById('chart').getContext('2d');
-      chart=new Chart(ctx,{
-        type:'line',
-        data:{labels:Array.from({length:7},function(_,i){return(i+1).toString();}),datasets:[{data:Array(7).fill(null),borderColor:'#fff',borderWidth:1.5,backgroundColor:'rgba(255,255,255,0.05)',pointBackgroundColor:Array(7).fill('#fff'),pointRadius:2,pointHoverRadius:3}]},
-        options:{plugins:{legend:{display:false},tooltip:{enabled:false}},scales:{y:{beginAtZero:false,grid:{color:'rgba(255,255,255,0.1)'},ticks:{color:'#fff'}},x:{grid:{color:'rgba(255,255,255,0.1)'},ticks:{color:'#fff'}}},animation:false,maintainAspectRatio:false},
-        plugins:[{afterDatasetsDraw:function(chartInstance){
-          const ctx=chartInstance.ctx,meta=chartInstance.getDatasetMeta(0),isDark=!document.body.classList.contains('day-mode');
+      chart=new Chart(ctx,{type:'line',data:{labels:Array.from({length:7},(_,i)=>(i+1).toString()),datasets:[{data:Array(7).fill(null),borderColor:'#fff',borderWidth:1.5,backgroundColor:'rgba(255,255,255,0.05)',pointBackgroundColor:Array(7).fill('#fff'),pointRadius:2,pointHoverRadius:3}]},options:{plugins:{legend:{display:false},tooltip:{enabled:false}},scales:{y:{beginAtZero:false,grid:{color:'rgba(255,255,255,0.1)'},ticks:{color:'#fff'}},x:{grid:{color:'rgba(255,255,255,0.1)'},ticks:{color:'#fff'}}},animation:false,maintainAspectRatio:false},
+        plugins:[{afterDatasetsDraw(ci){
+          const ctx=ci.ctx,meta=ci.getDatasetMeta(0),isDark=!document.body.classList.contains('day-mode');
           const decs=decimalDigits.slice(-7),colors=numColors.slice(-7);
-          const values=decs.map(function(d){let v=parseInt((d||'0'),10);if(isNaN(v))v=0;return v;});
-          for(let i=0;i<values.length-1;i++){
-            const v1=values[i],v2=values[i+1],c1=colors[i],c2=colors[i+1]; if(Math.abs(v1-v2)!==1) continue;
-            const pt1=meta.data[i],pt2=meta.data[i+1]; if(!pt1||!pt2) continue;
-            const midX=(pt1.x+pt2.x)/2,midY=(pt1.y+pt2.y)/2;
-            ctx.strokeStyle=isDark?'#40E0D0':'#000';ctx.lineWidth=0.9;ctx.beginPath();ctx.moveTo(midX-18,midY);ctx.lineTo(midX+18,midY);ctx.stroke();
-            ctx.font='bold 9px sans-serif';ctx.fillStyle=isDark?'#40E0D0':'#000';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('VZ',midX,midY-10);
-            let arrowColor='';
-            if(c1===c2){if(c1==='blue')arrowColor=v2>v1?'blue':'red';else if(c1==='red')arrowColor=v2<v1?'blue':'red';}
-            else{if(c1==='blue'&&c2==='red')arrowColor=v1<v2?'red':'blue';else if(c1==='red'&&c2==='blue')arrowColor=v2>v1?'blue':'red';}
-            if(!arrowColor) continue;
-            const arrowX=midX+35,arrowSize=7,stemLength=16;
-            ctx.strokeStyle=arrowColor;ctx.fillStyle=arrowColor;ctx.lineWidth=2;
-            if(arrowColor==='blue'){ctx.beginPath();ctx.moveTo(arrowX-stemLength*0.707,midY+stemLength*0.707);ctx.lineTo(arrowX,midY);ctx.stroke();ctx.beginPath();ctx.moveTo(arrowX,midY);ctx.lineTo(arrowX-arrowSize,midY);ctx.lineTo(arrowX,midY+arrowSize);ctx.closePath();ctx.fill();}
-            else{ctx.beginPath();ctx.moveTo(arrowX-stemLength*0.707,midY-stemLength*0.707);ctx.lineTo(arrowX,midY);ctx.stroke();ctx.beginPath();ctx.moveTo(arrowX,midY);ctx.lineTo(arrowX-arrowSize,midY);ctx.lineTo(arrowX,midY-arrowSize);ctx.closePath();ctx.fill();}
-          }
+          const values=decs.map(d=>{let v=parseInt((d||'0'),10);if(isNaN(v))v=0;return v;});
+          for(let i=0;i<values.length-1;i++){const v1=values[i],v2=values[i+1],c1=colors[i],c2=colors[i+1];if(Math.abs(v1-v2)!==1)continue;const pt1=meta.data[i],pt2=meta.data[i+1];if(!pt1||!pt2)continue;const mx=(pt1.x+pt2.x)/2,my=(pt1.y+pt2.y)/2;ctx.strokeStyle=isDark?'#40E0D0':'#000';ctx.lineWidth=0.9;ctx.beginPath();ctx.moveTo(mx-18,my);ctx.lineTo(mx+18,my);ctx.stroke();ctx.font='bold 9px sans-serif';ctx.fillStyle=isDark?'#40E0D0':'#000';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('VZ',mx,my-10);let ac='';if(c1===c2){if(c1==='blue')ac=v2>v1?'blue':'red';else if(c1==='red')ac=v2<v1?'blue':'red';}else{if(c1==='blue'&&c2==='red')ac=v1<v2?'red':'blue';else if(c1==='red'&&c2==='blue')ac=v2>v1?'blue':'red';}if(!ac)continue;const ax=mx+35,as=7,sl=16;ctx.strokeStyle=ac;ctx.fillStyle=ac;ctx.lineWidth=2;if(ac==='blue'){ctx.beginPath();ctx.moveTo(ax-sl*0.707,my+sl*0.707);ctx.lineTo(ax,my);ctx.stroke();ctx.beginPath();ctx.moveTo(ax,my);ctx.lineTo(ax-as,my);ctx.lineTo(ax,my+as);ctx.closePath();ctx.fill();}else{ctx.beginPath();ctx.moveTo(ax-sl*0.707,my-sl*0.707);ctx.lineTo(ax,my);ctx.stroke();ctx.beginPath();ctx.moveTo(ax,my);ctx.lineTo(ax-as,my);ctx.lineTo(ax,my-as);ctx.closePath();ctx.fill();}}
           ctx.font='900 15px sans-serif';ctx.textAlign='center';ctx.textBaseline='bottom';
           const digs=digits.slice(-7),combs=combinedDigits.slice(-7),worms=wormLinesTop.slice(-7);
-          meta.data.forEach(function(pt,i){
-            let t=''; if(currentGraph==='XZ')t=decs[i]||'';else if(currentGraph==='ZZ')t=digs[i]||'';else t=(combs[i]||'').replace(',','.');
-            if(pt&&pt.x!==undefined){let fillColor=colors[i]||'#000';if(fillColor==='blue')fillColor='#6A9FFF';ctx.fillStyle=fillColor;ctx.fillText(t,pt.x,pt.y-2);const wormColor=worms[i];if(wormColor==='blue'||wormColor==='red'){ctx.strokeStyle=wormColor;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(pt.x-5,pt.y-2);ctx.lineTo(pt.x+5,pt.y-2);ctx.stroke();}}
-          });
-          const last=meta.data[meta.data.length-1];
-          if(last&&last.x!==undefined){ctx.strokeStyle=isDark?'#40E0D0':'#000';ctx.lineWidth=0.5;ctx.beginPath();ctx.moveTo(chartInstance.scales.x.left,last.y);ctx.lineTo(last.x,last.y);ctx.stroke();}
+          meta.data.forEach((pt,i)=>{let t='';if(currentGraph==='XZ')t=decs[i]||'';else if(currentGraph==='ZZ')t=digs[i]||'';else t=(combs[i]||'').replace(',','.');if(pt&&pt.x!==undefined){let fc=colors[i]||'#000';if(fc==='blue')fc='#6A9FFF';ctx.fillStyle=fc;ctx.fillText(t,pt.x,pt.y-2);const wc=worms[i];if(wc==='blue'||wc==='red'){ctx.strokeStyle=wc;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(pt.x-5,pt.y-2);ctx.lineTo(pt.x+5,pt.y-2);ctx.stroke();}}});
+          const last=meta.data[meta.data.length-1];if(last&&last.x!==undefined){ctx.strokeStyle=isDark?'#40E0D0':'#000';ctx.lineWidth=0.5;ctx.beginPath();ctx.moveTo(ci.scales.x.left,last.y);ctx.lineTo(last.x,last.y);ctx.stroke();}
         }}]
       });
     }
 
-    // ========== BAŞLATMA ==========
-    document.
-addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded',()=>{
       setTimeout(()=>{document.getElementById('loadingIndicator').style.opacity='0';setTimeout(()=>{document.getElementById('loadingIndicator').style.display='none';},300);},1000);
-      initWebWorker();
-      initChart();
-      document.querySelectorAll('.grid-cell, .num-box, #chartContainer, #xyBox').forEach(el=>{el.classList.add('performance-mode','hw-accelerate');});
+      initWebWorker();initChart();
+      document.querySelectorAll('.grid-cell,.num-box,#chartContainer,#xyBox').forEach(el=>el.classList.add('performance-mode','hw-accelerate'));
       document.getElementById('themeToggle').addEventListener('click',toggleTheme);
       document.getElementById('graphToggle').addEventListener('click',toggleGraph);
-      document.getElementById('startStopBtn').addEventListener('click', function(){
-        // Stake değerini sakla
-        var stakeVal = document.getElementById('stakeInput').value;
-        // Veri sıfırla - API bağlantısına dokunma
-        prices=[]; digits=[]; decimalDigits=[]; combinedDigits=[]; wormLinesTop=[]; numColors=[];
+      document.getElementById('startStopBtn').addEventListener('click',()=>{
+        const sv=document.getElementById('stakeInput').value;
+        prices=[];digits=[];decimalDigits=[];combinedDigits=[];wormLinesTop=[];numColors=[];
         document.getElementById('numbersTop').innerHTML='';
-        gridHistory=[]; startCooldown=0; startGlobalSpan=null; xzTickCounter=0;
-        currentTrendData={direction:null,last3:[],colors:[],arrows:[]};
-        lastTrendSignal=null; trendStartGlobal=null;
-        trendDrawBuffer=[]; trendDrawStarted=false; lastStartSpanKey=null;
-        showTrendSignal(null); showUpDownSignal(null);
-        clearDrawPanels();
-        renderTwoRowGrid(); renderStartOverlay(); renderXYArea(); drawTrendAngle();
-        // Grafik sıfırla
-        if(chart){chart.data.datasets[0].data=Array(7).fill(null);chart.data.labels=Array.from({length:7},function(_,i){return(i+1).toString();});chart.update('none');}
-        // Fiyat sıfırla
-        document.getElementById('price').innerText='0.00';
-        document.getElementById('price').style.background='#0b57d0';
-        // Stake koru
-        document.getElementById('stakeInput').value = stakeVal;
-        // WS yeniden başlat (data WS - API DEĞİL)
-        if(ws){try{ws.close();}catch(e){}}
-        if(isRunning) startWS();
+        gridHistory=[];startCooldown=0;startGlobalSpan=null;xzTickCounter=0;
+        currentTrendData={direction:null,last3:[],colors:[],arrows:[]};lastTrendSignal=null;trendStartGlobal=null;
+        trendDrawBuffer=[];trendDrawStarted=false;lastStartSpanKey=null;
+        showTrendSignal(null);showUpDownSignal(null);clearDrawPanels();npResetPanel();
+        renderTwoRowGrid();renderStartOverlay();renderXYArea();drawTrendAngle();
+        if(chart){chart.data.datasets[0].data=Array(7).fill(null);chart.data.labels=Array.from({length:7},(_,i)=>(i+1).toString());chart.update('none');}
+        document.getElementById('price').innerText='0.00';document.getElementById('price').style.background='#0b57d0';
+        document.getElementById('stakeInput').value=sv;
+        if(ws){try{ws.close();}catch(e){}}if(isRunning)startWS();
       });
-      // Periyodik bellek temizleme - her 5 dakikada bir
-      setInterval(function(){
-        // Diziler zaten shift ile limitli, ekstra temizlik yap
-        if(prices.length > 100) prices.splice(0, prices.length - 100);
-        if(digits.length > 100) digits.splice(0, digits.length - 100);
-        if(decimalDigits.length > 100) decimalDigits.splice(0, decimalDigits.length - 100);
-        if(combinedDigits.length > 100) combinedDigits.splice(0, combinedDigits.length - 100);
-        if(numColors.length > 100) numColors.splice(0, numColors.length - 100);
-        if(wormLinesTop.length > 100) wormLinesTop.splice(0, wormLinesTop.length - 100);
-      }, 300000); // 5 dakika
-
-      document.getElementById('trendBellBox').addEventListener('click', function(){
-        bellMuted = !bellMuted;
-        document.getElementById('trendBellIcon').textContent = bellMuted ? '🔕' : '🔔';
-      });
-      document.getElementById('connectBtn').addEventListener('click',function(){ if(document.getElementById('connectBtn').textContent.trim()==='Disconnect'){ disconnectAPI(); } else { connectAPI(); } });
+      setInterval(()=>{if(prices.length>100)prices.splice(0,prices.length-100);if(digits.length>100)digits.splice(0,digits.length-100);if(decimalDigits.length>100)decimalDigits.splice(0,decimalDigits.length-100);if(combinedDigits.length>100)combinedDigits.splice(0,combinedDigits.length-100);if(numColors.length>100)numColors.splice(0,numColors.length-100);if(wormLinesTop.length>100)wormLinesTop.splice(0,wormLinesTop.length-100);},300000);
+      document.getElementById('trendBellBox').addEventListener('click',()=>{bellMuted=!bellMuted;document.getElementById('trendBellIcon').textContent=bellMuted?'🔕':'🔔';});
+      document.getElementById('connectBtn').addEventListener('click',()=>{if(document.getElementById('connectBtn').textContent.trim()==='Disconnect')disconnectAPI();else connectAPI();});
       document.getElementById('saveCheckbox').addEventListener('change',toggleSaveToken);
       document.getElementById('autoTradeBtn').addEventListener('click',toggleAutoTrade);
       document.getElementById('martingaleBtn').addEventListener('click',toggleMartingale);
-      document.getElementById('martingaleInput').addEventListener('change',function(){ martingaleMultiplier = parseFloat(this.value) || 2.2; });
-      document.getElementById('callBtn').addEventListener('click',function(){placeTrade('CALL');});
-      document.getElementById('putBtn').addEventListener('click',function(){placeTrade('PUT');});
-      document.querySelectorAll('.pair-btn').forEach(function(btn){btn.addEventListener('click',function(){selectPair(this.getAttribute('data-pair'));});});
-      setInterval(updateTime,1000); updateTime();
-      startWS();
-      loadSavedToken();
-
-      updateLogos();
-      document.body.addEventListener('click',function initAudioOnce(){initAudio();if(audioContext&&audioContext.state==='suspended')audioContext.resume();},{once:true});
-      document.body.addEventListener('touchstart',function(){if(audioContext&&audioContext.state==='suspended')audioContext.resume();},{passive:true});
-      let resizeTimeout;
-      window.addEventListener('resize',function(){clearTimeout(resizeTimeout);resizeTimeout=setTimeout(function(){renderXYArea();renderStartOverlay();renderTwoRowGrid();drawTrendAngle();renderDrawPanels();},100);});
-      if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('/service-worker.js').then(function(r){console.log('SW:',r.scope);},function(e){console.log('SW fail:',e);});});}
-
-    // ===== ARKA PLANDA ÇALIŞMA =====
-    var _wakeLock = null;
-    function _requestWakeLock() {
-      if('wakeLock' in navigator) {
-        navigator.wakeLock.request('screen').then(function(wl){
-          _wakeLock = wl;
-          wl.addEventListener('release', function(){ setTimeout(_requestWakeLock, 1000); });
-        }).catch(function(){});
-      }
-    }
-    var _audioCtx = null;
-    function _startSilentAudio() {
-      try {
-        if(_audioCtx) return;
-        _audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        var osc = _audioCtx.createOscillator();
-        var gain = _audioCtx.createGain();
-        gain.gain.value = 0.00001;
-        osc.connect(gain); gain.connect(_audioCtx.destination); osc.start();
-      } catch(e) {}
-    }
-    document.addEventListener('visibilitychange', function() {
-      if(document.visibilityState === 'visible') {
-        _requestWakeLock();
-        if(_audioCtx && _audioCtx.state === 'suspended') _audioCtx.resume();
-        if(wsReconnectEnabled && (!derivWS || derivWS.readyState !== WebSocket.OPEN)) _triggerReconnect();
-      }
-    });
-    document.addEventListener('click', function initAudio() {
-      _startSilentAudio(); _requestWakeLock();
-    }, { once: true });
-
+      document.getElementById('martingaleInput').addEventListener('change',function(){martingaleMultiplier=parseFloat(this.value)||2.2;});
+      document.getElementById('callBtn').addEventListener('click',()=>placeTrade('CALL'));
+      document.getElementById('putBtn').addEventListener('click',()=>placeTrade('PUT'));
+      document.querySelectorAll('.pair-btn').forEach(btn=>btn.addEventListener('click',function(){selectPair(this.getAttribute('data-pair'));}));
+      setInterval(updateTime,1000);updateTime();startWS();loadSavedToken();updateLogos();
+      document.body.addEventListener('click',function io(){initAudio();if(audioContext&&audioContext.state==='suspended')audioContext.resume();},{once:true});
+      document.body.addEventListener('touchstart',()=>{if(audioContext&&audioContext.state==='suspended')audioContext.resume();},{passive:true});
+      let rt;window.addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{renderXYArea();renderStartOverlay();renderTwoRowGrid();drawTrendAngle();renderDrawPanels();npRender();},100);});
+      if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('/service-worker.js').then(r=>console.log('SW:',r.scope)).catch(e=>console.log('SW fail:',e)));
+      let _wl=null;
+      function _rwl(){if('wakeLock' in navigator)navigator.wakeLock.request('screen').then(wl=>{_wl=wl;wl.addEventListener('release',()=>setTimeout(_rwl,1000));}).catch(()=>{});}
+      let _ac=null;
+      function _sa(){try{if(_ac)return;_ac=new(window.AudioContext||window.webkitAudioContext)();const o=_ac.createOscillator(),g=_ac.createGain();g.gain.value=0.00001;o.connect(g);g.connect(_ac.destination);o.start();}catch(e){}}
+      document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'){_rwl();if(_ac&&_ac.state==='suspended')_ac.resume();if(wsReconnectEnabled&&(!derivWS||derivWS.readyState!==WebSocket.OPEN))_triggerReconnect();}});
+      document.addEventListener('click',function ia(){_sa();_rwl();},{once:true});
     });
   </script>
 
