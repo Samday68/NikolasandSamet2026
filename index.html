@@ -177,14 +177,12 @@ body.day-mode #nikolasPanel { background: #f5f5f5; border-color: #ccc; }
 
 /* ===== TÜRKÇE ANALİZ PANELİ ===== */
 #trPanel {
-  width: 185px;
-  background: #000; border: 2px solid #666;
+  width: 100%; background: #000; border: 2px solid #666;
   border-radius: 6px; padding: 5px; display: none;
   flex-direction: column; gap: 3px; flex-shrink: 0;
 }
 body.day-mode #trPanel { background: #f5f5f5; border-color: #ccc; }
-@media (min-width: 769px) { #trPanel { width: 192px; } }
-@media (max-width: 768px) { #trPanel { width: 185px; border: 1.5px solid #666; padding: 4px; } }
+@media (max-width: 768px) { #trPanel { border: 1.5px solid #666; padding: 4px; } }
 
 .ap-title { font-size: 6px; font-weight: 900; letter-spacing: 1px; color: #666; text-transform: uppercase; font-family: monospace; padding-bottom: 2px; border-bottom: 1px solid #333; margin-bottom: 1px; }
 body.day-mode .ap-title { color: #888; border-color: #ddd; }
@@ -567,47 +565,48 @@ body.day-mode .np-val .nw, body.day-mode .tr-val .nw { color: #111; }
       // VZ fazla olabilir, sadece benzersiz kombinasyonları göster
       vzItems=[...new Set(vzItems)].slice(0,4);
 
-      // Decision
-      let decision=null,decRu='';
-      if(even.length>=1&&odd.length>=1){
-        const le=even[even.length-1],se=even[0],lo=odd[odd.length-1],so=odd[0];
-        if(ei.dir==='↑'&&oi.dir==='↑'){decision='UP';decRu='Оба шага растут';}
-        else if(ei.dir==='↓'&&oi.dir==='↓'){decision='DOWN';decRu='Оба шага падают';}
-        else if(ei.dir==='↓'&&oi.dir==='↑'){
-          const eMin=even.reduce((a,x)=>npSV(x.v,x.color)<npSV(a.v,a.color)?x:a);
-          const oMax=odd.reduce((a,x)=>npSV(x.v,x.color)>npSV(a.v,a.color)?x:a);
-          const c=npCmp(oMax.v,oMax.color,eMin.v,eMin.color);
-          if(c==='b'||c==='eq'){decision='DOWN';decRu='Чётный давит вниз';}
-          else{decision='UP';decRu='Нечётный пробил минимум чётного → ВВЕРХ';}
-        } else if(ei.dir==='↑'&&oi.dir==='↓'){
-          const oMin=odd.reduce((a,x)=>npSV(x.v,x.color)<npSV(a.v,a.color)?x:a);
-          const eMax=even.reduce((a,x)=>npSV(x.v,x.color)>npSV(a.v,a.color)?x:a);
-          const c=npCmp(eMax.v,eMax.color,oMin.v,oMin.color);
-          if(c==='b'||c==='eq'){decision='UP';decRu='Чётный давит вверх';}
-          else{decision='DOWN';decRu='Нечётный пробил минимум чётного → ВНИЗ';}
+      // ===== NİKOLAS ALGORİTMASI =====
+      // Her sayının gerçek değeri: mavi=+sayı, kırmızı=−sayı
+      const getRealValue = (v, color) => color === 'blue' ? v : -v;
+
+      // Max(tek) = tek sayıların en yüksek gerçek değeri
+      let maxOdd = null, maxOddItem = null;
+      odd.forEach(x => {
+        const rv = getRealValue(x.v, x.color);
+        if(maxOdd === null || rv > maxOdd){ maxOdd = rv; maxOddItem = x; }
+      });
+
+      // Min(çift) = çift sayıların en düşük gerçek değeri
+      let minEven = null, minEvenItem = null;
+      even.forEach(x => {
+        const rv = getRealValue(x.v, x.color);
+        if(minEven === null || rv < minEven){ minEven = rv; minEvenItem = x; }
+      });
+
+      // Formal sinyal
+      let formalSignal = null;
+      if(maxOdd !== null && minEven !== null){
+        if(maxOdd > minEven) formalSignal = 'UP';
+        else if(maxOdd < minEven) formalSignal = 'DOWN';
+      }
+
+      // Onay: çift adımın son değeri başlangıcına göre
+      // Onay için çift adımda en az 2 sayı + toplam en az 2 çift 2 tek şart
+      let confirmed = false;
+      let decRu = '', decision = null;
+      if(formalSignal && even.length >= 2 && odd.length >= 2){
+        const evenStart = getRealValue(even[0].v, even[0].color);
+        const evenEnd = getRealValue(even[even.length-1].v, even[even.length-1].color);
+        if(formalSignal === 'UP' && evenEnd > evenStart){
+          confirmed = true;
+          decRu = 'Max нечётного > Min чётного · Подтверждение → ВВЕРХ';
+          decision = 'UP';
+        } else if(formalSignal === 'DOWN' && evenEnd < evenStart){
+          confirmed = true;
+          decRu = 'Max нечётного < Min чётного · Подтверждение → ВНИЗ';
+          decision = 'DOWN';
         } else {
-          // Флэт или неопределённость — сравниваем последние точки
-          const c1=npCmp(le.v,le.color,so.v,so.color);
-          const c2=npCmp(lo.v,lo.color,se.v,se.color);
-          if(c1==='b'){decision='DOWN';decRu='Последний чётный ниже старта нечётного → ВНИЗ';}
-          else if(c1==='a'){decision='UP';decRu='Последний чётный выше старта нечётного → ВВЕРХ';}
-          else if(c2==='a'){decision='UP';decRu='Нечётный выше старта чётного → ВВЕРХ';}
-          else if(c2==='b'){decision='DOWN';decRu='Нечётный ниже старта чётного → ВНИЗ';}
-          else {
-            // Son çare: son gelen sayının rengi
-            const last=seq[seq.length-1];
-            const prev=seq[seq.length-2];
-            const cLast=npCmp(last.v,last.color,prev.v,prev.color);
-            if(cLast==='a'){decision='DOWN';decRu='Последнее движение вниз';}
-            else if(cLast==='b'){decision='UP';decRu='Последнее движение вверх';}
-            else{
-              // En son çare: çift adım yönü belirler
-              if(ei.dir==='↑'){decision='UP';decRu='Давление чётного → ВВЕРХ';}
-              else if(ei.dir==='↓'){decision='DOWN';decRu='Давление чётного → ВНИЗ';}
-              else if(oi.dir==='↑'){decision='UP';decRu='Давление нечётного → ВВЕРХ';}
-              else{decision='DOWN';decRu='Давление нечётного → ВНИЗ';}
-            }
-          }
+          decRu = 'Ожидание подтверждения...';
         }
       }
 
@@ -619,14 +618,14 @@ body.day-mode .np-val .nw, body.day-mode .tr-val .nw { color: #111; }
       rowsEl.innerHTML+=`<div class="np-row"><div class="np-lbl">Старт:</div><div class="np-val"><span class="${top.color==='blue'?'nb':'nr'}">${top.v}${top.color==='blue'?'с':'к'}</span> выше · <span class="${bot.color==='blue'?'nb':'nr'}">${bot.v}${bot.color==='blue'?'с':'к'}</span> ниже</div></div>`;
       if(even.length>=1){const es=even.map(x=>`<span class="${x.color==='blue'?'nb':'nr'}">${x.v}</span>`).join('→');rowsEl.innerHTML+=`<div class="np-row"><div class="np-lbl">Чётный:</div><div class="np-val">${es} · <span class="${ei.cls}">${ei.ru} ${ei.dir}</span> · ${ei.sz}→${ei.ez}</div></div>`;}
       if(odd.length>=1){const os=odd.map(x=>`<span class="${x.color==='blue'?'nb':'nr'}">${x.v}</span>`).join('→');rowsEl.innerHTML+=`<div class="np-row"><div class="np-lbl">Нечётный:</div><div class="np-val">${os} · <span class="${oi.cls}">${oi.ru} ${oi.dir}</span> · ${oi.sz}→${oi.ez}</div></div>`;}
+      if(minEvenItem)rowsEl.innerHTML+=`<div class="np-row"><div class="np-lbl">Min чётный:</div><div class="np-val"><span class="${minEvenItem.color==='blue'?'nb':'nr'}">${minEvenItem.v}${minEvenItem.color==='blue'?'с':'к'}</span> <span class="ny">(${minEven})</span></div></div>`;
+      if(maxOddItem)rowsEl.innerHTML+=`<div class="np-row"><div class="np-lbl">Max нечётный:</div><div class="np-val"><span class="${maxOddItem.color==='blue'?'nb':'nr'}">${maxOddItem.v}${maxOddItem.color==='blue'?'с':'к'}</span> <span class="ny">(${maxOdd})</span></div></div>`;
       if(flatItems.length>0)rowsEl.innerHTML+=`<div class="np-row"><div class="np-lbl">Флэт:</div><div class="np-val">${flatItems.join(' · ')}</div></div>`;
       if(vzItems.length>0)rowsEl.innerHTML+=`<div class="np-row"><div class="np-lbl">VZ (1ед):</div><div class="np-val">${vzItems.join(' · ')}</div></div>`;
-      if(decision)rowsEl.innerHTML+=`<div class="np-row"><div class="np-lbl">Итог:</div><div class="np-val nw">${decRu}</div></div>`;
+      rowsEl.innerHTML+=`<div class="np-row"><div class="np-lbl">Итог:</div><div class="np-val nw">${decRu||'—'}</div></div>`;
 
-      // Decision badge
-      // Start'tan sonra en az 2 çift + 2 tek daha gelmeli (toplam 3+3)
-      // Baskın olan yön sinyali verir — net değilse daha fazla bekle
-      const hasMinNumbers = even.length >= 3 && odd.length >= 3;
+      // Sinyal: toplam en az 2 çift + 2 tek (start dahil) ve onay alındıysa
+      const hasMinNumbers = even.length >= 2 && odd.length >= 2 && confirmed;
 
       if(hasMinNumbers && decision !== null){
         decEl.style.display='block';
@@ -641,10 +640,10 @@ body.day-mode .np-val .nw, body.day-mode .tr-val .nw { color: #111; }
       // Grafik çiz
       npDrawSvg(seq,decision);
       // Türkçe panel
-      trRender(seq,even,odd,ei,oi,flatItems,vzItems,decision,decRu);
+      trRender(seq,even,odd,ei,oi,flatItems,vzItems,decision,decRu,minEven,minEvenItem,maxOdd,maxOddItem,confirmed);
     }
 
-    function trRender(seq, even, odd, ei, oi, flatItems, vzItems, decision, decRu){
+    function trRender(seq, even, odd, ei, oi, flatItems, vzItems, decision, decRu, minEven, minEvenItem, maxOdd, maxOddItem, confirmed){
       const decEl=document.getElementById('trDecision');
       const rowsEl=document.getElementById('trRows');
       if(!rowsEl)return;
@@ -672,6 +671,10 @@ body.day-mode .np-val .nw, body.day-mode .tr-val .nw { color: #111; }
         rowsEl.innerHTML+=`<div class="tr-row"><div class="tr-lbl">Tek adım:</div><div class="tr-val">${os} · <span class="${oi.cls}">${trDir(oi.dir)}</span> · ${oi.sz==='синяя'?'mavi':'kırmızı'}→${oi.ez==='синяя'?'mavi':'kırmızı'}</div></div>`;
       }
 
+      // Min çift / Max tek
+      if(minEvenItem)rowsEl.innerHTML+=`<div class="tr-row"><div class="tr-lbl">Min çift:</div><div class="tr-val"><span class="${minEvenItem.color==='blue'?'nb':'nr'}">${minEvenItem.v}${minEvenItem.color==='blue'?'m':'k'}</span> <span class="ny">(${minEven})</span></div></div>`;
+      if(maxOddItem)rowsEl.innerHTML+=`<div class="tr-row"><div class="tr-lbl">Max tek:</div><div class="tr-val"><span class="${maxOddItem.color==='blue'?'nb':'nr'}">${maxOddItem.v}${maxOddItem.color==='blue'?'m':'k'}</span> <span class="ny">(${maxOdd})</span></div></div>`;
+
       // Flat
       if(flatItems.length>0)rowsEl.innerHTML+=`<div class="tr-row"><div class="tr-lbl">Flat:</div><div class="tr-val">${flatItems.join(' · ')}</div></div>`;
 
@@ -681,26 +684,14 @@ body.day-mode .np-val .nw, body.day-mode .tr-val .nw { color: #111; }
       // Sonuç
       const trDecRu=(d)=>{
         if(!d)return d;
-        return d.replace('Оба шага растут','Her iki adım yükseliyor')
-                .replace('Оба шага падают','Her iki adım düşüyor')
-                .replace('ВВЕРХ','YUKARI').replace('ВНИЗ','AŞAĞI')
-                .replace('Чётный давит вниз','Çift adım aşağı baskılı')
-                .replace('Чётный давит вверх','Çift adım yukarı baskılı')
-                .replace('Нечётный пробил минимум чётного','Tek adım çift minimumu geçti')
-                .replace('Последний чётный ниже старта нечётного','Son çift, tek başlangıcından aşağıda')
-                .replace('Последний чётный выше старта нечётного','Son çift, tek başlangıcından yukarıda')
-                .replace('Нечётный выше старта чётного','Tek adım çift başlangıcından yukarıda')
-                .replace('Нечётный ниже старта чётного','Tek adım çift başlangıcından aşağıda')
-                .replace('Последнее движение вниз','Son hareket aşağı')
-                .replace('Последнее движение вверх','Son hareket yukarı')
-                .replace('Давление чётного','Çift adım baskısı')
-                .replace('Давление нечётного','Tek adım baskısı');
+        return d.replace('Max нечётного > Min чётного · Подтверждение → ВВЕРХ','Max tek > Min çift · Onay → YUKARI')
+                .replace('Max нечётного < Min чётного · Подтверждение → ВНИЗ','Max tek < Min çift · Onay → AŞAĞI')
+                .replace('Ожидание подтверждения...','Onay bekleniyor...');
       };
-      if(decision)rowsEl.innerHTML+=`<div class="tr-row"><div class="tr-lbl">Sonuç:</div><div class="tr-val nw">${trDecRu(decRu)}</div></div>`;
+      rowsEl.innerHTML+=`<div class="tr-row"><div class="tr-lbl">Sonuç:</div><div class="tr-val nw">${trDecRu(decRu)||'—'}</div></div>`;
 
-      // Karar badge
-      const hasMin=even.length>=3&&odd.length>=3;
-      if(hasMin&&decision){
+      // Karar badge — toplam en az 2 çift + 2 tek ve onay alındıysa
+      if(confirmed && decision && even.length >= 2 && odd.length >= 2){
         decEl.style.display='block';
         decEl.className=decision==='UP'?'up':'down';
         decEl.textContent=decision==='UP'?'↑ BAHİS YUKARI':'↓ BAHİS AŞAĞI';
